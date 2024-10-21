@@ -27,7 +27,7 @@ const App = () => {
           <Content style={{ padding: '90px 15px 30px 15px', minHeight: '100vh',height:'',fontFamily: 'Varela Round, sans-serif'}}>
             <Routes>
               <Route path="/CommonSystem/ConditionSystem/RDESMasterUpload" element={<RDESMasterUpload />} />
-              <Route path="/CommonSystem/ConditionSystem/Shipment schedule maintain" element={<Shipmentschedulemaintain />} />
+              <Route path="/CommonSystem/ConditionSystem/Shipmentschedulemaintain" element={<Shipmentschedulemaintain />} />
             </Routes>
           </Content>
         </Layout>
