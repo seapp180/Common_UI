@@ -105,7 +105,7 @@ function fn_RDESMasterUpload() {
       key: "",
       align: "center",
       render: (text, record, index) => {
-        text=<Button icon={<CloseOutlined />} size="large"></Button>
+        text=<Button icon={<CloseOutlined style={{ color: 'red' }} />} size="large"></Button>
         return text
       },
     },
