@@ -3,6 +3,7 @@ import { Layout,theme } from 'antd';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './Header/Header';
 import RDESMasterUpload from './RDESMasterUpload/RDESMasterUpload';
+import Shipmentschedulemaintain from './Shipment schedule maintain/Shipmentschedulemaintain';
 import axios from "axios";
 
 const { Content } = Layout;
@@ -39,7 +40,7 @@ const App = () => {
         
             <Routes>
               <Route path="/CommonSystem/ConditionSystem/RDESMasterUpload" element={<RDESMasterUpload />} />
-
+              <Route path="/CommonSystem/ConditionSystem/Shipmentschedulemaintain" element={<Shipmentschedulemaintain />} />
             </Routes>
             </div>
           </Content>
