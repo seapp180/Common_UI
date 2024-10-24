@@ -5,7 +5,7 @@ const { Header } = Layout;
 import ImgReport from '../assets/report.png'
 import ImgHome from '../assets/3d-house.png'
 import ImgDash from '../assets/dashboard.png'
-import Imgcontact from '../assets/contact.png'
+import Imgsubmit from '../assets/submit.png'
 
 
 const CustomHeader = ({ collapsed, toggleCollapsed }) => {
@@ -19,18 +19,18 @@ const CustomHeader = ({ collapsed, toggleCollapsed }) => {
     console.log('url: ',url,'partweb :',partweb,'--',partweb.length)
   useEffect(() => {
     if (partweb === 'RDESMasterUpload') {
-      console.log('if1',partweb)
+
       setPageHeader(
         <span style={stylePageHeader()}>
-          <Avatar src={Imgcontact} shape="square" />&nbsp;RDES master upload
+          <Avatar src={Imgsubmit} shape="square" />&nbsp;RDES master upload
         </span>
       );
   
     } else {
-      console.log('if2',partweb)
+    
       setPageHeader(
         <span style={stylePageHeader()}>
-          <Avatar src={ImgHome} shape="square" />&nbsp;Common System
+          <Avatar src={ImgHome} shape="square" />&nbsp;Condition System
         </span>
       );
     }
