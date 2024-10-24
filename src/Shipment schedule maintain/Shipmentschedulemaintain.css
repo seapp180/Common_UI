@@ -1,0 +1,27 @@
+.TbShipment {
+    margin: auto;
+    display: flex;
+}
+
+.TbShipment th {
+    background-color: #71949e;
+    border-radius: 5px 5px 0 0;
+    color: #fff;
+    padding: 5px;
+}
+
+.TbShipment td {
+    padding: 4px;
+}
+
+.BtSave{
+    background-color: #1A5D1A !important ;
+    color: #fff !important;
+    height: 30px;
+}
+
+.BtCancel{
+    background-color: #E0282E!important ;
+    color: #fff !important;
+    height: 30px;
+}

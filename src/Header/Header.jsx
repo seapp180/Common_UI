@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Breadcrumb, Layout, Menu, theme,Avatar } from 'antd';
+import { Breadcrumb, Layout, Menu, theme, Avatar } from 'antd';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 const { Header } = Layout;
 import ImgReport from '../assets/report.png'
@@ -16,7 +16,7 @@ const CustomHeader = ({ collapsed, toggleCollapsed }) => {
   const [PageHeader, setPageHeader] = useState('');
   const url = window.location.href;
   const partweb = url.split('/').pop().split('?')[0];
-    console.log('url: ',url,'partweb :',partweb,'--',partweb.length)
+  console.log('url: ', url, 'partweb :', partweb, '--', partweb.length)
   useEffect(() => {
     if (partweb === 'RDESMasterUpload') {
 
@@ -25,9 +25,15 @@ const CustomHeader = ({ collapsed, toggleCollapsed }) => {
           <Avatar src={Imgsubmit} shape="square" />&nbsp;RDES master upload
         </span>
       );
-  
+
+    } else if (partweb === 'Shipmentschedulemaintain') {
+      setPageHeader(
+        <span style={stylePageHeader()}>
+          <Avatar src={Imgsubmit} shape="square" />&nbsp;Shipment schedule maintain
+        </span>
+      );
     } else {
-    
+
       setPageHeader(
         <span style={stylePageHeader()}>
           <Avatar src={ImgHome} shape="square" />&nbsp;Condition System
@@ -35,38 +41,38 @@ const CustomHeader = ({ collapsed, toggleCollapsed }) => {
       );
     }
   }, []);
-  
+
   const stylePageHeader = () => {
     return {
       display: 'flex',
       alignItems: 'center',
-      marginLeft: '16px', 
-      fontSize: '28px', 
-      fontWeight: 'bold', 
+      marginLeft: '16px',
+      fontSize: '28px',
+      fontWeight: 'bold',
       color: '#000000',
       fontFamily: 'Varela Round, sans-serif', // แก้ไขตรงนี้
     };
   };
-  
-  
+
+
   return (
     <Header
-    style={{
-      position: 'fixed',
+      style={{
+        position: 'fixed',
         top: 0,
-        left: 0, 
-        right: 0, 
-        zIndex: 1000, 
+        left: 0,
+        right: 0,
+        zIndex: 1000,
         display: 'flex',
         alignItems: 'center',
-        background:'#C6DBF2'
-        
-       
-    }}
-  >
-    <div className="demo-logo" />
+        background: '#C6DBF2'
+
+
+      }}
+    >
+      <div className="demo-logo" />
       {PageHeader}
-  </Header>
+    </Header>
   );
 };
 
