@@ -38,13 +38,13 @@ const { TextArea } = Input;
 const { Option } = Select;
 import ImgHome from "../assets/house.png";
 import "../Shipment schedule maintain/Shipmentschedulemaintain.css";
-//import dayjs from 'dayjs';
+import dayjs from 'dayjs';
 import { fn_Shipmentschedulemaintain } from "./fn_Shipmentschedulemaintain";
 
 function Shipmentschedulemaintain() {
   const {
     txtProduct, settxtProduct, selBuild, BuildData, txtLine, settxtLine, txtLotNo, settxtLotNo, txtFirtshipment, settxtFirtshipment,
-    txtSecondshipment, settxtSecondshipment, txtLineDisabled, txtLotDisabled, txtSecondDisabled, btsaveDisabled, 
+    txtSecondshipment, settxtSecondshipment, txtLineDisabled, txtLotDisabled, txtSecondDisabled, btsaveDisabled, dateFormatList,
     btnhomeClick, handleChangeProduct, handleChangeBuild, btnSaveClick, btnCancelClick
   } = fn_Shipmentschedulemaintain();
 
@@ -184,11 +184,11 @@ function Shipmentschedulemaintain() {
                 <TableCell>
                   <DatePicker
                     style={{ width: "100%" }}
-                    //defaultValue={dayjs('01/01/2015', dateFormatList[0])}
-                    // format={dateFormatList}
-                    value={txtFirtshipment}
-                    onChange={(e) => {
-                      settxtFirtshipment(e.target.value);
+                    defaultValue={dayjs(dateFormatList[0])}
+                    format={dateFormatList}
+                    value={txtFirtshipment ? dayjs(txtFirtshipment, 'DD/MM/YYYY') : null} 
+                    onChange={(date) => {
+                      settxtFirtshipment(date ? dayjs(date).format('DD/MM/YYYY') : null); 
                     }}
                   />
                 </TableCell>
@@ -199,11 +199,11 @@ function Shipmentschedulemaintain() {
                 </TableCell>
                 <TableCell>
                   <DatePicker
-                    //defaultValue={dayjs('01/01/2015', dateFormatList[0])}
-                    // format={dateFormatList}
-                    value={txtSecondshipment}
-                    onChange={(e) => {
-                      settxtSecondshipment(e.target.value);
+                    defaultValue={dayjs(dateFormatList[0])}
+                    format={dateFormatList}
+                    value={txtSecondshipment ? dayjs(txtSecondshipment, 'DD/MM/YYYY') : null} 
+                    onChange={(date) => {
+                      settxtSecondshipment(date ? dayjs(date).format('DD/MM/YYYY') : null); 
                     }}
                     disabled={txtSecondDisabled}
                     style={{
@@ -228,6 +228,11 @@ function Shipmentschedulemaintain() {
               className="BtSave"
               disabled={btsaveDisabled}
               onClick={btnSaveClick}
+              style={{
+                backgroundColor: btsaveDisabled ? "#e0e0e0" : "#4CAF50", 
+                color: btsaveDisabled ? "#8e8e8e" : "#ffffff", 
+                cursor: btsaveDisabled ? "not-allowed" : "pointer",
+              }}
             >
               Save
             </Button>{" "}
