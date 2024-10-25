@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./Header/Header";
 import RDESMasterUpload from "./RDESMasterUpload/RDESMasterUpload";
 import Shipmentschedulemaintain from "./Shipment schedule maintain/Shipmentschedulemaintain";
+import QA_ORT_WorkingRecord from "./QA ORT Working Record/QA_ORT_WorkingRecord";
 import axios from "axios";
 import "./Common/StyleCommon.css";
 const { Content } = Layout;
@@ -44,6 +45,10 @@ const App = () => {
                 <Route
                   path="/CommonSystem/ConditionSystem/Shipmentschedulemaintain"
                   element={<Shipmentschedulemaintain />}
+                />
+                <Route
+                  path="/CommonSystem/ConditionSystem/QA_ORT_WorkingRecord"
+                  element={<QA_ORT_WorkingRecord />}
                 />
               </Routes>
             </div>
