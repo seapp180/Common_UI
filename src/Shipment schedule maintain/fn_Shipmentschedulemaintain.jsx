@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import swal from "sweetalert";
+import dayjs from 'dayjs';
 
 function fn_Shipmentschedulemaintain() {
   const [txtProduct, settxtProduct] = useState("");
@@ -8,20 +9,20 @@ function fn_Shipmentschedulemaintain() {
   const [BuildData, setBuildData] = useState([]);
   const [txtLine, settxtLine] = useState("");
   const [txtLotNo, settxtLotNo] = useState("");
-  const [txtFirtshipment, settxtFirtshipment] = useState("");
-  const [txtSecondshipment, settxtSecondshipment] = useState("");
+  const [txtFirtshipment, settxtFirtshipment] = useState(null);
+  const [txtSecondshipment, settxtSecondshipment] = useState(null);
 
   //Disabled
   const [txtLineDisabled, settxtLineDisabled] = useState(false);
   const [txtLotDisabled, settxtLotDisabled] = useState(false);
   const [txtSecondDisabled, settxtSecondDisabled] = useState(false);
-  const [btsaveDisabled, setbtsaveDisabled] = useState(false);
+  const [btsaveDisabled, setbtsaveDisabled] = useState(true);
 
   //link
   const LoginID = "002097" //ยังไม่มีหน้า Login
   const SystemID = "11"; //ยังไม่มีหน้า Login
 
-  // const dateFormatList = ['DD/MM/YYYY', 'YYYY-MM-DD']; 
+  const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY'];
 
   useEffect(() => {
     settxtLineDisabled(true);
@@ -75,9 +76,9 @@ function fn_Shipmentschedulemaintain() {
       console.log(data)
       settxtLine(data.F_LINE);
       settxtLotNo(data.F_LOT);
-      settxtFirtshipment(data.F_FIRST_DATE);
+      settxtFirtshipment(data.F_FIRST_DATE ? dayjs(data.F_FIRST_DATE).format('DD/MM/YYYY') : null);
       if (data.F_SECOND_DATE !== null) {
-        settxtSecondshipment(data.F_SECOND_DATE);
+        settxtSecondshipment(dayjs(data.F_SECOND_DATE).format('DD/MM/YYYY'));
       } else {
         settxtSecondDisabled(true);
       }
@@ -93,6 +94,7 @@ function fn_Shipmentschedulemaintain() {
       if (txtFirtshipment !== "") {
         const res = await axios.post("/api/Shipment/SaveData", {
           firstshipment: txtFirtshipment,
+          loginid: LoginID,
           strprdname: txtProduct,
           strbuild: selBuild
         });
@@ -101,8 +103,9 @@ function fn_Shipmentschedulemaintain() {
       }
 
       if (txtSecondshipment !== "") {
-        const res2 = await axios.post("/api/Shipment/SaveData", {
-          firstshipment: txtSecondshipment,
+        const res2 = await axios.post("/api/Shipment/SaveData2", {
+          secondshipment: txtSecondshipment,
+          loginid: LoginID,
           strprdname: txtProduct,
           strbuild: selBuild
         });
@@ -132,7 +135,7 @@ function fn_Shipmentschedulemaintain() {
 
   return {
     txtProduct, settxtProduct, selBuild, BuildData, txtLine, settxtLine, txtLotNo, settxtLotNo, txtFirtshipment, settxtFirtshipment,
-    txtSecondshipment, settxtSecondshipment, txtLineDisabled, txtLotDisabled, txtSecondDisabled, btsaveDisabled, 
+    txtSecondshipment, settxtSecondshipment, txtLineDisabled, txtLotDisabled, txtSecondDisabled, btsaveDisabled, dateFormatList,
     btnhomeClick, handleChangeProduct, handleChangeBuild, btnSaveClick, btnCancelClick
   }
 };

@@ -7,7 +7,7 @@ import ImgHome from '../assets/3d-house.png'
 import ImgDash from '../assets/dashboard.png'
 import Imgsubmit from '../assets/submit.png'
 import Imgrecord from '../assets/folder.png'
-
+import Imgtime from '../assets/time.png'
 
 const CustomHeader = ({ collapsed, toggleCollapsed }) => {
   const {
@@ -30,7 +30,7 @@ const CustomHeader = ({ collapsed, toggleCollapsed }) => {
     } else if (partweb === 'Shipmentschedulemaintain') {
       setPageHeader(
         <span style={stylePageHeader()}>
-          <Avatar src={Imgsubmit} shape="square" />&nbsp;Shipment schedule maintain
+          <Avatar src={Imgtime} shape="square" />&nbsp;Shipment schedule maintain
         </span>
       );
     } else if (partweb === 'QA_ORT_WorkingRecord') {
