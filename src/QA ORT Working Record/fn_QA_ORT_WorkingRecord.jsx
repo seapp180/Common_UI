@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 
-function fn_QA_ORT_WorkingRecord() {
+const fn_QA_ORT_WorkingRecord = React.memo(() => {
   return (
     <div>fn_QA_ORT_WorkingRecord</div>
-  )
-}
+  );
+});
 
-export default fn_QA_ORT_WorkingRecord
+export default fn_QA_ORT_WorkingRecord;

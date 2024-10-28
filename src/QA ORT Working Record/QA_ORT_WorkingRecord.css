@@ -1,0 +1,38 @@
+.Row_Main {
+    margin-top: 1%;
+}
+
+.Center {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.Color_Fading {
+  color: rgba(255, 255, 255, 0);
+}
+
+.Icon_Size {
+  font-size: 20px;
+}
+
+.Btn_Search {
+  background-color: #4379f2;
+  border-color: #4379f2;
+  width: 50%;
+  font-size: 16px;
+}
+
+.Btn_Cancel {
+  background-color: #fabc3f;
+  border-color: #fabc3f;
+  width: 50%;
+  font-size: 16px;
+}
+
+.Btn_Export {
+  background-color: #399918;
+  border-color: #399918;
+  width: 50%;
+  font-size: 16px;
+}
