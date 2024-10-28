@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Layout, theme } from "antd";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
-import "./Common/StyleCommon.css";
+import "./StyleCommon.css";
 
 //import File
-import Header from "./Common/Header/Header";
+import Header from "./Header/Header";
 import RDESMasterUpload from "./Condition System/RDESMasterUpload/RDESMasterUpload";
 import Shipmentschedulemaintain from "./Condition System/Shipment schedule maintain/Shipmentschedulemaintain";
 import QA_ORT_WorkingRecord from "./Condition System/QA ORT Working Record/QA_ORT_WorkingRecord";
