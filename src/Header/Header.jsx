@@ -10,14 +10,18 @@ import Imgrecord from '../assets/folder.png'
 import Imgtime from '../assets/time.png'
 
 const CustomHeader = ({ collapsed, toggleCollapsed }) => {
+  
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
   const [PageHeader, setPageHeader] = useState('');
   const url = window.location.href;
+  const params = new URLSearchParams(window.location.search);
   const partweb = url.split('/').pop().split('?')[0];
-  console.log('url: ', url, 'partweb :', partweb, '--', partweb.length)
+  let loginID  = params.get("loginID");
+  let systemID  = params.get("systemID");
+  // console.log('url: ', url, 'partweb :', partweb, '--', partweb.length,'loginID',loginID)
   useEffect(() => {
     if (partweb === 'RDESMasterUpload') {
 
