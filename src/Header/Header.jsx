@@ -54,14 +54,14 @@ const CustomHeader = ({ collapsed, toggleCollapsed }) => {
   }, []);
 
   const Gohome = () => {
-    console.log('link0',loginID.systemID)
+    console.log('link0',loginID,systemID)
     axios.post("/api/Common/GetURL_Home", {
       loginID:loginID,
       systemID:systemID
     }).then((res) => {
         let link =res.data[0].URL
-        console.log(link,loginID.systemID)
-        // window.location.href = link;
+        console.log(link,loginID,systemID)
+        window.location.href = link;
 
     });
   }
