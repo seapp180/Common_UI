@@ -4,22 +4,26 @@ import axios from "axios";
 import {
   SearchOutlined,
   LoadingOutlined,
-  UploadOutlined,
+
   CloudUploadOutlined,
   FileOutlined,
   FileExcelOutlined,
   CloseOutlined,
+  SaveOutlined ,
+  UploadOutlined,
+  CloseCircleOutlined 
 } from "@ant-design/icons";
 import { fn_RDESMasterUpload } from "./fn_RDESMasterUpload";
 import "./RDESMasterUpload.css";
 const { Content } = Layout;
+import ImgExcel from "../assets/excel.png";
 
 const Page2 = () => {
   const {
     SL_Product,handleChange,columns,Product,DataSearch,GetFileFormat,Bt_Search,
     showPopUp,handlePopUpOk,handlePopUpCancel,UploadOpen,handleFileUpload,FileName
-    ,handleDrop,ClearFile,UploadFile,dataFile,columnsUpload
-    
+    ,handleDrop,ClearFile,UploadFile,dataFile,columnsUpload,Save
+    ,DisableSave,loadingSearch,loadingSave,BtnExport
   } = fn_RDESMasterUpload();
 
   return (
@@ -45,7 +49,7 @@ const Page2 = () => {
         />{" "}
         &nbsp;&nbsp; &nbsp;&nbsp;
         <Button
-          icon={<SearchOutlined />}
+        icon={loadingSearch ? <LoadingOutlined /> : <SearchOutlined />}
           style={{ background: "#5AA8F5", color: "#fff" }}
           size="large"
           onClick={() => Bt_Search()}
@@ -64,17 +68,30 @@ const Page2 = () => {
       </div>
       <br />
 
-      <br />
+     
+      <div style={{ display: "flex", justifyContent: "flex-end" ,marginBottom:'5px'}}>
+        <Button
+          icon={
+            <img
+              src={ImgExcel}
+              alt="Excel Icon"
+              style={{ width: 20, height: 20 }}
+            />
+          }
+            onClick={() => BtnExport()}
+        >
+          Export Excel
+        </Button>
+      </div>
+      
       <div className="divTable">
         <Table
           columns={columns}
-          style={{ width: "80%" }}
+          
           className="tableSummary"
           dataSource={DataSearch}
-          pagination={{
-            pageSize: 5,
-            showSizeChanger: false,
-          }}
+          pagination={false}
+          scroll={{ x: 'max-content',y:310 }}
         ></Table>
       </div>
       <Modal
@@ -119,7 +136,6 @@ const Page2 = () => {
             Fomat File
           </Button>
         </div>
-{console.log(FileName,'FileNameFileNameFileName')}
         <div
           style={{ display: "flex", alignItems: "center", marginTop: "10px" }}
         >
@@ -142,7 +158,7 @@ const Page2 = () => {
             </div>
           </div>
           <Button
-            icon={<FileOutlined />}
+            icon={<UploadOutlined />}
             style={{
               marginLeft: "5px",
               marginTop: "0",
@@ -159,35 +175,35 @@ const Page2 = () => {
         <div className="divTable">
           <Table
             columns={columnsUpload}
-            style={{ width: "100%" }}
+            style={{ width: "99%" }}
             className="tableSummary"
             dataSource={dataFile}
-            pagination={{
-              pageSize: 5,
-              showSizeChanger: false,
-            }}
+            pagination={false}
+            scroll={{ x: 'max-content',y:310 }}
             size="small"
           ></Table>
         </div>
         <br />
         <div
           style={{
-            display: "flex",
+            display: dataFile.length <=0 ? 'none' : 'flex',
             justifyContent: "center",
             marginTop: "10px",
           }}
         >
           <Button
-            icon={<FileOutlined />}
+          
+          icon={loadingSave ? <LoadingOutlined /> : <SaveOutlined />}
+            disabled={DisableSave}
             style={{ marginLeft: "5px", background: "#399918", color: "#fff" }}
-            // onClick={() => GetFileFormat()}
+            onClick={() => Save()}
           >
             Save
           </Button>
           <Button
-            icon={<FileOutlined />}
+            icon={<CloseCircleOutlined />}
             style={{ marginLeft: "5px", background: "#DF2E38", color: "#fff" }}
-            // onClick={() => GetFileFormat()}
+            onClick={() => handlePopUpCancel()}
           >
             Cancel
           </Button>

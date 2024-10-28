@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { Layout, theme } from "antd";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import axios from "axios";
+import "./Common/StyleCommon.css";
+
+//import File
 import Header from "./Header/Header";
 import RDESMasterUpload from "./RDESMasterUpload/RDESMasterUpload";
 import Shipmentschedulemaintain from "./Shipment schedule maintain/Shipmentschedulemaintain";
 import QA_ORT_WorkingRecord from "./QA ORT Working Record/QA_ORT_WorkingRecord";
-import axios from "axios";
-import "./Common/StyleCommon.css";
+import AnalysisUpload from "./Analysis Formula Master Upload/AnalysisUpload";
+
 const { Content } = Layout;
 const backendUrl = import.meta.env.VITE_SERVICE_URL;
 axios.defaults.baseURL = backendUrl;
@@ -49,6 +53,10 @@ const App = () => {
                 <Route
                   path="/CommonSystem/ConditionSystem/QA_ORT_WorkingRecord"
                   element={<QA_ORT_WorkingRecord />}
+                />
+                 <Route
+                  path="/CommonSystem/ConditionSystem/AnalysisFormulaMaster"
+                  element={<AnalysisUpload />}
                 />
               </Routes>
             </div>
