@@ -3,12 +3,12 @@ import { Breadcrumb, Layout, Menu, theme, Avatar } from 'antd';
 import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import axios from "axios";
 
-import ImgReport from '../assets/report.png'
-import ImgHome from '../assets/3d-house.png'
-import ImgDash from '../assets/dashboard.png'
-import Imgsubmit from '../assets/submit.png'
-import Imgrecord from '../assets/folder.png'
-import Imgtime from '../assets/time.png'
+import ImgReport from '../../assets/report.png'
+import ImgHome from '../../assets/3d-house.png'
+import ImgDash from '../../assets/dashboard.png'
+import Imgsubmit from '../../assets/submit.png'
+import Imgrecord from '../../assets/folder.png'
+import Imgtime from '../../assets/time.png'
 const { Header } = Layout;
 const CustomHeader = ({ collapsed, toggleCollapsed }) => {
   
