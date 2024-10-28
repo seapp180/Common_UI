@@ -6,10 +6,10 @@ import "./Common/StyleCommon.css";
 
 //import File
 import Header from "./Header/Header";
-import RDESMasterUpload from "./RDESMasterUpload/RDESMasterUpload";
-import Shipmentschedulemaintain from "./Shipment schedule maintain/Shipmentschedulemaintain";
-import QA_ORT_WorkingRecord from "./QA ORT Working Record/QA_ORT_WorkingRecord";
-import AnalysisUpload from "./Analysis Formula Master Upload/AnalysisUpload";
+import RDESMasterUpload from "./Condition System/RDESMasterUpload/RDESMasterUpload";
+import Shipmentschedulemaintain from "./Condition System/Shipment schedule maintain/Shipmentschedulemaintain";
+import QA_ORT_WorkingRecord from "./Condition System/QA ORT Working Record/QA_ORT_WorkingRecord";
+import AnalysisUpload from "./FPC System/Analysis Formula Master Upload/AnalysisUpload";
 
 const { Content } = Layout;
 const backendUrl = import.meta.env.VITE_SERVICE_URL;

@@ -16,7 +16,7 @@ import {
 import { fn_RDESMasterUpload } from "./fn_RDESMasterUpload";
 import "./RDESMasterUpload.css";
 const { Content } = Layout;
-import ImgExcel from "../assets/excel.png";
+import ImgExcel from "../../assets/excel.png";
 
 const Page2 = () => {
   const {

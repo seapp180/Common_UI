@@ -14,7 +14,7 @@ import {
 } from "@ant-design/icons";
 import { fn_AnalysisUpload } from "./fn_AnalysisUpload";
 import "./AnalysisUpload.css";
-import ImgExcel from "../assets/excel.png";
+import ImgExcel from "../../assets/excel.png";
 
 //
 const { Content } = Layout;
