@@ -37,7 +37,7 @@ import {
 const { TextArea } = Input;
 const { Option } = Select;
 import { SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import "../Shipment schedule maintain/Shipmentschedulemaintain.css";
+import "./Shipmentschedulemaintain.css";
 import dayjs from 'dayjs';
 import { fn_Shipmentschedulemaintain } from "./fn_Shipmentschedulemaintain";
 
