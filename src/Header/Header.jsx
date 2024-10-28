@@ -10,11 +10,7 @@ import Imgsubmit from '../assets/submit.png'
 import Imgrecord from '../assets/folder.png'
 import Imgtime from '../assets/time.png'
 const { Header } = Layout;
-const CustomHeader = ({ collapsed, toggleCollapsed }) => {
-  
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+const CustomHeader = () => {
 
   const [PageHeader, setPageHeader] = useState('');
   const url = window.location.href;
@@ -61,7 +57,7 @@ const CustomHeader = ({ collapsed, toggleCollapsed }) => {
     }).then((res) => {
         let link =res.data[0].URL
         console.log(link,loginID,systemID)
-        // window.location.href = link;
+        window.location.href = link;
 
     });
   }
