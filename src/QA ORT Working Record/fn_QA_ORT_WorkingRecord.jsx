@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from "react";
 
 function fn_QA_ORT_WorkingRecord() {
-  return (
-    <div>fn_QA_ORT_WorkingRecord</div>
-  )
+  const [options, setOptions] = useState([
+    { value: "A1", label: "A1" },
+    { value: "N1", label: "N1" },
+  ]);
+  return { options };
 }
 
-export default fn_QA_ORT_WorkingRecord
+export { fn_QA_ORT_WorkingRecord };
