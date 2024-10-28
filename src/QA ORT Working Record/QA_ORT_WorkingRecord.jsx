@@ -26,8 +26,10 @@ import {
   FileExcelOutlined,
 } from "@ant-design/icons";
 import "./QA_ORT_WorkingRecord.css";
+import { fn_QA_ORT_WorkingRecord } from "./fn_QA_ORT_WorkingRecord";
 
 function QA_ORT_WorkingRecord() {
+  const {options} = fn_QA_ORT_WorkingRecord();
   return (
     <div>
       {/* <Content>
@@ -52,10 +54,9 @@ function QA_ORT_WorkingRecord() {
             placeholder="--- select ---"
             optionFilterProp="label"
             filterSort={(optionA, optionB) =>
-              (optionA?.label ?? "")
-                .toLowerCase()
-                .localeCompare((optionB?.label ?? "").toLowerCase())
+              (optionA?.label ?? "").toLowerCase().localeCompare((optionB?.label ?? "").toLowerCase())
             }
+            options={options} 
           />
         </Col>
         <Col span={4}>
@@ -96,7 +97,8 @@ function QA_ORT_WorkingRecord() {
         </Col>
         <Col span={4}>
           <Typography>Date Form</Typography>
-          <Input
+          <DatePicker
+            placeholder="yyyy-mm-dd"
             size="middle"
             style={{
               width: "96%",
@@ -105,7 +107,8 @@ function QA_ORT_WorkingRecord() {
         </Col>
         <Col span={4}>
           <Typography>Date To</Typography>
-          <Input
+          <DatePicker
+            placeholder="yyyy-mm-dd"
             size="middle"
             style={{
               width: "96%",
@@ -144,7 +147,8 @@ function QA_ORT_WorkingRecord() {
         </Col>
         <Col span={4}>
           <Typography>Date Form</Typography>
-          <Input
+          <DatePicker
+            placeholder="yyyy-mm-dd"
             size="middle"
             style={{
               width: "96%",
@@ -153,7 +157,8 @@ function QA_ORT_WorkingRecord() {
         </Col>
         <Col span={4}>
           <Typography>Date To</Typography>
-          <Input
+          <DatePicker
+            placeholder="yyyy-mm-dd"
             size="middle"
             style={{
               width: "96%",
@@ -229,8 +234,6 @@ function QA_ORT_WorkingRecord() {
           </Button>
         </Col>
       </Row>
-      
-      
     </div>
   );
 }
