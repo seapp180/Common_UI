@@ -1,6 +1,7 @@
 .tableSummary .ant-table-thead > tr > th {
     background-color: #71949e;
     color: white;
+    padding: 0;
 
   }
   .tableSummary .ant-table-tbody > tr > td {
