@@ -19,6 +19,7 @@ import {
   message,
   Avatar,
 } from "antd";
+import { Table as AntTable } from "antd";
 const { Content } = Layout;
 import {
   SearchOutlined,
@@ -63,18 +64,13 @@ function QA_ORT_WorkingRecord() {
     setInputSerialNo,
     Btn_Search,
     Btn_Cancel,
+    Btn_Excel,
+    dataSource,
+    columns,
   } = fn_QA_ORT_WorkingRecord();
+  console.log("dataSource", dataSource);
   return (
     <div>
-      {/* <Content>
-        <h1>QA ORT WorkingRecord</h1>
-        <Row>
-            <Col span={2}></Col>
-        </Row>
-        <div style={{ marginLeft: "30px", marginBottom: "5px" }}>
-          <span style={{ fontSize: "18px" }}>Factory</span>{" "}
-        </div>
-      </Content> */}
       <Row>
         <Col span={4}>
           <Typography>Factory</Typography>
@@ -175,7 +171,7 @@ function QA_ORT_WorkingRecord() {
               width: "96%",
             }}
             value={
-              selectedDateFromIn === null
+              selectedDateFromIn === ""
                 ? undefined
                 : moment(selectedDateFromIn, "YYYY-MM-DD")
             }
@@ -183,7 +179,7 @@ function QA_ORT_WorkingRecord() {
               if (date) {
                 setSelectedFromIn(date.format("YYYYMMDD"));
               } else {
-                setSelectedFromIn(null);
+                setSelectedFromIn("");
               }
             }}
             allowClear
@@ -198,7 +194,7 @@ function QA_ORT_WorkingRecord() {
               width: "96%",
             }}
             value={
-              selectedDateToIn === null
+              selectedDateToIn === ""
                 ? undefined
                 : moment(selectedDateToIn, "YYYY-MM-DD")
             }
@@ -206,7 +202,7 @@ function QA_ORT_WorkingRecord() {
               if (date) {
                 setSelectedToIn(date.format("YYYYMMDD"));
               } else {
-                setSelectedToIn(null);
+                setSelectedToIn("");
               }
             }}
             allowClear
@@ -264,7 +260,7 @@ function QA_ORT_WorkingRecord() {
               width: "96%",
             }}
             value={
-              selectedDateFromOut === null
+              selectedDateFromOut === ""
                 ? undefined
                 : moment(selectedDateFromOut, "YYYY-MM-DD")
             }
@@ -272,7 +268,7 @@ function QA_ORT_WorkingRecord() {
               if (date) {
                 setSelectedFromOut(date.format("YYYYMMDD"));
               } else {
-                setSelectedFromOut(null);
+                setSelectedFromOut("");
               }
             }}
             allowClear
@@ -287,7 +283,7 @@ function QA_ORT_WorkingRecord() {
               width: "96%",
             }}
             value={
-              selectedDateToOut === null
+              selectedDateToOut === ""
                 ? undefined
                 : moment(selectedDateToOut, "YYYY-MM-DD")
             }
@@ -295,7 +291,7 @@ function QA_ORT_WorkingRecord() {
               if (date) {
                 setSelectedToOut(date.format("YYYYMMDD"));
               } else {
-                setSelectedToOut(null);
+                setSelectedToOut("");
               }
             }}
             allowClear
@@ -411,11 +407,53 @@ function QA_ORT_WorkingRecord() {
             type="primary"
             className="Btn_Export"
             icon={<FileExcelOutlined className="Icon_Size" />}
+            onClick={Btn_Excel}
           >
             Export
           </Button>
         </Col>
       </Row>
+
+      {/* <div style={{ marginTop: "2%", padding: "0px" }}>
+        <AntTable
+          columns={columns}
+          dataSource={dataSource}
+          style={{
+            width: "100%",
+            boxShadow: "rgba(0, 0, 0, 0.10) 0px 3px 8px",
+            padding: "0px",
+          }}
+          pagination={false}
+          size="small"
+          bordered
+        />
+      </div> */}
+      <div
+        style={{
+          marginTop: "2%",
+          padding: "0px",
+          maxWidth: "100%",
+          overflow: "auto",
+        }}
+      >
+        <AntTable
+          columns={columns}
+          dataSource={dataSource}
+          className="tabledata"
+          style={{
+            width: "100%", // กำหนดความกว้างให้ AntTable
+            boxShadow: "rgba(0, 0, 0, 0.10) 0px 3px 8px",
+            padding: "0px",
+          }}
+          pagination={true}
+          scroll={{
+            x: 'max-content',
+            y: 55 * 6,
+          }}
+          size="small"
+          bordered
+        />
+      </div>
     </div>
   );
 }

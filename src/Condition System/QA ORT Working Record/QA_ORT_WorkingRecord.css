@@ -36,3 +36,9 @@
   width: 50%;
   font-size: 16px;
 }
+
+.tabledata .ant-table-thead > tr > th {
+  background-color: #71949e;
+  color: white;
+
+}
