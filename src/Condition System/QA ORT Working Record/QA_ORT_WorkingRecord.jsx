@@ -18,7 +18,7 @@ import {
   Upload,
   message,
   Avatar,
-  notification ,
+  notification,
 } from "antd";
 import { Table as AntTable } from "antd";
 const { Content } = Layout;
@@ -75,7 +75,6 @@ function QA_ORT_WorkingRecord() {
   return (
     <div>
       <Row>
-      
         <Col span={8}>
           <Card className="CardStyle" style={{ border: "none" }}>
             <Row>
@@ -142,7 +141,7 @@ function QA_ORT_WorkingRecord() {
             </Row>
           </Card>
         </Col>
-      
+
         <Col span={12}>
           <Card className="CardStyleIn">
             <Row>
@@ -179,7 +178,8 @@ function QA_ORT_WorkingRecord() {
               <Col span={8}>
                 <Typography className="FontStyle">Date Form</Typography>
                 <DatePicker
-                  placeholder="yyyy-mm-dd"
+                  placeholder="dd-mm-yyyy"
+                  format="DD-MM-YYYY"
                   size="middle"
                   style={{
                     width: "96%",
@@ -202,7 +202,8 @@ function QA_ORT_WorkingRecord() {
               <Col span={8}>
                 <Typography className="FontStyle">Date To</Typography>
                 <DatePicker
-                  placeholder="yyyy-mm-dd"
+                  placeholder="dd-mm-yyyy"
+                  format="DD-MM-YYYY"
                   size="middle"
                   style={{
                     width: "96%",
@@ -232,15 +233,14 @@ function QA_ORT_WorkingRecord() {
             className="Btn_Search"
             icon={<SearchOutlined className="Icon_Size" />}
             onClick={Btn_Search}
-            loading={loading} 
+            loading={loading}
           >
             Search
           </Button>
-          
         </Col>
       </Row>
       <Row className="Row_Main">
-      <Col span={8}>
+        <Col span={8}>
           <Card className="CardStyle" style={{ border: "none" }}>
             <Row>
               <Col span={12}>
@@ -319,7 +319,8 @@ function QA_ORT_WorkingRecord() {
               <Col span={8}>
                 <Typography className="FontStyle">Date Form</Typography>
                 <DatePicker
-                  placeholder="yyyy-mm-dd"
+                  placeholder="dd-mm-yyyy"
+                  format="DD-MM-YYYY"
                   size="middle"
                   style={{
                     width: "96%",
@@ -342,7 +343,8 @@ function QA_ORT_WorkingRecord() {
               <Col span={8}>
                 <Typography className="FontStyle">Date To</Typography>
                 <DatePicker
-                  placeholder="yyyy-mm-dd"
+                  placeholder="dd-mm-yyyy"
+                  format="DD-MM-YYYY"
                   size="middle"
                   style={{
                     width: "96%",
@@ -366,8 +368,6 @@ function QA_ORT_WorkingRecord() {
           </Card>
         </Col>
 
-    
-
         <Col span={4} className="Center">
           <Typography className="Color_Fading">-</Typography>
           <Button
@@ -381,70 +381,66 @@ function QA_ORT_WorkingRecord() {
         </Col>
       </Row>
       <Row className="Row_Main">
-      
-
         <Col span={12}>
           <Card className="CardStyle" style={{ border: "none" }}>
             <Row>
-            <Col span={8}>
-          <Typography className="FontStyle">Lot No.</Typography>
-          <Input
-            size="middle"
-            style={{
-              width: "96%",
-            }}
-            value={inputLotNo === "" ? undefined : inputLotNo}
-            onChange={(e) => {
-              if (e.target.value) {
-                setInputLotNo(e.target.value);
-              } else {
-                setInputLotNo(null);
-              }
-            }}
-            allowClear
-          />
-        </Col>
-        <Col span={8}>
-          <Typography className="FontStyle">Week No.</Typography>
-          <Input
-            size="middle"
-            style={{
-              width: "96%",
-            }}
-            value={inputWeekNo === "" ? undefined : inputWeekNo}
-            onChange={(e) => {
-              if (e.target.value) {
-                setInputWeekNo(e.target.value);
-              } else {
-                setInputWeekNo(null);
-              }
-            }}
-            allowClear
-          />
-        </Col>
-        <Col span={8}>
-          <Typography className="FontStyle">Serial No.</Typography>
-          <Input
-            size="middle"
-            style={{
-              width: "96%",
-            }}
-            value={inputSerialNo === "" ? undefined : inputSerialNo}
-            onChange={(e) => {
-              if (e.target.value) {
-                setInputSerialNo(e.target.value);
-              } else {
-                setInputSerialNo(null);
-              }
-            }}
-            allowClear
-          />
-        </Col>
+              <Col span={8}>
+                <Typography className="FontStyle">Lot No.</Typography>
+                <Input
+                  size="middle"
+                  style={{
+                    width: "96%",
+                  }}
+                  value={inputLotNo === "" ? undefined : inputLotNo}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setInputLotNo(e.target.value);
+                    } else {
+                      setInputLotNo(null);
+                    }
+                  }}
+                  allowClear
+                />
+              </Col>
+              <Col span={8}>
+                <Typography className="FontStyle">Week No.</Typography>
+                <Input
+                  size="middle"
+                  style={{
+                    width: "96%",
+                  }}
+                  value={inputWeekNo === "" ? undefined : inputWeekNo}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setInputWeekNo(e.target.value);
+                    } else {
+                      setInputWeekNo(null);
+                    }
+                  }}
+                  allowClear
+                />
+              </Col>
+              <Col span={8}>
+                <Typography className="FontStyle">Serial No.</Typography>
+                <Input
+                  size="middle"
+                  style={{
+                    width: "96%",
+                  }}
+                  value={inputSerialNo === "" ? undefined : inputSerialNo}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setInputSerialNo(e.target.value);
+                    } else {
+                      setInputSerialNo(null);
+                    }
+                  }}
+                  allowClear
+                />
+              </Col>
             </Row>
           </Card>
         </Col>
-
-
 
         <Col span={8}></Col>
         <Col span={4} className="Center">
@@ -461,7 +457,6 @@ function QA_ORT_WorkingRecord() {
         </Col>
       </Row>
 
-     
       <div
         style={{
           marginTop: "2%",
@@ -470,24 +465,24 @@ function QA_ORT_WorkingRecord() {
           overflow: "auto",
         }}
       >
-        {(showTable && dataSource.length > 0) && ( 
-        <AntTable
-          columns={columns}
-          dataSource={dataSource}
-          className="tabledata"
-          style={{
-            width: "100%", // กำหนดความกว้างให้ AntTable
-            boxShadow: "rgba(0, 0, 0, 0.10) 0px 3px 8px",
-            padding: "0px",
-          }}
-          pagination={true}
-          scroll={{
-            x: "max-content",
-            y: 55 * 6,
-          }}
-          size="small"
-          bordered
-        />
+        {showTable && dataSource.length > 0 && (
+          <AntTable
+            columns={columns}
+            dataSource={dataSource}
+            className="tabledata"
+            style={{
+              width: "100%", // กำหนดความกว้างให้ AntTable
+              boxShadow: "rgba(0, 0, 0, 0.10) 0px 3px 8px",
+              padding: "0px",
+            }}
+            pagination={true}
+            scroll={{
+              x: "max-content",
+              y: 55 * 6,
+            }}
+            size="small"
+            bordered
+          />
         )}
       </div>
     </div>
