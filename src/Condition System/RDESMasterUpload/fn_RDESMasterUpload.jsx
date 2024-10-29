@@ -581,7 +581,7 @@ function fn_RDESMasterUpload() {
     handleDrop,
     ClearFile,
     UploadFile,
-    dataFile,
+    
     columnsUpload,
     dataFile,
     Save,
