@@ -86,7 +86,7 @@ function QA_ORT_WorkingRecord() {
                   style={{
                     width: "96%",
                   }}
-                  placeholder="--- select ---"
+                  placeholder="--- Please select ---"
                   optionFilterProp="label"
                   filterSort={(optionA, optionB) =>
                     (optionA?.label ?? "")
@@ -116,7 +116,7 @@ function QA_ORT_WorkingRecord() {
                   style={{
                     width: "96%",
                   }}
-                  placeholder="--- select ---"
+                  placeholder="--- Please select ---"
                   optionFilterProp="label"
                   filterSort={(optionA, optionB) =>
                     (optionA?.label ?? "")
@@ -153,7 +153,7 @@ function QA_ORT_WorkingRecord() {
                   style={{
                     width: "96%",
                   }}
-                  placeholder="--- select ---"
+                  placeholder="--- Please select ---"
                   optionFilterProp="label"
                   filterSort={(optionA, optionB) =>
                     (optionA?.label ?? "")
@@ -294,7 +294,7 @@ function QA_ORT_WorkingRecord() {
                   style={{
                     width: "96%",
                   }}
-                  placeholder="--- select ---"
+                  placeholder="--- Please select ---"
                   optionFilterProp="label"
                   filterSort={(optionA, optionB) =>
                     (optionA?.label ?? "")
