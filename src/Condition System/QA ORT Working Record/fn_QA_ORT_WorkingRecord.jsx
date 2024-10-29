@@ -38,6 +38,7 @@ function fn_QA_ORT_WorkingRecord() {
   const [inputSerialNo, setInputSerialNo] = useState("");
   const [dataSource, setDataSource] = useState("");
   const [showTable, setShowTable] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setShowTable(false);
@@ -500,7 +501,7 @@ function fn_QA_ORT_WorkingRecord() {
       });
     }
   };
-  const [loading, setLoading] = useState(false);
+
 
   return {
     opFactory,

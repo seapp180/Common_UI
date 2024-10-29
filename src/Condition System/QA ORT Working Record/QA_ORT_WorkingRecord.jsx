@@ -240,7 +240,48 @@ function QA_ORT_WorkingRecord() {
         </Col>
       </Row>
       <Row className="Row_Main">
-     
+      <Col span={8}>
+          <Card className="CardStyle" style={{ border: "none" }}>
+            <Row>
+              <Col span={12}>
+                <Typography className="FontStyle">Product Name</Typography>
+                <Input
+                  size="middle"
+                  style={{
+                    width: "96%",
+                  }}
+                  value={inputProductName === "" ? undefined : inputProductName}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setInputProductName(e.target.value);
+                    } else {
+                      setInputProductName(null);
+                    }
+                  }}
+                  allowClear
+                />
+              </Col>
+              <Col span={12}>
+                <Typography className="FontStyle">Test Item</Typography>
+                <Input
+                  size="middle"
+                  style={{
+                    width: "96%",
+                  }}
+                  value={inputTestItem === "" ? undefined : inputTestItem}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setInputTestItem(e.target.value);
+                    } else {
+                      setInputTestItem(null);
+                    }
+                  }}
+                  allowClear
+                />
+              </Col>
+            </Row>
+          </Card>
+        </Col>
 
         <Col span={12}>
           <Card className="CardStyleOut">
@@ -325,48 +366,7 @@ function QA_ORT_WorkingRecord() {
           </Card>
         </Col>
 
-        <Col span={8}>
-          <Card className="CardStyle" style={{ border: "none" }}>
-            <Row>
-              <Col span={12}>
-                <Typography className="FontStyle">Product Name</Typography>
-                <Input
-                  size="middle"
-                  style={{
-                    width: "96%",
-                  }}
-                  value={inputProductName === "" ? undefined : inputProductName}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      setInputProductName(e.target.value);
-                    } else {
-                      setInputProductName(null);
-                    }
-                  }}
-                  allowClear
-                />
-              </Col>
-              <Col span={12}>
-                <Typography className="FontStyle">Test Item</Typography>
-                <Input
-                  size="middle"
-                  style={{
-                    width: "96%",
-                  }}
-                  value={inputTestItem === "" ? undefined : inputTestItem}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      setInputTestItem(e.target.value);
-                    } else {
-                      setInputTestItem(null);
-                    }
-                  }}
-                  allowClear
-                />
-              </Col>
-            </Row>
-          </Card>
-        </Col>
+    
 
         <Col span={4} className="Center">
           <Typography className="Color_Fading">-</Typography>
