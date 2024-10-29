@@ -20,7 +20,24 @@ import ImgExcel from "../../assets/excel.png";
 const { Content } = Layout;
 
 const AnalysisUpload = () => {
-  const { columns } = fn_AnalysisUpload();
+  const {     
+    columns,
+    Unit,
+    Process,
+    Machine,
+    Bath,
+    Ch,
+    SL_Bath,
+    SL_Ch,
+    SL_Machine,
+    SL_Process,
+    SL_Unit,
+    HandleUnit,
+    handleMachine,
+    handleProcess,
+    HandleBath,
+    HandleCh
+  } = fn_AnalysisUpload();
 
   return (
     <Content>
@@ -30,7 +47,7 @@ const AnalysisUpload = () => {
           <span style={{ fontSize: "14px" }}>Unit</span>
           <Select
             showSearch
-            value={"ALL"}
+            value={SL_Unit}
             style={{
               width: "200px",
               display: "block",
@@ -42,6 +59,8 @@ const AnalysisUpload = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
+            options={Unit}
+            onChange={HandleUnit}
           />
         </div>
 
@@ -49,18 +68,20 @@ const AnalysisUpload = () => {
           <span style={{ fontSize: "14px" }}>Process</span>
           <Select
             showSearch
-            value={"ALL"}
+            value={SL_Process}
             style={{
               width: "200px",
               display: "block",
               marginTop: "5px",
               marginLeft: "5px",
             }}
-            placeholder="Select a Unit"
+            placeholder="Select a Process"
             optionFilterProp="children"
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
+            options={Process}
+            onChange={handleProcess}
           />
         </div>
 
@@ -68,18 +89,20 @@ const AnalysisUpload = () => {
           <span style={{ fontSize: "14px" }}>Machine</span>
           <Select
             showSearch
-            value={"ALL"}
+            value={SL_Machine}
             style={{
               width: "200px",
               display: "block",
               marginTop: "5px",
               marginLeft: "5px",
             }}
-            placeholder="Select a Unit"
+            placeholder="Select a Machine"
             optionFilterProp="children"
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
+            options={Machine}
+            onChange={handleMachine}
           />
         </div>
       </div>
@@ -91,18 +114,20 @@ const AnalysisUpload = () => {
           <span style={{ fontSize: "14px" }}>Bath</span>
           <Select
             showSearch
-            value={"ALL"}
+            value={SL_Bath}
             style={{
               width: "200px",
               display: "block",
               marginTop: "5px",
               marginLeft: "5px",
             }}
-            placeholder="Select a Unit"
+            placeholder="Select a Bath"
             optionFilterProp="children"
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
+            options={Bath}
+            onChange={HandleBath}
           />
         </div>
 
@@ -110,18 +135,20 @@ const AnalysisUpload = () => {
           <span style={{ fontSize: "14px" }}>Ch</span>
           <Select
             showSearch
-            value={"ALL"}
+            value={SL_Ch}
             style={{
               width: "200px",
               display: "block",
               marginTop: "5px",
               marginLeft: "5px",
             }}
-            placeholder="Select a Unit"
+            placeholder="Select a Ch"
             optionFilterProp="children"
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
+            options={Ch}
+            onChange={HandleCh}
           />
         </div>
         <div style={{ marginLeft: "30px" }}>

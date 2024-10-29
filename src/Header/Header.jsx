@@ -9,12 +9,9 @@ import ImgDash from '../assets/dashboard.png'
 import Imgsubmit from '../assets/submit.png'
 import Imgrecord from '../assets/folder.png'
 import Imgtime from '../assets/time.png'
+import Imgchemistry from '../assets/chemistry.png'
 const { Header } = Layout;
-const CustomHeader = ({ collapsed, toggleCollapsed }) => {
-  
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
+const CustomHeader = () => {
 
   const [PageHeader, setPageHeader] = useState('');
   const url = window.location.href;
@@ -22,7 +19,7 @@ const CustomHeader = ({ collapsed, toggleCollapsed }) => {
   const partweb = url.split('/').pop().split('?')[0];
   const loginID  = params.get("loginID");
   const systemID  = params.get("systemID");
-  console.log(systemID,'systemID')
+
   useEffect(() => {
     if (partweb === 'RDESMasterUpload') {
       setPageHeader(
@@ -43,7 +40,13 @@ const CustomHeader = ({ collapsed, toggleCollapsed }) => {
           <Avatar src={Imgrecord} shape="square" />&nbsp;QA ORT WorkingRecord
         </span>
       );
-    } else {
+    } else if (partweb === 'AnalysisFormulaMaster') {
+      setPageHeader(
+        <span style={stylePageHeader()}>
+          <Avatar src={Imgchemistry} shape="square" />&nbsp;Analysis Formula Master Upload
+        </span>
+      );
+    }else {
 
       setPageHeader(
         <span style={stylePageHeader()}>

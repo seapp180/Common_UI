@@ -19,8 +19,9 @@ function fn_Shipmentschedulemaintain() {
   const [btsaveDisabled, setbtsaveDisabled] = useState(true);
 
   //link
-  const LoginID = "002097" //ยังไม่มีหน้า Login
-  const SystemID = "11"; //ยังไม่มีหน้า Login
+  const params = new URLSearchParams(window.location.search);
+  const LoginID = params.get("loginID");
+  const SystemID = params.get("systemID");
 
   const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY'];
 

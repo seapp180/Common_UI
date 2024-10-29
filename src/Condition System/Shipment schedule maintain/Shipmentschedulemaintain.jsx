@@ -67,9 +67,9 @@ function Shipmentschedulemaintain() {
             <TableHead>
               <TableRow>
                 <TableCell colSpan={2} align="center">
-                    <Typography variant="h6">
-                      Shipment schedule maintain
-                    </Typography>
+                  <Typography variant="h6">
+                    Shipment schedule maintain
+                  </Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
