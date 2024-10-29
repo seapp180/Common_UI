@@ -66,7 +66,7 @@ function fn_QA_ORT_WorkingRecord() {
       openNotification("Error");
       setTimeout(() => {
         setLoading(false);
-      }, 3000);
+      }, 2000);
       return;
     }
     axios
@@ -282,7 +282,7 @@ function fn_QA_ORT_WorkingRecord() {
       title: () => <div style={{ textAlign: "center" }}>Fixture Jig Code</div>,
       dataIndex: "fixture_jig_code",
       key: "fixture_jig_code",
-      render: (text) => <div style={{ width: "120px" }}>{text}</div>,
+      render: (text) => <div style={{ width: "150px" }}>{text}</div>,
       align: "left",
     },
     {
@@ -483,7 +483,7 @@ function fn_QA_ORT_WorkingRecord() {
         description: "Please fill in factory and product type information.",
         placement: "bottomRight",
         icon: <CloseCircleOutlined style={{ color: "#F32424" }} />,
-        duration: 3,
+        duration: 2,
         style: {
           backgroundColor: "#FFC3C3",
         },
@@ -494,7 +494,7 @@ function fn_QA_ORT_WorkingRecord() {
         description: "Please fill in the information correctly.",
         placement: "bottomRight",
         icon: <WarningOutlined style={{ color: "#E9B824" }} />,
-        duration: 3,
+        duration: 2,
         style: {
           backgroundColor: "#FFFAD7",
         },
