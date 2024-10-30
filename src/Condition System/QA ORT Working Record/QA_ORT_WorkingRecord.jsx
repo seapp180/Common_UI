@@ -79,7 +79,9 @@ function QA_ORT_WorkingRecord() {
           <Card className="CardStyle" style={{ border: "none" }}>
             <Row>
               <Col span={12}>
-                <Typography className="FontStyle">Factory</Typography>
+                <Typography className="FontStyle">
+                  Factory <span style={{ color: "red" }}>*</span>
+                </Typography>
                 <Select
                   size="middle"
                   showSearch
@@ -109,7 +111,9 @@ function QA_ORT_WorkingRecord() {
                 />
               </Col>
               <Col span={12}>
-                <Typography className="FontStyle">Product Type</Typography>
+                <Typography className="FontStyle">
+                  Product Type <span style={{ color: "red" }}>*</span>
+                </Typography>
                 <Select
                   size="middle"
                   showSearch
