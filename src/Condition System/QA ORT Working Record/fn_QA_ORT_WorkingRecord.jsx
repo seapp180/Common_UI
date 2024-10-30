@@ -27,8 +27,8 @@ function fn_QA_ORT_WorkingRecord() {
   const [selectedDateFromOut, setSelectedFromOut] = useState("");
   const [selectedDateToIn, setSelectedToIn] = useState("");
   const [selectedDateToOut, setSelectedToOut] = useState("");
-  const [drpFactory, setDrpFactory] = useState("");
-  const [drpProductType, setDrpProductType] = useState("");
+  const [drpFactory, setDrpFactory] = useState("A1");
+  const [drpProductType, setDrpProductType] = useState("ALL");
   const [drpInPut, setDrpInPut] = useState("");
   const [drpOutPut, setDrpOutPut] = useState("");
   const [inputProductName, setInputProductName] = useState("");
@@ -45,6 +45,7 @@ function fn_QA_ORT_WorkingRecord() {
   }, []);
 
   const Btn_Search = async () => {
+    // console.log("Btn_Search",drpFactory, drpProductType, drpInPut, drpOutPut, inputProductName, inputTestItem, inputLotNo, inputWeekNo, inputSerialNo, selectedDateFromIn, selectedDateFromOut, selectedDateToIn, selectedDateToOut);
     setLoading(true);
     if (drpFactory.trim() === "" || drpProductType.trim() === "") {
       openNotification("Error");
@@ -94,8 +95,8 @@ function fn_QA_ORT_WorkingRecord() {
     setSelectedFromOut("");
     setSelectedToIn("");
     setSelectedToOut("");
-    setDrpFactory("");
-    setDrpProductType("");
+    setDrpFactory("A1");
+    setDrpProductType("ALL");
     setDrpInPut("");
     setDrpOutPut("");
     setInputProductName("");
@@ -109,7 +110,7 @@ function fn_QA_ORT_WorkingRecord() {
 
   const Btn_Excel = async () => {
   
-    FN_ExportGridView("QA_ORT_working_record" + ".xls", dataSource);
+    FN_ExportGridView("QA_ORT_working_record" + ".xlsx", dataSource);
   };
 
   const FN_ExportGridView = async (namefile, data) => {
@@ -441,14 +442,14 @@ function fn_QA_ORT_WorkingRecord() {
       dataIndex: "receive_date",
       key: "receive_date",
       render: (text) => <div style={{ width: "160px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Receive Time</div>,
       dataIndex: "receive_time",
       key: "receive_time",
       render: (text) => <div style={{ width: "100px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Input1 Pic</div>,
@@ -462,28 +463,28 @@ function fn_QA_ORT_WorkingRecord() {
       dataIndex: "input1_date",
       key: "input1_date",
       render: (text) => <div style={{ width: "100px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Input1 Time</div>,
       dataIndex: "input1_time",
       key: "input1_time",
       render: (text) => <div style={{ width: "100px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output Plan1 Date</div>,
       dataIndex: "output_plan1_date",
       key: "output_plan1_date",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output Plan1 Time</div>,
       dataIndex: "output_plan1_time",
       key: "output_plan1_time",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output1 Pic</div>,
@@ -497,14 +498,14 @@ function fn_QA_ORT_WorkingRecord() {
       dataIndex: "output1_date",
       key: "output1_date",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output1 Time</div>,
       dataIndex: "output1_time",
       key: "output1_time",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Input2 Pic</div>,
@@ -518,28 +519,28 @@ function fn_QA_ORT_WorkingRecord() {
       dataIndex: "input2_date",
       key: "input2_date",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Input2 Time</div>,
       dataIndex: "input2_time",
       key: "input2_time",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output Plan2 Date</div>,
       dataIndex: "output_plan2_date",
       key: "output_plan2_date",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output Plan2 Time</div>,
       dataIndex: "output_plan2_time",
       key: "output_plan2_time",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output2 Pic</div>,
@@ -553,14 +554,14 @@ function fn_QA_ORT_WorkingRecord() {
       dataIndex: "output2_date",
       key: "output2_date",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output2 Time</div>,
       dataIndex: "output2_time",
       key: "output2_time",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Inspection Item</div>,

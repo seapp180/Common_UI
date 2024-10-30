@@ -98,12 +98,13 @@ function QA_ORT_WorkingRecord() {
                     value: factory.value,
                     label: factory.label,
                   }))}
-                  value={drpFactory === "" ? undefined : drpFactory}
+                  defaultValue="A1"
+                  value={drpFactory}
                   onChange={(e) => {
                     if (e) {
                       setDrpFactory(e);
                     } else {
-                      setDrpFactory("");
+                      setDrpFactory("A1");
                     }
                   }}
                   allowClear
@@ -130,12 +131,13 @@ function QA_ORT_WorkingRecord() {
                     value: product_type.value,
                     label: product_type.label,
                   }))}
-                  value={drpProductType === "" ? undefined : drpProductType}
+                    defaultValue="ALL"
+                  value={drpProductType}
                   onChange={(e) => {
                     if (e) {
                       setDrpProductType(e);
                     } else {
-                      setDrpProductType("");
+                      setDrpProductType("ALL");
                     }
                   }}
                   allowClear
@@ -258,7 +260,7 @@ function QA_ORT_WorkingRecord() {
                     if (e.target.value) {
                       setInputProductName(e.target.value);
                     } else {
-                      setInputProductName(null);
+                      setInputProductName("");
                     }
                   }}
                   allowClear
@@ -276,7 +278,7 @@ function QA_ORT_WorkingRecord() {
                     if (e.target.value) {
                       setInputTestItem(e.target.value);
                     } else {
-                      setInputTestItem(null);
+                      setInputTestItem("");
                     }
                   }}
                   allowClear
@@ -399,7 +401,7 @@ function QA_ORT_WorkingRecord() {
                     if (e.target.value) {
                       setInputLotNo(e.target.value);
                     } else {
-                      setInputLotNo(null);
+                      setInputLotNo("");
                     }
                   }}
                   allowClear
@@ -417,7 +419,7 @@ function QA_ORT_WorkingRecord() {
                     if (e.target.value) {
                       setInputWeekNo(e.target.value);
                     } else {
-                      setInputWeekNo(null);
+                      setInputWeekNo("");
                     }
                   }}
                   allowClear
@@ -435,7 +437,7 @@ function QA_ORT_WorkingRecord() {
                     if (e.target.value) {
                       setInputSerialNo(e.target.value);
                     } else {
-                      setInputSerialNo(null);
+                      setInputSerialNo("");
                     }
                   }}
                   allowClear
