@@ -112,208 +112,208 @@ function fn_QA_ORT_WorkingRecord() {
     FN_ExportGridView("QA_ORT_working_record" + ".xls", dataSource);
   };
 
-  // const FN_ExportGridView = async (namefile, data) => {
-  //   console.log(data, "FN_ExportGridView", namefile);
-  //   const workbook = new ExcelJS.Workbook();
-  //   const sheet = workbook.addWorksheet("My Sheet");
-  //   sheet.properties.defaultRowHeight = 20;
-
-  //   // ดึงชื่อคีย์จาก data[0] เพื่อสร้าง header อัตโนมัติ
-  //   const dynamicColumns = Object.keys(data[0] || {}).map((key) => ({
-  //     header: key.toUpperCase(),
-  //     key: key,
-  //     width: 10,
-  //     style: { alignment: { horizontal: "center" } },
-  //   }));
-  //   sheet.columns = dynamicColumns;
-
-  //   if (data.length === 0) {
-  //     const emptyRow = {};
-  //     dynamicColumns.forEach((col) => (emptyRow[col.dataIndex] = "")); // เติมค่าค่าว่าง
-  //     data.push(emptyRow);
-  //   }
-
-  //   data.forEach((row) => {
-  //     const newRow = sheet.addRow(row);
-  //     newRow.eachCell({ includeEmpty: true }, (cell) => {
-  //       cell.alignment = { horizontal: "center" };
-
-  //       cell.border = {
-  //         top: { style: "thin" },
-  //         left: { style: "thin" },
-  //         bottom: { style: "thin" },
-  //         right: { style: "thin" },
-  //       };
-  //     });
-  //   });
-
-  //   const firstRow = sheet.getRow(1);
-  //   firstRow.eachCell({ includeEmpty: true }, (cell) => {
-  //     cell.fill = {
-  //       type: "pattern",
-  //       pattern: "solid",
-  //       fgColor: { argb: "FFFF00" },
-  //     };
-  //     cell.font = {
-  //       name: "Roboto",
-  //       size: 9,
-  //       bold: true,
-  //     };
-
-  //     cell.border = {
-  //       top: { style: "thin" },
-  //       left: { style: "thin" },
-  //       bottom: { style: "thin" },
-  //       right: { style: "thin" },
-  //     };
-  //   });
-
-  //   sheet.columns.forEach((column) => {
-  //     let maxWidth = column.header.length;
-  //     data.forEach((row) => {
-  //       const cellValue = String(row[column.key] || "");
-  //       maxWidth = Math.max(maxWidth, cellValue.length);
-  //     });
-  //     column.width = maxWidth + 2;
-  //   });
-
-  //   workbook.xlsx.writeBuffer().then((buffer) => {
-  //     const blob = new Blob([buffer], { type: "application/octet-stream" });
-  //     saveAs(blob, `${namefile}`);
-  //   });
-  // };
   const FN_ExportGridView = async (namefile, data) => {
-    
+    console.log(data, "FN_ExportGridView", namefile);
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("My Sheet");
     sheet.properties.defaultRowHeight = 20;
 
-    // กำหนด headers ตามที่ต้องการ
-    const headers = [
-        { header: 'No.', key: 'no', width: 8 },
-        { header: 'Unit', key: 'unit', width: 10 },
-        { header: 'Process', key: 'process', width: 12 },
-        { header: 'Machine', key: 'machine', width: 12 },
-        { header: 'Bath', key: 'bath', width: 15 },
-        { header: 'Chemical', key: 'chemical', width: 12 },
-        { header: 'Seq', key: 'seq', width: 8 },
-        { header: 'Input', key: 'input', width: 8 },
-        { 
-            header: 'Formula', 
-            key: 'formula', 
-            width: 20,
-            children: [
-                { header: 'Refer1', key: 'refer1', width: 10 },
-                { header: 'Refer2', key: 'refer2', width: 10 }
-            ]
-        }
-    ];
+    // ดึงชื่อคีย์จาก data[0] เพื่อสร้าง header อัตโนมัติ
+    const dynamicColumns = Object.keys(data[0] || {}).map((key) => ({
+      header: key.toUpperCase(),
+      key: key,
+      width: 10,
+      style: { alignment: { horizontal: "center" } },
+    }));
+    sheet.columns = dynamicColumns;
 
-    // สร้าง columns
-    sheet.columns = headers.flatMap(header => {
-        if (header.children) {
-            return header.children;
-        }
-        return header;
-    });
+    if (data.length === 0) {
+      const emptyRow = {};
+      dynamicColumns.forEach((col) => (emptyRow[col.dataIndex] = "")); // เติมค่าค่าว่าง
+      data.push(emptyRow);
+    }
 
-    // สร้าง header rows
-    const headerRow1 = sheet.getRow(1);
-    const headerRow2 = sheet.getRow(2);
+    data.forEach((row) => {
+      const newRow = sheet.addRow(row);
+      newRow.eachCell({ includeEmpty: true }, (cell) => {
+        cell.alignment = { horizontal: "center" };
 
-    // จัดการ header แถวแรก
-    let colIndex = 1;
-    headers.forEach(header => {
-        const cell = headerRow1.getCell(colIndex);
-        cell.value = header.header;
-        
-        if (header.children) {
-            // Merge cells สำหรับ Formula
-            sheet.mergeCells(1, colIndex, 1, colIndex + header.children.length - 1);
-            
-            // เพิ่ม sub-headers
-            header.children.forEach((child, index) => {
-                const subCell = headerRow2.getCell(colIndex + index);
-                subCell.value = child.header;
-                subCell.fill = {
-                    type: 'pattern',
-                    pattern: 'solid',
-                    fgColor: { argb: 'B8CCE4' } // สีพื้นหลัง header
-                };
-                subCell.border = {
-                    top: { style: 'thin' },
-                    left: { style: 'thin' },
-                    bottom: { style: 'thin' },
-                    right: { style: 'thin' }
-                };
-                subCell.font = {
-                    bold: true,
-                    size: 11
-                };
-                subCell.alignment = { horizontal: 'center', vertical: 'middle' };
-            });
-            colIndex += header.children.length;
-        } else {
-            // Merge cells สำหรับ header ปกติ
-            sheet.mergeCells(1, colIndex, 2, colIndex);
-            colIndex += 1;
-        }
-
-        cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'B8CCE4' } // สีพื้นหลัง header
-        };
         cell.border = {
-            top: { style: 'thin' },
-            left: { style: 'thin' },
-            bottom: { style: 'thin' },
-            right: { style: 'thin' }
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
         };
-        cell.font = {
-            bold: true,
-            size: 11
-        };
-        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      });
     });
 
-    // เพิ่มข้อมูลเริ่มจากแถวที่ 3
-    data.forEach((row, index) => {
-        const dataRow = sheet.addRow({
-            no: index + 1,
-            unit: row.unit,
-            process: row.process,
-            machine: row.machine,
-            bath: row.bath,
-            chemical: row.chemical,
-            seq: row.seq,
-            input: row.input,
-            refer1: row.refer1,
-            refer2: row.refer2
-        });
+    const firstRow = sheet.getRow(1);
+    firstRow.eachCell({ includeEmpty: true }, (cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "FFFF00" },
+      };
+      cell.font = {
+        name: "Roboto",
+        size: 9,
+        bold: true,
+      };
 
-        // จัดรูปแบบแถวข้อมูล
-        dataRow.eachCell({ includeEmpty: true }, cell => {
-            cell.alignment = { horizontal: 'center', vertical: 'middle' };
-            cell.border = {
-                top: { style: 'thin' },
-                left: { style: 'thin' },
-                bottom: { style: 'thin' },
-                right: { style: 'thin' }
-            };
-        });
+      cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
+      };
     });
 
-    // ปรับความสูงของ header rows
-    headerRow1.height = 25;
-    headerRow2.height = 25;
+    sheet.columns.forEach((column) => {
+      let maxWidth = column.header.length;
+      data.forEach((row) => {
+        const cellValue = String(row[column.key] || "");
+        maxWidth = Math.max(maxWidth, cellValue.length);
+      });
+      column.width = maxWidth + 2;
+    });
 
-    // สร้างและดาวน์โหลดไฟล์
     workbook.xlsx.writeBuffer().then((buffer) => {
-        const blob = new Blob([buffer], { type: "application/octet-stream" });
-        saveAs(blob, `${namefile}`);
+      const blob = new Blob([buffer], { type: "application/octet-stream" });
+      saveAs(blob, `${namefile}`);
     });
-};
+  };
+//   const FN_ExportGridView = async (namefile, data) => {
+    
+//     const workbook = new ExcelJS.Workbook();
+//     const sheet = workbook.addWorksheet("My Sheet");
+//     sheet.properties.defaultRowHeight = 20;
+
+//     // กำหนด headers ตามที่ต้องการ
+//     const headers = [
+//         { header: 'No.', key: 'no', width: 8 },
+//         { header: 'Unit', key: 'unit', width: 10 },
+//         { header: 'Process', key: 'process', width: 12 },
+//         { header: 'Machine', key: 'machine', width: 12 },
+//         { header: 'Bath', key: 'bath', width: 15 },
+//         { header: 'Chemical', key: 'chemical', width: 12 },
+//         { header: 'Seq', key: 'seq', width: 8 },
+//         { header: 'Input', key: 'input', width: 8 },
+//         { 
+//             header: 'Formula', 
+//             key: 'formula', 
+//             width: 20,
+//             children: [
+//                 { header: 'Refer1', key: 'refer1', width: 10 },
+//                 { header: 'Refer2', key: 'refer2', width: 10 }
+//             ]
+//         }
+//     ];
+
+//     // สร้าง columns
+//     sheet.columns = headers.flatMap(header => {
+//         if (header.children) {
+//             return header.children;
+//         }
+//         return header;
+//     });
+
+//     // สร้าง header rows
+//     const headerRow1 = sheet.getRow(1);
+//     const headerRow2 = sheet.getRow(2);
+
+//     // จัดการ header แถวแรก
+//     let colIndex = 1;
+//     headers.forEach(header => {
+//         const cell = headerRow1.getCell(colIndex);
+//         cell.value = header.header;
+        
+//         if (header.children) {
+//             // Merge cells สำหรับ Formula
+//             sheet.mergeCells(1, colIndex, 1, colIndex + header.children.length - 1);
+            
+//             // เพิ่ม sub-headers
+//             header.children.forEach((child, index) => {
+//                 const subCell = headerRow2.getCell(colIndex + index);
+//                 subCell.value = child.header;
+//                 subCell.fill = {
+//                     type: 'pattern',
+//                     pattern: 'solid',
+//                     fgColor: { argb: 'B8CCE4' } // สีพื้นหลัง header
+//                 };
+//                 subCell.border = {
+//                     top: { style: 'thin' },
+//                     left: { style: 'thin' },
+//                     bottom: { style: 'thin' },
+//                     right: { style: 'thin' }
+//                 };
+//                 subCell.font = {
+//                     bold: true,
+//                     size: 11
+//                 };
+//                 subCell.alignment = { horizontal: 'center', vertical: 'middle' };
+//             });
+//             colIndex += header.children.length;
+//         } else {
+//             // Merge cells สำหรับ header ปกติ
+//             sheet.mergeCells(1, colIndex, 2, colIndex);
+//             colIndex += 1;
+//         }
+
+//         cell.fill = {
+//             type: 'pattern',
+//             pattern: 'solid',
+//             fgColor: { argb: 'B8CCE4' } // สีพื้นหลัง header
+//         };
+//         cell.border = {
+//             top: { style: 'thin' },
+//             left: { style: 'thin' },
+//             bottom: { style: 'thin' },
+//             right: { style: 'thin' }
+//         };
+//         cell.font = {
+//             bold: true,
+//             size: 11
+//         };
+//         cell.alignment = { horizontal: 'center', vertical: 'middle' };
+//     });
+
+//     // เพิ่มข้อมูลเริ่มจากแถวที่ 3
+//     data.forEach((row, index) => {
+//         const dataRow = sheet.addRow({
+//             no: index + 1,
+//             unit: row.unit,
+//             process: row.process,
+//             machine: row.machine,
+//             bath: row.bath,
+//             chemical: row.chemical,
+//             seq: row.seq,
+//             input: row.input,
+//             refer1: row.refer1,
+//             refer2: row.refer2
+//         });
+
+//         // จัดรูปแบบแถวข้อมูล
+//         dataRow.eachCell({ includeEmpty: true }, cell => {
+//             cell.alignment = { horizontal: 'center', vertical: 'middle' };
+//             cell.border = {
+//                 top: { style: 'thin' },
+//                 left: { style: 'thin' },
+//                 bottom: { style: 'thin' },
+//                 right: { style: 'thin' }
+//             };
+//         });
+//     });
+
+//     // ปรับความสูงของ header rows
+//     headerRow1.height = 25;
+//     headerRow2.height = 25;
+
+//     // สร้างและดาวน์โหลดไฟล์
+//     workbook.xlsx.writeBuffer().then((buffer) => {
+//         const blob = new Blob([buffer], { type: "application/octet-stream" });
+//         saveAs(blob, `${namefile}`);
+//     });
+// };
 
   const columns = [
     {
