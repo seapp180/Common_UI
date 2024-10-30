@@ -476,14 +476,22 @@ function QA_ORT_WorkingRecord() {
             dataSource={dataSource}
             className="tabledata"
             style={{
-              width: "100%", // กำหนดความกว้างให้ AntTable
+              width: "100%",
               boxShadow: "rgba(0, 0, 0, 0.10) 0px 3px 8px",
               padding: "0px",
             }}
-            pagination={true}
+            // pagination={false}
+            pagination={{
+              pageSize: 200,           // จำนวนแถวต่อหน้า
+              position: ['bottomCenter'],
+              showSizeChanger: true,  // ให้ผู้ใช้เปลี่ยนจำนวนแถวต่อหน้าได้
+              showTotal: (total, range) => 
+                `${range[0]}-${range[1]} of ${total} items`,  // แสดงจำนวนรายการทั้งหมด
+              showSizeChanger: false,
+            }}
             scroll={{
               x: "max-content",
-              y: 55 * 6,
+              y: 55 * 4,
             }}
             size="small"
             bordered
