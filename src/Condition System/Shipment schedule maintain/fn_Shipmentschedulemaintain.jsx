@@ -119,6 +119,7 @@ function fn_Shipmentschedulemaintain() {
       settxtLotNo("");
       settxtFirtshipment("");
       settxtSecondshipment("");
+      setBuildData([]);
     } catch (error) {
       console.error("เกิดข้อผิดพลาด =", error);
       swal("Cannot save. Error: ", error.message, "error");
@@ -132,6 +133,7 @@ function fn_Shipmentschedulemaintain() {
     settxtLotNo("");
     settxtFirtshipment("");
     settxtSecondshipment("");
+    setBuildData([]);
   };
 
   return {
