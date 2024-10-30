@@ -114,7 +114,6 @@ function fn_QA_ORT_WorkingRecord() {
   };
 
   const FN_ExportGridView = async (namefile, data) => {
-    console.log(data, "FN_ExportGridView", namefile);
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("My Sheet");
     sheet.properties.defaultRowHeight = 20;
