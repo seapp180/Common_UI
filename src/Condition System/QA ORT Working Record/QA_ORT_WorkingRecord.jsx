@@ -71,7 +71,6 @@ function QA_ORT_WorkingRecord() {
     showTable,
     loading,
   } = fn_QA_ORT_WorkingRecord();
-  console.log("dataSource", dataSource);
   return (
     <div>
       <Row>

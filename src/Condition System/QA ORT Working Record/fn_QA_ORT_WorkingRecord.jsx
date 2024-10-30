@@ -45,22 +45,6 @@ function fn_QA_ORT_WorkingRecord() {
   }, []);
 
   const Btn_Search = async () => {
-    console.log(
-      "Start Btn_Search",
-      selectedDateFromIn,
-      selectedDateFromOut,
-      selectedDateToIn,
-      selectedDateToOut,
-      drpFactory,
-      drpProductType,
-      drpInPut,
-      drpOutPut,
-      inputProductName,
-      inputTestItem,
-      inputLotNo,
-      inputWeekNo,
-      inputSerialNo
-    );
     setLoading(true);
     if (drpFactory.trim() === "" || drpProductType.trim() === "") {
       openNotification("Error");
@@ -88,7 +72,7 @@ function fn_QA_ORT_WorkingRecord() {
       .then((res) => {
         let data = res.data;
         if (data.length > 0) {
-          console.log("data Btn_Search", data);
+      
           setDataSource(data);
           setShowTable(true);
           setLoading(false);
@@ -105,7 +89,7 @@ function fn_QA_ORT_WorkingRecord() {
   };
 
   const Btn_Cancel = async () => {
-    console.log("Btn_Cancel");
+   
     setSelectedFromIn("");
     setSelectedFromOut("");
     setSelectedToIn("");
@@ -124,7 +108,7 @@ function fn_QA_ORT_WorkingRecord() {
   };
 
   const Btn_Excel = async () => {
-    console.log("เข้ามาในเงื่อนไขแล้ว : ", dataSource);
+  
     FN_ExportGridView("QA_ORT_working_record" + ".xls", dataSource);
   };
 
@@ -199,7 +183,6 @@ function fn_QA_ORT_WorkingRecord() {
   //   });
   // };
   const FN_ExportGridView = async (namefile, data) => {
-    console.log(data, "FN_ExportGridView", namefile);
     
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("My Sheet");
