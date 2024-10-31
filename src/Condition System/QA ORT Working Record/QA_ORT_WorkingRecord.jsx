@@ -71,7 +71,6 @@ function QA_ORT_WorkingRecord() {
     showTable,
     loading,
   } = fn_QA_ORT_WorkingRecord();
-  console.log("dataSource", dataSource);
   return (
     <div>
       <Row>
@@ -79,7 +78,9 @@ function QA_ORT_WorkingRecord() {
           <Card className="CardStyle" style={{ border: "none" }}>
             <Row>
               <Col span={12}>
-                <Typography className="FontStyle">Factory</Typography>
+                <Typography className="FontStyle">
+                  Factory <span style={{ color: "red" }}>*</span>
+                </Typography>
                 <Select
                   size="middle"
                   showSearch
@@ -97,19 +98,22 @@ function QA_ORT_WorkingRecord() {
                     value: factory.value,
                     label: factory.label,
                   }))}
-                  value={drpFactory === "" ? undefined : drpFactory}
+                  defaultValue="A1"
+                  value={drpFactory}
                   onChange={(e) => {
                     if (e) {
                       setDrpFactory(e);
                     } else {
-                      setDrpFactory("");
+                      setDrpFactory("A1");
                     }
                   }}
                   allowClear
                 />
               </Col>
               <Col span={12}>
-                <Typography className="FontStyle">Product Type</Typography>
+                <Typography className="FontStyle">
+                  Product Type <span style={{ color: "red" }}>*</span>
+                </Typography>
                 <Select
                   size="middle"
                   showSearch
@@ -127,12 +131,13 @@ function QA_ORT_WorkingRecord() {
                     value: product_type.value,
                     label: product_type.label,
                   }))}
-                  value={drpProductType === "" ? undefined : drpProductType}
+                    defaultValue="ALL"
+                  value={drpProductType}
                   onChange={(e) => {
                     if (e) {
                       setDrpProductType(e);
                     } else {
-                      setDrpProductType("");
+                      setDrpProductType("ALL");
                     }
                   }}
                   allowClear
@@ -255,7 +260,7 @@ function QA_ORT_WorkingRecord() {
                     if (e.target.value) {
                       setInputProductName(e.target.value);
                     } else {
-                      setInputProductName(null);
+                      setInputProductName("");
                     }
                   }}
                   allowClear
@@ -273,7 +278,7 @@ function QA_ORT_WorkingRecord() {
                     if (e.target.value) {
                       setInputTestItem(e.target.value);
                     } else {
-                      setInputTestItem(null);
+                      setInputTestItem("");
                     }
                   }}
                   allowClear
@@ -396,7 +401,7 @@ function QA_ORT_WorkingRecord() {
                     if (e.target.value) {
                       setInputLotNo(e.target.value);
                     } else {
-                      setInputLotNo(null);
+                      setInputLotNo("");
                     }
                   }}
                   allowClear
@@ -414,7 +419,7 @@ function QA_ORT_WorkingRecord() {
                     if (e.target.value) {
                       setInputWeekNo(e.target.value);
                     } else {
-                      setInputWeekNo(null);
+                      setInputWeekNo("");
                     }
                   }}
                   allowClear
@@ -432,7 +437,7 @@ function QA_ORT_WorkingRecord() {
                     if (e.target.value) {
                       setInputSerialNo(e.target.value);
                     } else {
-                      setInputSerialNo(null);
+                      setInputSerialNo("");
                     }
                   }}
                   allowClear
@@ -471,14 +476,22 @@ function QA_ORT_WorkingRecord() {
             dataSource={dataSource}
             className="tabledata"
             style={{
-              width: "100%", // กำหนดความกว้างให้ AntTable
+              width: "100%",
               boxShadow: "rgba(0, 0, 0, 0.10) 0px 3px 8px",
               padding: "0px",
             }}
-            pagination={true}
+            // pagination={false}
+            pagination={{
+              pageSize: 200,           // จำนวนแถวต่อหน้า
+              position: ['bottomCenter'],
+              showSizeChanger: true,  // ให้ผู้ใช้เปลี่ยนจำนวนแถวต่อหน้าได้
+              showTotal: (total, range) => 
+                `${range[0]}-${range[1]} of ${total} items`,  // แสดงจำนวนรายการทั้งหมด
+              showSizeChanger: false,
+            }}
             scroll={{
               x: "max-content",
-              y: 55 * 6,
+              y: 55 * 4,
             }}
             size="small"
             bordered

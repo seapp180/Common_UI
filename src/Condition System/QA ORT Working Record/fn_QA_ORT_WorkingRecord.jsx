@@ -27,8 +27,8 @@ function fn_QA_ORT_WorkingRecord() {
   const [selectedDateFromOut, setSelectedFromOut] = useState("");
   const [selectedDateToIn, setSelectedToIn] = useState("");
   const [selectedDateToOut, setSelectedToOut] = useState("");
-  const [drpFactory, setDrpFactory] = useState("");
-  const [drpProductType, setDrpProductType] = useState("");
+  const [drpFactory, setDrpFactory] = useState("A1");
+  const [drpProductType, setDrpProductType] = useState("ALL");
   const [drpInPut, setDrpInPut] = useState("");
   const [drpOutPut, setDrpOutPut] = useState("");
   const [inputProductName, setInputProductName] = useState("");
@@ -45,28 +45,13 @@ function fn_QA_ORT_WorkingRecord() {
   }, []);
 
   const Btn_Search = async () => {
-    console.log(
-      "Start Btn_Search",
-      selectedDateFromIn,
-      selectedDateFromOut,
-      selectedDateToIn,
-      selectedDateToOut,
-      drpFactory,
-      drpProductType,
-      drpInPut,
-      drpOutPut,
-      inputProductName,
-      inputTestItem,
-      inputLotNo,
-      inputWeekNo,
-      inputSerialNo
-    );
+    // console.log("Btn_Search",drpFactory, drpProductType, drpInPut, drpOutPut, inputProductName, inputTestItem, inputLotNo, inputWeekNo, inputSerialNo, selectedDateFromIn, selectedDateFromOut, selectedDateToIn, selectedDateToOut);
     setLoading(true);
     if (drpFactory.trim() === "" || drpProductType.trim() === "") {
       openNotification("Error");
       setTimeout(() => {
         setLoading(false);
-      }, 3000);
+      }, 2000);
       return;
     }
     axios
@@ -88,7 +73,7 @@ function fn_QA_ORT_WorkingRecord() {
       .then((res) => {
         let data = res.data;
         if (data.length > 0) {
-          console.log("data Btn_Search", data);
+      
           setDataSource(data);
           setShowTable(true);
           setLoading(false);
@@ -105,13 +90,13 @@ function fn_QA_ORT_WorkingRecord() {
   };
 
   const Btn_Cancel = async () => {
-    console.log("Btn_Cancel");
+   
     setSelectedFromIn("");
     setSelectedFromOut("");
     setSelectedToIn("");
     setSelectedToOut("");
-    setDrpFactory("");
-    setDrpProductType("");
+    setDrpFactory("A1");
+    setDrpProductType("ALL");
     setDrpInPut("");
     setDrpOutPut("");
     setInputProductName("");
@@ -124,12 +109,11 @@ function fn_QA_ORT_WorkingRecord() {
   };
 
   const Btn_Excel = async () => {
-    console.log("เข้ามาในเงื่อนไขแล้ว : ", dataSource);
-    FN_ExportGridView("QA_ORT_working_record" + ".xls", dataSource);
+  
+    FN_ExportGridView("QA_ORT_working_record" + ".xlsx", dataSource);
   };
 
   const FN_ExportGridView = async (namefile, data) => {
-    console.log(data, "FN_ExportGridView", namefile);
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("My Sheet");
     sheet.properties.defaultRowHeight = 20;
@@ -198,6 +182,138 @@ function fn_QA_ORT_WorkingRecord() {
       saveAs(blob, `${namefile}`);
     });
   };
+//   const FN_ExportGridView = async (namefile, data) => {
+    
+//     const workbook = new ExcelJS.Workbook();
+//     const sheet = workbook.addWorksheet("My Sheet");
+//     sheet.properties.defaultRowHeight = 20;
+
+//     // กำหนด headers ตามที่ต้องการ
+//     const headers = [
+//         { header: 'No.', key: 'no', width: 8 },
+//         { header: 'Unit', key: 'unit', width: 10 },
+//         { header: 'Process', key: 'process', width: 12 },
+//         { header: 'Machine', key: 'machine', width: 12 },
+//         { header: 'Bath', key: 'bath', width: 15 },
+//         { header: 'Chemical', key: 'chemical', width: 12 },
+//         { header: 'Seq', key: 'seq', width: 8 },
+//         { header: 'Input', key: 'input', width: 8 },
+//         { 
+//             header: 'Formula', 
+//             key: 'formula', 
+//             width: 20,
+//             children: [
+//                 { header: 'Refer1', key: 'refer1', width: 10 },
+//                 { header: 'Refer2', key: 'refer2', width: 10 }
+//             ]
+//         }
+//     ];
+
+//     // สร้าง columns
+//     sheet.columns = headers.flatMap(header => {
+//         if (header.children) {
+//             return header.children;
+//         }
+//         return header;
+//     });
+
+//     // สร้าง header rows
+//     const headerRow1 = sheet.getRow(1);
+//     const headerRow2 = sheet.getRow(2);
+
+//     // จัดการ header แถวแรก
+//     let colIndex = 1;
+//     headers.forEach(header => {
+//         const cell = headerRow1.getCell(colIndex);
+//         cell.value = header.header;
+        
+//         if (header.children) {
+//             // Merge cells สำหรับ Formula
+//             sheet.mergeCells(1, colIndex, 1, colIndex + header.children.length - 1);
+            
+//             // เพิ่ม sub-headers
+//             header.children.forEach((child, index) => {
+//                 const subCell = headerRow2.getCell(colIndex + index);
+//                 subCell.value = child.header;
+//                 subCell.fill = {
+//                     type: 'pattern',
+//                     pattern: 'solid',
+//                     fgColor: { argb: 'B8CCE4' } // สีพื้นหลัง header
+//                 };
+//                 subCell.border = {
+//                     top: { style: 'thin' },
+//                     left: { style: 'thin' },
+//                     bottom: { style: 'thin' },
+//                     right: { style: 'thin' }
+//                 };
+//                 subCell.font = {
+//                     bold: true,
+//                     size: 11
+//                 };
+//                 subCell.alignment = { horizontal: 'center', vertical: 'middle' };
+//             });
+//             colIndex += header.children.length;
+//         } else {
+//             // Merge cells สำหรับ header ปกติ
+//             sheet.mergeCells(1, colIndex, 2, colIndex);
+//             colIndex += 1;
+//         }
+
+//         cell.fill = {
+//             type: 'pattern',
+//             pattern: 'solid',
+//             fgColor: { argb: 'B8CCE4' } // สีพื้นหลัง header
+//         };
+//         cell.border = {
+//             top: { style: 'thin' },
+//             left: { style: 'thin' },
+//             bottom: { style: 'thin' },
+//             right: { style: 'thin' }
+//         };
+//         cell.font = {
+//             bold: true,
+//             size: 11
+//         };
+//         cell.alignment = { horizontal: 'center', vertical: 'middle' };
+//     });
+
+//     // เพิ่มข้อมูลเริ่มจากแถวที่ 3
+//     data.forEach((row, index) => {
+//         const dataRow = sheet.addRow({
+//             no: index + 1,
+//             unit: row.unit,
+//             process: row.process,
+//             machine: row.machine,
+//             bath: row.bath,
+//             chemical: row.chemical,
+//             seq: row.seq,
+//             input: row.input,
+//             refer1: row.refer1,
+//             refer2: row.refer2
+//         });
+
+//         // จัดรูปแบบแถวข้อมูล
+//         dataRow.eachCell({ includeEmpty: true }, cell => {
+//             cell.alignment = { horizontal: 'center', vertical: 'middle' };
+//             cell.border = {
+//                 top: { style: 'thin' },
+//                 left: { style: 'thin' },
+//                 bottom: { style: 'thin' },
+//                 right: { style: 'thin' }
+//             };
+//         });
+//     });
+
+//     // ปรับความสูงของ header rows
+//     headerRow1.height = 25;
+//     headerRow2.height = 25;
+
+//     // สร้างและดาวน์โหลดไฟล์
+//     workbook.xlsx.writeBuffer().then((buffer) => {
+//         const blob = new Blob([buffer], { type: "application/octet-stream" });
+//         saveAs(blob, `${namefile}`);
+//     });
+// };
 
   const columns = [
     {
@@ -282,7 +398,7 @@ function fn_QA_ORT_WorkingRecord() {
       title: () => <div style={{ textAlign: "center" }}>Fixture Jig Code</div>,
       dataIndex: "fixture_jig_code",
       key: "fixture_jig_code",
-      render: (text) => <div style={{ width: "120px" }}>{text}</div>,
+      render: (text) => <div style={{ width: "150px" }}>{text}</div>,
       align: "left",
     },
     {
@@ -325,14 +441,14 @@ function fn_QA_ORT_WorkingRecord() {
       dataIndex: "receive_date",
       key: "receive_date",
       render: (text) => <div style={{ width: "160px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Receive Time</div>,
       dataIndex: "receive_time",
       key: "receive_time",
       render: (text) => <div style={{ width: "100px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Input1 Pic</div>,
@@ -346,28 +462,28 @@ function fn_QA_ORT_WorkingRecord() {
       dataIndex: "input1_date",
       key: "input1_date",
       render: (text) => <div style={{ width: "100px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Input1 Time</div>,
       dataIndex: "input1_time",
       key: "input1_time",
       render: (text) => <div style={{ width: "100px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output Plan1 Date</div>,
       dataIndex: "output_plan1_date",
       key: "output_plan1_date",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output Plan1 Time</div>,
       dataIndex: "output_plan1_time",
       key: "output_plan1_time",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output1 Pic</div>,
@@ -381,14 +497,14 @@ function fn_QA_ORT_WorkingRecord() {
       dataIndex: "output1_date",
       key: "output1_date",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output1 Time</div>,
       dataIndex: "output1_time",
       key: "output1_time",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Input2 Pic</div>,
@@ -402,28 +518,28 @@ function fn_QA_ORT_WorkingRecord() {
       dataIndex: "input2_date",
       key: "input2_date",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Input2 Time</div>,
       dataIndex: "input2_time",
       key: "input2_time",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output Plan2 Date</div>,
       dataIndex: "output_plan2_date",
       key: "output_plan2_date",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output Plan2 Time</div>,
       dataIndex: "output_plan2_time",
       key: "output_plan2_time",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output2 Pic</div>,
@@ -437,14 +553,14 @@ function fn_QA_ORT_WorkingRecord() {
       dataIndex: "output2_date",
       key: "output2_date",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Output2 Time</div>,
       dataIndex: "output2_time",
       key: "output2_time",
       render: (text) => <div style={{ width: "150px" }}>{text}</div>,
-      align: "right",
+      align: "center",
     },
     {
       title: () => <div style={{ textAlign: "center" }}>Inspection Item</div>,
@@ -483,7 +599,7 @@ function fn_QA_ORT_WorkingRecord() {
         description: "Please fill in factory and product type information.",
         placement: "bottomRight",
         icon: <CloseCircleOutlined style={{ color: "#F32424" }} />,
-        duration: 3,
+        duration: 2,
         style: {
           backgroundColor: "#FFC3C3",
         },
@@ -494,7 +610,7 @@ function fn_QA_ORT_WorkingRecord() {
         description: "Please fill in the information correctly.",
         placement: "bottomRight",
         icon: <WarningOutlined style={{ color: "#E9B824" }} />,
-        duration: 3,
+        duration: 2,
         style: {
           backgroundColor: "#FFFAD7",
         },
