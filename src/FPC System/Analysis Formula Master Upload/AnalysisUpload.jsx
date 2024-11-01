@@ -71,7 +71,7 @@ const AnalysisUpload = () => {
   return (
     <Content>
       {/* <Tag>test</Tag> */}
-      <div style={{ display: "flex", alignItems: "center", margin: '20px' }}>
+      <div style={{ display: "flex", alignItems: "center"}}>
     <h1 style={{
       background: '#CA965C',
       borderRadius: '25px',
@@ -97,7 +97,8 @@ const AnalysisUpload = () => {
       /> */}
       Analysis Formula Master Upload
     </h1>
-  </div><div style={{ display: "flex", alignItems: "flex-start" }}>
+  </div>
+  <div style={{ display: "flex", alignItems: "flex-start" }}>
         <div style={{ marginLeft: "30px" }}>
           <span style={{ fontSize: "14px" }}>Unit</span>
           <Select

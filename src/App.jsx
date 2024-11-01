@@ -22,7 +22,7 @@ const App = () => {
   return (
     <LoadingProvider>
     <Router > 
-      <Layout style={{marginBottom:'65px'}}>
+      <Layout style={{marginBottom:'30px'}}>
         <Header/>
       </Layout>
       <Layout>
