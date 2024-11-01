@@ -4,8 +4,11 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { notification } from "antd";
 import { CloseCircleOutlined, WarningOutlined } from "@ant-design/icons";
+import { useLoading } from "../../component/loading/fn_loading";
+
 
 function fn_QA_ORT_WorkingRecord() {
+   const { showLoading, hideLoading } = useLoading();
   const [opFactory, setOpFactory] = useState([
     { value: "A1", label: "A1" },
     { value: "N1", label: "N1" },
@@ -47,6 +50,8 @@ function fn_QA_ORT_WorkingRecord() {
   const Btn_Search = async () => {
     // console.log("Btn_Search",drpFactory, drpProductType, drpInPut, drpOutPut, inputProductName, inputTestItem, inputLotNo, inputWeekNo, inputSerialNo, selectedDateFromIn, selectedDateFromOut, selectedDateToIn, selectedDateToOut);
     setLoading(true);
+    showLoading('กำลังค้นหา กรุณารอสักครู่');
+    // showLoading();
     if (drpFactory.trim() === "" || drpProductType.trim() === "") {
       openNotification("Error");
       setTimeout(() => {
@@ -77,11 +82,13 @@ function fn_QA_ORT_WorkingRecord() {
           setDataSource(data);
           setShowTable(true);
           setLoading(false);
+          hideLoading();
         } else {
           openNotification("Warning");
           setDataSource("");
           setShowTable(false);
           setLoading(false);
+          hideLoading();
         }
       });
     // setTimeout(() => {

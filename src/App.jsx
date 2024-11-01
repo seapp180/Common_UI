@@ -3,6 +3,7 @@ import { Layout, theme } from "antd";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import "./StyleCommon.css";
+import { LoadingProvider } from './component/loading/fn_loading';
 
 //import File
 import Header from "./Header/Header";
@@ -10,6 +11,7 @@ import RDESMasterUpload from "./Condition System/RDESMasterUpload/RDESMasterUplo
 import Shipmentschedulemaintain from "./Condition System/Shipment schedule maintain/Shipmentschedulemaintain";
 import QA_ORT_WorkingRecord from "./Condition System/QA ORT Working Record/QA_ORT_WorkingRecord";
 import AnalysisUpload from "./FPC System/Analysis Formula Master Upload/AnalysisUpload";
+import Loading from "./component/loading/loading";
 
 const { Content } = Layout;
 const backendUrl = import.meta.env.VITE_SERVICE_URL;
@@ -27,6 +29,7 @@ const App = () => {
   };
 
   return (
+    <LoadingProvider> 
     <Router>
       <Layout>
         <Header/>
@@ -55,6 +58,10 @@ const App = () => {
                   element={<QA_ORT_WorkingRecord />}
                 />
                  <Route
+                  path="/CommonSystem/ConditionSystem/Loading"
+                  element={<Loading />}
+                />
+                 <Route
                   path="/CommonSystem/FPCSystem/AnalysisFormulaMaster"
                   element={<AnalysisUpload />}
                 />
@@ -64,6 +71,7 @@ const App = () => {
         </Layout>
       </Layout>
     </Router>
+    </LoadingProvider> 
   );
 };
 
