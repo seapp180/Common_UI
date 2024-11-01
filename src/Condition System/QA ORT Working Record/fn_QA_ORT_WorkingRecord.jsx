@@ -115,9 +115,23 @@ function fn_QA_ORT_WorkingRecord() {
     setShowTable(false);
   };
 
+  // const Btn_Excel = async () => {
+  //   showLoading('กรุณารอสักครู่');
+  //   await  FN_ExportGridView("QA_ORT_working_record" + ".xlsx", dataSource);
+  //   hideLoading();
+  // };
   const Btn_Excel = async () => {
-  
-    FN_ExportGridView("QA_ORT_working_record" + ".xlsx", dataSource);
+    showLoading('กำลังดาวน์โหลด กรุณารอสักครู่');
+    await new Promise(resolve => setTimeout(resolve, 100));
+    try {
+      await FN_ExportGridView("QA_ORT_working_record" + ".xlsx", dataSource);
+    } catch (error) {
+      console.error("Export error:", error);
+    } finally {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      hideLoading();
+      
+    }
   };
 
   const FN_ExportGridView = async (namefile, data) => {
@@ -188,6 +202,7 @@ function fn_QA_ORT_WorkingRecord() {
       const blob = new Blob([buffer], { type: "application/octet-stream" });
       saveAs(blob, `${namefile}`);
     });
+  
   };
 //   const FN_ExportGridView = async (namefile, data) => {
     
