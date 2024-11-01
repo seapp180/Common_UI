@@ -50,7 +50,7 @@ console.log(partweb,'params')
 
       setPageHeader(
         <span style={stylePageHeader()}>
-          <Avatar src={ImgHome} shape="square" />&nbsp;Condition System
+          <Avatar src={ImgReport} shape="square" />&nbsp;Condition System
         </span>
       );
     }
@@ -76,7 +76,7 @@ console.log(partweb,'params')
       marginLeft: '16px',
       fontSize: '28px',
       fontWeight: 'bold',
-      color: '#000000',
+      color: '#fff',
       fontFamily: 'Varela Round, sans-serif', // แก้ไขตรงนี้
     };
   };
@@ -94,7 +94,8 @@ console.log(partweb,'params')
     alignItems: 'center',
     justifyContent: 'space-between', // จัดวางแบบชิดซ้ายและขวา
     padding: '0 16px', // เพิ่ม padding ซ้าย-ขวา
-    background: '#C6DBF2'
+    background: '#705C53',
+    // color:'#fff'
   }}
 >
   <div style={{ display: 'flex', alignItems: 'center',marginLeft:'20px' }}>

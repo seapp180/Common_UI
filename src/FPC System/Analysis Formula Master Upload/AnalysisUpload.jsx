@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Layout, Button, Table, Select, Modal,Spin } from "antd";
+import { Layout, Button, Table, Select, Modal,Spin,Tag,Avatar } from "antd";
 import axios from "axios";
 import {
   SearchOutlined,
@@ -15,6 +15,7 @@ import {
 import { fn_AnalysisUpload } from "./fn_AnalysisUpload";
 import "./AnalysisUpload.css";
 import ImgExcel from "../../assets/excel.png";
+import Imgchemistry from '../../assets/chemistry.png'
 
 //
 const { Content } = Layout;
@@ -69,9 +70,34 @@ const AnalysisUpload = () => {
 
   return (
     <Content>
-      
-      <h1>Analysis Formula Master Upload</h1>
-      <div style={{ display: "flex", alignItems: "flex-start" }}>
+      {/* <Tag>test</Tag> */}
+      <div style={{ display: "flex", alignItems: "center", margin: '20px' }}>
+    <h1 style={{
+      background: '#CA965C',
+      borderRadius: '25px',
+      paddingLeft: '15px',
+      paddingRight: '15px',
+      color: '#fff',
+      paddingTop: '10px', // เพิ่ม padding เพื่อให้มีพื้นที่มากขึ้น
+      paddingBottom: '10px',
+      display: 'flex',
+      alignItems: 'center',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // เพิ่มเงาให้กับ h1
+      width: 'auto', // ปรับให้ความกว้างเป็นอัตโนมัติ
+    }}>
+      {/* <Avatar 
+        src={Imgchemistry} 
+        alt="icon" 
+        size={40} 
+        style={{ 
+          marginRight: '10px', 
+          borderRadius: '5px',
+          // border: '2px solid #fff', // ขอบสีขาวรอบ Avatar
+        }} 
+      /> */}
+      Analysis Formula Master Upload
+    </h1>
+  </div><div style={{ display: "flex", alignItems: "flex-start" }}>
         <div style={{ marginLeft: "30px" }}>
           <span style={{ fontSize: "14px" }}>Unit</span>
           <Select
@@ -195,14 +221,14 @@ const AnalysisUpload = () => {
           <Button
             icon={<CloseOutlined />}
             danger
-            type="primary"
+            type="primary" 
             style={{ marginTop: "5px" }}
             onClick={() => Clear()}
           >
             Clear{" "}
           </Button>{" "}
           &nbsp;&nbsp;
-          <Button icon={<UploadOutlined />} onClick={() => showPopUp()}>
+          <Button icon={<UploadOutlined />} onClick={() => showPopUp() } style={{marginTop:'5px'}}>
             {" "}
             Upload File
           </Button>
