@@ -30,8 +30,7 @@ function fn_AnalysisUpload() {
   const [SL_Unit, setSL_Unit] = useState(null);
   const [DataSearch, setDataSearch] = useState([]);
   const [UploadOpen, setUploadOpen] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState([]);
-  const [dataFile, SetdataFile] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);  const [dataFile, SetdataFile] = useState([]);
   const [FileName, setFileName] = useState("");
   const [DisableSave, setDisableSave] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
@@ -205,84 +204,146 @@ function fn_AnalysisUpload() {
   const readExcelData = (file) => {
     const reader = new FileReader();
     reader.onload = (e) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
 
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-        const filteredData = jsonData
-            .map((row) =>
-                row.map((cell) =>
-                    cell === null || cell === undefined || cell === "" ? "" : cell
-                )
-            )
-            .filter((row) => row.some((cell) => cell !== ""));
+      const filteredData = jsonData
+        .map((row) =>
+          row.map((cell) =>
+            cell === null || cell === undefined || cell === "" ? "" : cell
+          )
+        )
+        .filter((row) => row.some((cell) => cell !== ""));
 
-        console.log(filteredData, "filteredData");
+      console.log(filteredData, "filteredData");
 
-        const datajson = filteredData.slice(2).map((row) => ({ // ข้าม 2 แถวแรก
-            // UNIT : row[1] || "", // เริ่มจากคอลัมน์ B
-            // PROCESS: row[2] || "",
-            // MACHINE: row[3] ,
-            BATH : row[4] || "",
-            CHEMICAL : row[5] || "",
-            SEQ: row[6] || "",
-            INPUT : '', //row[7],
-            FORMULA : row[8],
-            FORMULA_REFER1 : row[9],
-            FORMULA_REFER2 : row[10],
-            REPLENISHER : row[11],
-            REPLENISHER_REFER1 : row[12],
-            REPLENISHER_REFER2 : row[13],
-            UNIT : row[14],
-            TARGET : row[15],
-            LCL : row[16],
-            UCL : row[17],
-            LSL : row[18],
-            USL : row[19],
-            REMARK : '',
-        }))
-        // กรองเฉพาะแถวที่มี PRODUCT และ PROCESS ไม่เป็นค่าว่าง
-        // .filter((row) => row.PRODUCT !== "" || row.PROCESS !== "");
+      const datajson = filteredData.slice(2).map((row) => ({
+        // ข้าม 2 แถวแรก
+        // UNIT : row[1] || "", // เริ่มจากคอลัมน์ B
+        // PROCESS: row[2] || "",
+        // MACHINE: row[3] ,
+        BATH: row[4] || "",
+        CHEMICAL: row[5] || "",
+        SEQ: row[6] || "",
+        INPUT: "", //row[7],
+        FORMULA: row[8],
+        FORMULA_REFER1: row[9],
+        FORMULA_REFER2: row[10],
+        REPLENISHER: row[11],
+        REPLENISHER_REFER1: row[12],
+        REPLENISHER_REFER2: row[13],
+        UNIT: row[14],
+        TARGET: row[15],
+        LCL: row[16],
+        UCL: row[17],
+        LSL: row[18],
+        USL: row[19],
+        REMARK: "",
+      }));
+      // กรองเฉพาะแถวที่มี PRODUCT และ PROCESS ไม่เป็นค่าว่าง
+      // .filter((row) => row.PRODUCT !== "" || row.PROCESS !== "");
 
-        setSelectedFiles(datajson);
-        console.log(datajson, "datajson");
+      setSelectedFiles(datajson);
+      console.log(datajson, "datajson");
     };
 
     reader.readAsArrayBuffer(file);
-};
+  };
 
-const UploadFile = () => {
-  console.log('upload',selectedFiles)
-  if(SL_MCPopUp==null){
-    Swal.fire({
-      icon: "error",
-      title: "Please Select Machine",
-    });
-    return
-  }
-  else{
-    for (let i = 0; i < selectedFiles.length; i++) {
-      let bath =selectedFiles[i].BATH
-      let chem = selectedFiles[i].CHEMICAL
-      let seq = selectedFiles[i].SEQ
-      let formula = selectedFiles[i].FORMULA
-      const countFomula = (formula.match(/\b(V1|V2|V3|V4)\b/g) || []).length
-      let remark =''
-      if(bath==''&&chem==''&&seq==''){
-        remark='Not Found Bath or Chemical or Seq'
+  const UploadFile = async () => {
+    // console.log('upload',selectedFiles)
+    if (SL_MCPopUp == null) {
+      Swal.fire({
+        icon: "error",
+        title: "Please Select Machine",
+      });
+      return;
+    } else {
+      for (let i = 0; i < selectedFiles.length; i++) {
+        let dataChem = "";
+        let bathValue = "";
+        let bath = selectedFiles[i].BATH;
+        await axios //find Bath Value 
+          .post("/api/Analysis_Formular/GetBathValue", {
+            Bath: selectedFiles[i].BATH,
+          })
+          .then((res) => {
+            bathValue = res.data;
+          });
+        await axios //get Chem 
+          .post("/api/Analysis_Formular/GetChemical", {
+            PARAMETER_MC: SL_MCPopUp,
+            PARAMETER_BATH: bathValue,
+          })
+          .then((res) => {
+            dataChem = res.data;
+          });
+        let chem = selectedFiles[i].CHEMICAL;
+        let seq = selectedFiles[i].SEQ;
+        let formula = selectedFiles[i].FORMULA;
+        const countFomula = (formula.match(/\b(V1|V2|V3|V4)\b/g) || []).length;
+        let formulaRef1 = formula.match(/\bREF_V1\b/g);
+        let formulaRef2 = formula.match(/\bREF2_V1\b/g);
+        const openParenthesesCount = (formula.match(/\(/g) || []).length;
+        const closeParenthesesCount = (formula.match(/\)/g) || []).length;
+        let remark = "";
+
+        //-----------------------------------------------1
+        if (bath == "" && chem == "" && seq == "") {
+          remark = "Not Found Bath or Chemical or Seq";
+        }
+        //-----------------------------------------------3-6
+        if (countFomula != 0) {
+          selectedFiles[i].INPUT = countFomula;
+        }
+        //------------------------------------------------ข้อ7
+        if (formulaRef1 != null) {
+          console.log(selectedFiles[i].FORMULA_REFER1, ":", "Formular1" );
+          if (selectedFiles[i].FORMULA_REFER1 != "") {
+            console.log(SL_MCPopUp, ":", "Machince", bathValue);
+            const CheckChem = dataChem.find(item => item.label === selectedFiles[i].FORMULA_REFER1);
+            if (CheckChem) {
+              
+              console.log('พบบบบ',selectedFiles[i].FORMULA_REFER1);
+            } 
+            else{
+              console.log('Chemical ไม่อยู่ใน MC และ Bath เดียวกัน',selectedFiles[i].FORMULA_REFER1);
+              remark='Chemical Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน'
+            }
+          } else {
+            remark = "Not Found Fomula Refer1";
+          }
+        }
+        //------------------------------------------------ข้อ8
+        if (formulaRef2 != null) {
+          console.log(selectedFiles[i].FORMULA_REFER2, ":", "Formular2" );
+          if (selectedFiles[i].FORMULA_REFER1 != "") {
+            console.log(SL_MCPopUp, ":", "Machince", bathValue);
+            const CheckChem = dataChem.find(item => item.label === selectedFiles[i].FORMULA_REFER2);
+            if (!CheckChem) {
+               remark='Chemical Refer2  ไม่อยู่ใน MC และ Bath เดียวกัน'
+               console.log('Chemical ไม่อยู่ใน MC และ Bath เดียวกัน2',selectedFiles[i].FORMULA_REFER1);
+            } 
+          } else {
+            remark = "Not Found Fomula Refer1";
+          }
+        }
+        //------------------------------------------------ข้อ9
+        if(formulaRef1!=null||formulaRef2!=null){
+          selectedFiles[i].INPUT = '';
+        }
+        //------------------------------------------------ข้อ10
+        if (openParenthesesCount != closeParenthesesCount) {
+          remark=  'วงเล็บเปิด-ปิดไม่ครบถ้วน'
+        } 
+        selectedFiles[i].REMARK = remark;
       }
-      if(countFomula!=0){
-        selectedFiles[i].REMARK=countFomula
-      }
-      
-      console.log(formula,':',countFomula)
-      selectedFiles[i].REMARK=remark
     }
-  }
-}
-
+    console.log(selectedFiles,'selectedFiles')
+  };
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -417,24 +478,24 @@ const UploadFile = () => {
 
     const headerRowCount = 2;
     for (let rowIndex = 1; rowIndex <= headerRowCount; rowIndex++) {
-        const row = worksheet.getRow(rowIndex);
-        row.eachCell((cell) => {
-            cell.fill = {
-                type: "pattern",
-                pattern: "solid",
-                fgColor: { argb: "FFFF00" },
-            };
-            cell.font = {
-                name: "Roboto",
-                size: 9,
-                bold: true,
-            };
-            // จัดตำแหน่งข้อความให้อยู่กลางเซลล์
-            cell.alignment = {
-                horizontal: 'center',
-                vertical: 'middle'
-            };
-        });
+      const row = worksheet.getRow(rowIndex);
+      row.eachCell((cell) => {
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "FFFF00" },
+        };
+        cell.font = {
+          name: "Roboto",
+          size: 9,
+          bold: true,
+        };
+        // จัดตำแหน่งข้อความให้อยู่กลางเซลล์
+        cell.alignment = {
+          horizontal: "center",
+          vertical: "middle",
+        };
+      });
     }
     worksheet.eachRow((row, rowIndex) => {
       row.eachCell((cell, colIndex) => {

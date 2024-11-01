@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Layout, Button, Table, Select, Modal } from "antd";
+import { Layout, Button, Table, Select, Modal,Spin } from "antd";
 import axios from "axios";
 import {
   SearchOutlined,
@@ -69,6 +69,7 @@ const AnalysisUpload = () => {
 
   return (
     <Content>
+      
       <h1>Analysis Formula Master Upload</h1>
       <div style={{ display: "flex", alignItems: "flex-start" }}>
         <div style={{ marginLeft: "30px" }}>

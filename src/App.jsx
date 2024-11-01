@@ -16,29 +16,20 @@ const backendUrl = import.meta.env.VITE_SERVICE_URL;
 axios.defaults.baseURL = backendUrl;
 
 const App = () => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
-  const [collapsed, setCollapsed] = useState(true);
-
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
 
   return (
-    <Router>
-      <Layout>
+    <Router > 
+      <Layout style={{marginBottom:'65px'}}>
         <Header/>
       </Layout>
       <Layout>
-        <Layout>
+        <Layout style={{background:'#FFF8F3'}}>
           <Content className="ContentAPP">
             <div
               style={{
-                padding: 24,
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG,
+                // padding: 24,
+                // background: colorBgContainer,
+                // borderRadius: borderRadiusLG,
               }}
             >
               <Routes>

@@ -16,10 +16,10 @@ const CustomHeader = () => {
   const [PageHeader, setPageHeader] = useState('');
   const url = window.location.href;
   const params = new URLSearchParams(window.location.search);
-  const partweb = url.split('/').pop().split('?')[0];
+  const partweb = url.split('/')[4]; 
   const loginID  = params.get("loginID");
   const systemID  = params.get("systemID");
-
+console.log(partweb,'params')
   useEffect(() => {
     if (partweb === 'RDESMasterUpload') {
       setPageHeader(
