@@ -20,7 +20,7 @@ import ImgExcel from "../../assets/excel.png";
 const { Content } = Layout;
 
 const AnalysisUpload = () => {
-  const {     
+  const {
     columns,
     Unit,
     Process,
@@ -44,7 +44,27 @@ const AnalysisUpload = () => {
     handlePopUpCancel,
     UploadOpen,
     handleDrop,
-    handleFileUpload,selectedFiles,dataFile,FileName,DisableSave,loadingSave,ClearFile,GetFileFormat
+    handleFileUpload,
+    selectedFiles,
+    dataFile,
+    FileName,
+    DisableSave,
+    loadingSave,
+    ClearFile,
+    GetFileFormat,
+    BtnExport,
+    loadingSearch,
+    Clear,
+    HandleUnitPopUp,
+    HandleProcessPopUp,
+    HandleMachinePopUp,
+    SL_ProcessPopUp,
+    SL_UnitPopUp,
+    SL_MCPopUp,
+    UnitPopUp,
+    ProcessPopUp,
+    MCPopUp,
+    UploadFile,
   } = fn_AnalysisUpload();
 
   return (
@@ -162,18 +182,26 @@ const AnalysisUpload = () => {
         <div style={{ marginLeft: "30px" }}>
           <br />
           <Button
-            icon={<SearchOutlined />}
-            // icon={loadingSearch ? <LoadingOutlined /> : <SearchOutlined />}
-            style={{ background: "#343131", color: "#fff", marginTop: "5px" }}
-              onClick={() => Search()}
+          
+            type="primary"
+            icon={loadingSearch ? <LoadingOutlined /> : <SearchOutlined />}
+            style={{ background: "#5AA8F5", color: "#fff", marginTop: "5px" }}
+            onClick={() => Search()}
           >
             Search{" "}
           </Button>{" "}
           &nbsp;&nbsp;
           <Button
-            icon={<UploadOutlined />}
-              onClick={() => showPopUp()}
+            icon={<CloseOutlined />}
+            danger
+            type="primary"
+            style={{ marginTop: "5px" }}
+            onClick={() => Clear()}
           >
+            Clear{" "}
+          </Button>{" "}
+          &nbsp;&nbsp;
+          <Button icon={<UploadOutlined />} onClick={() => showPopUp()}>
             {" "}
             Upload File
           </Button>
@@ -189,6 +217,7 @@ const AnalysisUpload = () => {
               style={{ width: 20, height: 20 }}
             />
           }
+          onClick={() => BtnExport()}
         >
           Export Excel
         </Button>
@@ -196,29 +225,101 @@ const AnalysisUpload = () => {
 
       <Table
         columns={columns}
-        style={{ marginTop: "5px"}}
-        className="tableSummary"
-          dataSource={DataSearch}
+        style={{ marginTop: "5px" }}
+        className="tableSerachAnalysis"
+        dataSource={DataSearch}
         bordered
         pagination={false}
         scroll={{ x: "max-content", y: 310 }}
       ></Table>
-            <Modal
+      <Modal
         open={UploadOpen}
         footer={null}
         onCancel={handlePopUpCancel}
         width={"90%"}
       >
-        <div style={{ display: "flex", alignItems: "flex-start" }}
-         onDragOver={(e) => e.preventDefault()}
-         onDrop={handleDrop}
+        
+        <div style={{ display: "flex", alignItems: "flex-start" }}>
+          <div style={{}}>
+            <span style={{ fontSize: "14px" }}>Unit</span>
+            <Select
+              showSearch
+              value={SL_UnitPopUp}
+              style={{
+                width: "200px",
+                display: "block",
+                marginTop: "5px",
+                marginLeft: "5px",
+              }}
+              placeholder="Select Unit"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={UnitPopUp}
+              onChange={HandleUnitPopUp}
+            />
+          </div>
+        
+          <div style={{ marginLeft: "30px" }}>
+            <span style={{ fontSize: "14px" }}>Process</span>
+            <Select
+              showSearch
+              value={SL_ProcessPopUp}
+              style={{
+                width: "200px",
+                display: "block",
+                marginTop: "5px",
+                marginLeft: "5px",
+              }}
+              placeholder="Select Process"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={ProcessPopUp}
+              onChange={HandleProcessPopUp}
+            />
+          </div>
+
+          <div style={{ marginLeft: "30px" }}>
+            <span style={{ fontSize: "14px" }}>Machine</span>
+            <Select
+              showSearch
+              value={SL_MCPopUp}
+              style={{
+                width: "200px",
+                display: "block",
+                marginTop: "5px",
+                marginLeft: "5px",
+              }}
+              placeholder="Select Machine"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.label ?? "")
+                  .toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+              options={MCPopUp}
+              onChange={HandleMachinePopUp}
+            />
+          </div>
+        </div>
+        <div
+          style={{ display: "flex", alignItems: "flex-start" }}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}
         >
           <input
-               type="file"
-               multiple
-               onChange={handleFileUpload}
-               style={{ display: "none" }}
-               id="fileInput"
+            type="file"
+            multiple
+            onChange={handleFileUpload}
+            style={{ display: "none" }}
+            id="fileInput"
           />
           <label htmlFor="fileInput" className="bt_ChooseFile">
             <CloudUploadOutlined
@@ -229,7 +330,12 @@ const AnalysisUpload = () => {
             <br />
             or
             <br />
-            <Button size="small"  onClick={() =>document.getElementById('fileInput').click()}>Browse files</Button>
+            <Button
+              size="small"
+              onClick={() => document.getElementById("fileInput").click()}
+            >
+              Browse files
+            </Button>
             <br />
             <span style={{ fontSize: "12px", color: "red" }}>
               **.xlsx or .xls only
@@ -240,7 +346,6 @@ const AnalysisUpload = () => {
             icon={<FileOutlined />}
             style={{ marginTop: "auto" }}
             onClick={() => GetFileFormat()}
-
           >
             Fomat File
           </Button>
@@ -249,12 +354,12 @@ const AnalysisUpload = () => {
           style={{ display: "flex", alignItems: "center", marginTop: "10px" }}
         >
           <div
-          className="File_name"
+            className="File_name"
             style={{
-              display: FileName === '' ? 'none' : 'flex',
+              display: FileName === "" ? "none" : "flex",
             }}
           >
-           <FileExcelOutlined style={{ marginRight: "5px", color: "green" }} />
+            <FileExcelOutlined style={{ marginRight: "5px", color: "green" }} />
             <span style={{ fontSize: "14px" }}>{FileName}</span>
             <div
               style={{
@@ -263,9 +368,10 @@ const AnalysisUpload = () => {
                 alignItems: "center",
               }}
             >
-              <CloseOutlined style={{ marginLeft: "5px", color: "red" }}  
-              onClick={() => ClearFile()}
-               />
+              <CloseOutlined
+                style={{ marginLeft: "5px", color: "red" }}
+                onClick={() => ClearFile()}
+              />
             </div>
           </div>
           <Button
@@ -275,9 +381,9 @@ const AnalysisUpload = () => {
               marginTop: "0",
               background: "#5AA8F5",
               color: "#fff",
-              display: FileName === '' ? 'none' : 'flex',
+              display: FileName === "" ? "none" : "flex",
             }}
-            // onClick={() => UploadFile()}
+            onClick={() => UploadFile()}
           >
             Upload
           </Button>
@@ -287,24 +393,23 @@ const AnalysisUpload = () => {
           <Table
             // columns={columnsUpload}
             style={{ width: "99%" }}
-            className="tableSummary"
+            className="tableSerachAnalysis"
             dataSource={dataFile}
             pagination={false}
-            scroll={{ x: 'max-content',y:310 }}
+            scroll={{ x: "max-content", y: 310 }}
             size="small"
           ></Table>
         </div>
         <br />
         <div
           style={{
-            display: dataFile.length <=0 ? 'none' : 'flex',
+            display: dataFile.length <= 0 ? "none" : "flex",
             justifyContent: "center",
             marginTop: "10px",
           }}
         >
           <Button
-          
-          icon={loadingSave ? <LoadingOutlined /> : <SaveOutlined />}
+            icon={loadingSave ? <LoadingOutlined /> : <SaveOutlined />}
             disabled={DisableSave}
             style={{ marginLeft: "5px", background: "#399918", color: "#fff" }}
             // onClick={() => Save()}

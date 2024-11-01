@@ -3,6 +3,8 @@ import axios from "axios";
 import Column from "antd/es/table/Column";
 import Swal from "sweetalert2";
 import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 
 import { Button, Tag } from "antd";
 
@@ -11,8 +13,9 @@ import {
   SaveOutlined,
   UploadOutlined,
   CloseCircleOutlined,
-  EditOutlined
+  EditOutlined,
 } from "@ant-design/icons";
+import { se } from "date-fns/locale";
 
 function fn_AnalysisUpload() {
   const [Unit, setUnit] = useState([]);
@@ -32,14 +35,55 @@ function fn_AnalysisUpload() {
   const [FileName, setFileName] = useState("");
   const [DisableSave, setDisableSave] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+
+  const [SL_UnitPopUp, setSL_UnitPopUp] = useState(null);
+  const [SL_ProcessPopUp, setSL_ProcessPopUp] = useState(null);
+  const [SL_MCPopUp, setSL_MCPopUp] = useState(null);
+
+  const [UnitPopUp, setUnitPopUp] = useState([]);
+  const [ProcessPopUp, setProcessPopUp] = useState([]);
+  const [MCPopUp, setMCPopUp] = useState([]);
 
   useEffect(() => {
     GetUnit();
-    //  HandleUnit()
-    //  GetMachine()
-    //  GetBath()
-    //  Get_Ch()
+    GetUnitPopUP();
   }, []);
+
+  const GetUnitPopUP = () => {
+    axios.post("/api/Analysis_Formular/GetUnitPopup", {}).then((res) => {
+      console.log("UnitPop", res.data);
+      setUnitPopUp(res.data);
+    });
+  };
+
+  const HandleUnitPopUp = (unit) => {
+    setSL_UnitPopUp(unit);
+    axios
+      .post("/api/Analysis_Formular/GetProcessPopup", {
+        PARAMETER_UNIT: unit,
+      })
+      .then((res) => {
+        console.log("ProcessPop", res.data);
+        setProcessPopUp(res.data);
+      });
+  };
+
+  const HandleProcessPopUp = (process) => {
+    setSL_ProcessPopUp(process);
+    axios
+      .post("/api/Analysis_Formular/GetMachinePopup", {
+        PARAMETER_PROCESS: process,
+      })
+      .then((res) => {
+        console.log("McPop", res.data);
+        setMCPopUp(res.data);
+      });
+  };
+
+  const HandleMachinePopUp = (Mc) => {
+    setSL_MCPopUp(Mc);
+  };
 
   const HandleCh = (ch) => {
     setSL_Ch(ch);
@@ -101,17 +145,45 @@ function fn_AnalysisUpload() {
       });
   };
 
+  const Clear = () => {
+    setSL_Bath(null);
+    setSL_Ch(null);
+    setSL_Machine(null);
+    setSL_Process(null);
+    setSL_Unit(null);
+    setDataSearch([]);
+  };
+
   const Search = () => {
-    axios.post("/api/Analysis_Formular/Search_Analysis", {
-      PARAMETER_UNIT:SL_Unit||'',
-      PARAMETER_PROCESS:SL_Process||'',
-      PARAMETER_MC:SL_Machine||'',
-      PARAMETER_BATH:SL_Bath||'',
-      PARAMETER_CHEMICAL:SL_Ch||''
-    }).then((res) => {
-      console.log("Search", res.data);
-      setDataSearch(res.data);
-    });
+    setLoadingSearch(true);
+    if (
+      SL_Bath != null ||
+      SL_Ch != null ||
+      SL_Machine != null ||
+      SL_Process != null ||
+      SL_Unit != null
+    ) {
+      axios
+        .post("/api/Analysis_Formular/Search_Analysis", {
+          PARAMETER_UNIT: SL_Unit || "",
+          PARAMETER_PROCESS: SL_Process || "",
+          PARAMETER_MC: SL_Machine || "",
+          PARAMETER_BATH: SL_Bath || "",
+          PARAMETER_CHEMICAL: SL_Ch || "",
+        })
+        .then((res) => {
+          setTimeout(() => {
+            setDataSearch(res.data);
+            setLoadingSearch(false);
+          }, 500);
+        });
+    } else {
+      setLoadingSearch(false);
+      Swal.fire({
+        icon: "error",
+        title: "Please Select Unit",
+      });
+    }
   };
 
   const showPopUp = () => {
@@ -120,16 +192,97 @@ function fn_AnalysisUpload() {
 
   const handlePopUpOk = () => {
     setUploadOpen(false);
-    
   };
 
-  const handlePopUpCancel =async () => {
-    SetdataFile([])
+  const handlePopUpCancel = async () => {
+    SetdataFile([]);
     setUploadOpen(false);
     setFileName("");
     setSelectedFiles([]);
     document.getElementById("fileInput").value = "";
   };
+
+  const readExcelData = (file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        const filteredData = jsonData
+            .map((row) =>
+                row.map((cell) =>
+                    cell === null || cell === undefined || cell === "" ? "" : cell
+                )
+            )
+            .filter((row) => row.some((cell) => cell !== ""));
+
+        console.log(filteredData, "filteredData");
+
+        const datajson = filteredData.slice(2).map((row) => ({ // ข้าม 2 แถวแรก
+            // UNIT : row[1] || "", // เริ่มจากคอลัมน์ B
+            // PROCESS: row[2] || "",
+            // MACHINE: row[3] ,
+            BATH : row[4] || "",
+            CHEMICAL : row[5] || "",
+            SEQ: row[6] || "",
+            INPUT : '', //row[7],
+            FORMULA : row[8],
+            FORMULA_REFER1 : row[9],
+            FORMULA_REFER2 : row[10],
+            REPLENISHER : row[11],
+            REPLENISHER_REFER1 : row[12],
+            REPLENISHER_REFER2 : row[13],
+            UNIT : row[14],
+            TARGET : row[15],
+            LCL : row[16],
+            UCL : row[17],
+            LSL : row[18],
+            USL : row[19],
+            REMARK : '',
+        }))
+        // กรองเฉพาะแถวที่มี PRODUCT และ PROCESS ไม่เป็นค่าว่าง
+        // .filter((row) => row.PRODUCT !== "" || row.PROCESS !== "");
+
+        setSelectedFiles(datajson);
+        console.log(datajson, "datajson");
+    };
+
+    reader.readAsArrayBuffer(file);
+};
+
+const UploadFile = () => {
+  console.log('upload',selectedFiles)
+  if(SL_MCPopUp==null){
+    Swal.fire({
+      icon: "error",
+      title: "Please Select Machine",
+    });
+    return
+  }
+  else{
+    for (let i = 0; i < selectedFiles.length; i++) {
+      let bath =selectedFiles[i].BATH
+      let chem = selectedFiles[i].CHEMICAL
+      let seq = selectedFiles[i].SEQ
+      let formula = selectedFiles[i].FORMULA
+      const countFomula = (formula.match(/\b(V1|V2|V3|V4)\b/g) || []).length
+      let remark =''
+      if(bath==''&&chem==''&&seq==''){
+        remark='Not Found Bath or Chemical or Seq'
+      }
+      if(countFomula!=0){
+        selectedFiles[i].REMARK=countFomula
+      }
+      
+      console.log(formula,':',countFomula)
+      selectedFiles[i].REMARK=remark
+    }
+  }
+}
+
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -149,6 +302,7 @@ function fn_AnalysisUpload() {
       });
     }
   };
+
   const ClearFile = () => {
     setFileName("");
     setSelectedFiles([]);
@@ -174,7 +328,11 @@ function fn_AnalysisUpload() {
 
   const GetFileFormat = () => {
     axios
-      .post("/api/Analysis_Formular/GetFileFormat", {}, { responseType: "blob" })
+      .post(
+        "/api/Analysis_Formular/GetFileFormat",
+        {},
+        { responseType: "blob" }
+      )
       .then((res) => {
         console.log(res.data, "GetFileFormat");
         const url = window.URL.createObjectURL(new Blob([res.data]));
@@ -191,16 +349,122 @@ function fn_AnalysisUpload() {
       });
   };
 
+  const BtnExport = async () => {
+    let nameFile = "";
+    if (DataSearch.length <= 0) {
+      Swal.fire({
+        icon: "error",
+        title: "No Data Export!",
+      });
+    } else {
+      nameFile = "Export.xls";
+
+      exportExcelFile(columns, DataSearch, nameFile);
+    }
+  };
+
+  const exportExcelFile = async (columns, data, NameFile) => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Sheet1");
+
+    const filteredColumns = columns.filter((col) => col.title !== "No.");
+    const mainHeaderRow = [
+      "No.",
+      ...filteredColumns.flatMap((col) =>
+        col.children ? Array(col.children.length).fill(col.title) : col.title
+      ),
+    ];
+
+    const mainHeader = worksheet.addRow(mainHeaderRow);
+
+    const subHeaderRow = [
+      "No.",
+      ...filteredColumns.flatMap((col) =>
+        col.children ? col.children.map((subCol) => subCol.title) : col.title
+      ),
+    ];
+    worksheet.addRow(subHeaderRow);
+
+    data.forEach((row, index) => {
+      const rowData = [
+        index + 1,
+        ...filteredColumns.flatMap((col) =>
+          col.children
+            ? col.children.map((subCol) => row[subCol.dataIndex] || "")
+            : row[col.dataIndex] || ""
+        ),
+      ];
+      worksheet.addRow(rowData);
+    });
+
+    // รวมเซลล์
+    worksheet.mergeCells("I1:K1");
+    worksheet.mergeCells("L1:N1");
+    worksheet.mergeCells("A1:A2");
+    worksheet.mergeCells("B1:B2");
+    worksheet.mergeCells("C1:C2");
+    worksheet.mergeCells("D1:D2");
+    worksheet.mergeCells("E1:E2");
+    worksheet.mergeCells("F1:F2");
+    worksheet.mergeCells("G1:G2");
+    worksheet.mergeCells("H1:H2");
+    worksheet.mergeCells("O1:O2");
+    worksheet.mergeCells("P1:P2");
+    worksheet.mergeCells("Q1:Q2");
+    worksheet.mergeCells("R1:R2");
+    worksheet.mergeCells("S1:S2");
+    worksheet.mergeCells("T1:T2");
+
+    const headerRowCount = 2;
+    for (let rowIndex = 1; rowIndex <= headerRowCount; rowIndex++) {
+        const row = worksheet.getRow(rowIndex);
+        row.eachCell((cell) => {
+            cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: "FFFF00" },
+            };
+            cell.font = {
+                name: "Roboto",
+                size: 9,
+                bold: true,
+            };
+            // จัดตำแหน่งข้อความให้อยู่กลางเซลล์
+            cell.alignment = {
+                horizontal: 'center',
+                vertical: 'middle'
+            };
+        });
+    }
+    worksheet.eachRow((row, rowIndex) => {
+      row.eachCell((cell, colIndex) => {
+        if (colIndex !== 21 && colIndex !== 22) {
+          cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" },
+          };
+        }
+      });
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const dataBlob = new Blob([buffer], { type: "application/octet-stream" });
+    saveAs(dataBlob, `${NameFile}.xlsx`);
+  };
+
   const columns = [
     {
       title: "No.",
       dataIndex: "No",
       key: "No.",
       render: (text, record, index) => {
-        return index + 1;
+        text = index + 1;
+        return text;
       },
       align: "center",
-      width:30
+      width: 30,
     },
     {
       title: "Unit",
@@ -219,7 +483,7 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:30
+      width: 30,
     },
     {
       title: "Machine",
@@ -229,7 +493,7 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:100
+      width: 100,
     },
     {
       title: "Bath",
@@ -239,7 +503,7 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:250
+      width: 250,
     },
     {
       title: "Chemical",
@@ -249,7 +513,7 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:120
+      width: 120,
     },
     {
       title: "Seq",
@@ -259,7 +523,7 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:30
+      width: 30,
     },
     {
       title: "Input",
@@ -269,7 +533,7 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:30
+      width: 30,
     },
     {
       title: "Formula",
@@ -282,7 +546,7 @@ function fn_AnalysisUpload() {
             return text;
           },
           align: "left",
-          width:400
+          width: 350,
         },
         {
           title: "Refer1",
@@ -292,7 +556,7 @@ function fn_AnalysisUpload() {
             return text;
           },
           align: "center",
-          width:50
+          width: 50,
         },
         {
           title: "Refer2",
@@ -302,11 +566,10 @@ function fn_AnalysisUpload() {
             return text;
           },
           align: "center",
-          width:50
+          width: 50,
         },
       ],
     },
-
     {
       title: "Replenisher",
       children: [
@@ -318,7 +581,7 @@ function fn_AnalysisUpload() {
             return text;
           },
           align: "left",
-          width:400
+          width: 350,
         },
         {
           title: "Refer1",
@@ -328,7 +591,7 @@ function fn_AnalysisUpload() {
             return text;
           },
           align: "center",
-          width:50
+          width: 50,
         },
         {
           title: "Refer2",
@@ -338,7 +601,7 @@ function fn_AnalysisUpload() {
             return text;
           },
           align: "center",
-          width:50
+          width: 50,
         },
       ],
     },
@@ -350,7 +613,7 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:50
+      width: 50,
     },
     {
       title: "Target",
@@ -360,7 +623,7 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:30
+      width: 30,
     },
     {
       title: "LCL",
@@ -370,7 +633,7 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:30
+      width: 30,
     },
     {
       title: "UCL",
@@ -380,7 +643,7 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:30
+      width: 30,
     },
     {
       title: "LSL",
@@ -390,7 +653,7 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:30
+      width: 30,
     },
     {
       title: "USL",
@@ -400,34 +663,27 @@ function fn_AnalysisUpload() {
         return text;
       },
       align: "center",
-      width:30
+      width: 30,
     },
     {
-      title: "EDIT",
-      dataIndex: "",
-      key: "",
       align: "center",
       render: (text, record, index) => {
-        console.log(record, "record");
+        // console.log(record, "record");
         text = (
           <Button
-            icon={  <EditOutlined />}
+            icon={<EditOutlined />}
             onClick={() => Btn_Delete(record.PRODUCT, record.PROCESS)}
             size="large"
           ></Button>
         );
         return text;
-
       },
-      width:30
+      width: 30,
     },
     {
-      title: "DELETE",
-      dataIndex: "",
-      key: "",
       align: "center",
       render: (text, record, index) => {
-        console.log(record, "record");
+        // console.log(record, "record");
         text = (
           <Button
             icon={<CloseOutlined style={{ color: "red" }} />}
@@ -437,11 +693,9 @@ function fn_AnalysisUpload() {
         );
         return text;
       },
-      width:30
+      width: 30,
     },
   ];
-
-  
 
   return {
     columns,
@@ -467,7 +721,27 @@ function fn_AnalysisUpload() {
     handlePopUpCancel,
     UploadOpen,
     handleDrop,
-    handleFileUpload,selectedFiles,dataFile,FileName,DisableSave,loadingSave,ClearFile,GetFileFormat
+    handleFileUpload,
+    selectedFiles,
+    dataFile,
+    FileName,
+    DisableSave,
+    loadingSave,
+    ClearFile,
+    GetFileFormat,
+    BtnExport,
+    loadingSearch,
+    Clear,
+    HandleUnitPopUp,
+    HandleProcessPopUp,
+    HandleMachinePopUp,
+    SL_ProcessPopUp,
+    SL_UnitPopUp,
+    SL_MCPopUp,
+    UnitPopUp,
+    ProcessPopUp,
+    MCPopUp,
+    UploadFile,
   };
 }
 
