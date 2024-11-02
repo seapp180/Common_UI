@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { Button, Tag } from "antd";
+import { useLoading } from "../../component/loading/fn_loading";
 
 import {
   CloseOutlined,
@@ -24,6 +25,7 @@ function fn_RDESMasterUpload() {
   const [dataFile, SetdataFile] = useState([]);
   const [FileName, setFileName] = useState("");
   const [DisableSave, setDisableSave] = useState(false);
+  const { showLoading, hideLoading } = useLoading();
 
   useEffect(() => {
     GetProduct();
@@ -36,6 +38,7 @@ function fn_RDESMasterUpload() {
   };
 
   const Bt_Search =async () => {
+    showLoading('กำลังค้นหา กรุณารอสักครู่');
     setLoadingSearch(true)
     axios
       .post("/api/RDESMasterUpload/Search", { Product: SL_Product })
@@ -43,6 +46,7 @@ function fn_RDESMasterUpload() {
         setTimeout(() => {
           setLoadingSearch(false)
           setDataSearch(res.data);
+          hideLoading();
         }, 1000);
       });
   };
@@ -230,6 +234,7 @@ function fn_RDESMasterUpload() {
 
   const Save = async () => {
     let Error = "";
+    showLoading('กำลังบันทึก กรุณารอสักครู่');
     setLoadingSave(true)
     try {
       for (let i = 0; i < dataFile.length; i++) {
@@ -268,12 +273,14 @@ function fn_RDESMasterUpload() {
           title: Error,
         });
         setLoadingSave(false)
+        hideLoading();
       } else {
         Swal.fire({
           icon: "success",
           title: "Save Completed",
         });
         setLoadingSave(false)
+        hideLoading();
         await handlePopUpCancel()
         await Bt_Search()
       }
@@ -284,6 +291,7 @@ function fn_RDESMasterUpload() {
       });
       console.error(err);
       setLoadingSave(false)
+      hideLoading();
       
     }
   };
