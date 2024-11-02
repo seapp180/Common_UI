@@ -33,7 +33,7 @@ background: #705C53;
 .TitleHeader{
     display: flex;
     align-items: center;
-    margin-left: 16px;
+    margin-left: 0px;
     font-size: 28px;
     font-weight: bold;
     color: #fff;

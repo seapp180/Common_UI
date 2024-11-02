@@ -70,7 +70,7 @@ const CustomHeader = () => {
   return (
     <Header className="Header">
       <div
-        style={{ display: "flex", alignItems: "center", marginLeft: "20px" }}
+        style={{ display: "flex", alignItems: "center", marginLeft: "0px" }}
       >
         <div className="demo-logo" />
         {PageHeader}

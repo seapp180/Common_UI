@@ -448,7 +448,7 @@ function fn_QA_ORT_WorkingRecord() {
       title: () => <div style={{ textAlign: "center" }}>Cond 2</div>,
       dataIndex: "cond_2",
       key: "cond_2",
-      render: (text) => <div style={{ width: "100px" }}>{text}</div>,
+      render: (text) => <div style={{ width: "250px" }}>{text}</div>,
       align: "left",
     },
     {
