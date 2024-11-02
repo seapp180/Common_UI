@@ -14,7 +14,7 @@ overflow:initial ;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); margin-left: 15px;
 }
 
 .Header{
@@ -33,7 +33,7 @@ background: #705C53;
 .TitleHeader{
     display: flex;
     align-items: center;
-    margin-left: 0px;
+    margin-left: 15px;
     font-size: 28px;
     font-weight: bold;
     color: #fff;
