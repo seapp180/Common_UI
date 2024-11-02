@@ -586,7 +586,7 @@ function QA_ORT_WorkingRecord() {
   const renderDesktopView = () => (
     <div>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <h2 className="TitlePage_h2">Analysis Formula Master Upload</h2>
+        <h2 className="TitlePage_h2">QA ORT WorkingRecord</h2>
       </div>
       <div>
         {/* 1 */}
@@ -1045,7 +1045,7 @@ function QA_ORT_WorkingRecord() {
   const renderTabletView = () => (
     <div>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <h2 className="TitlePage_h2">Analysis Formula Master Upload</h2>
+        <h2 className="TitlePage_h2">QA ORT WorkingRecord</h2>
       </div>
       {/* 1 */}
       <Row>
