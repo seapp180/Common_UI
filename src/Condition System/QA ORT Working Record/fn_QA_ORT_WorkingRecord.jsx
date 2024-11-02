@@ -4,8 +4,11 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { notification } from "antd";
 import { CloseCircleOutlined, WarningOutlined } from "@ant-design/icons";
+import { useLoading } from "../../component/loading/fn_loading";
+
 
 function fn_QA_ORT_WorkingRecord() {
+   const { showLoading, hideLoading } = useLoading();
   const [opFactory, setOpFactory] = useState([
     { value: "A1", label: "A1" },
     { value: "N1", label: "N1" },
@@ -47,6 +50,8 @@ function fn_QA_ORT_WorkingRecord() {
   const Btn_Search = async () => {
     // console.log("Btn_Search",drpFactory, drpProductType, drpInPut, drpOutPut, inputProductName, inputTestItem, inputLotNo, inputWeekNo, inputSerialNo, selectedDateFromIn, selectedDateFromOut, selectedDateToIn, selectedDateToOut);
     setLoading(true);
+    showLoading('กำลังค้นหา กรุณารอสักครู่');
+    // showLoading();
     if (drpFactory.trim() === "" || drpProductType.trim() === "") {
       openNotification("Error");
       setTimeout(() => {
@@ -77,11 +82,13 @@ function fn_QA_ORT_WorkingRecord() {
           setDataSource(data);
           setShowTable(true);
           setLoading(false);
+          hideLoading();
         } else {
           openNotification("Warning");
           setDataSource("");
           setShowTable(false);
           setLoading(false);
+          hideLoading();
         }
       });
     // setTimeout(() => {
@@ -108,9 +115,23 @@ function fn_QA_ORT_WorkingRecord() {
     setShowTable(false);
   };
 
+  // const Btn_Excel = async () => {
+  //   showLoading('กรุณารอสักครู่');
+  //   await  FN_ExportGridView("QA_ORT_working_record" + ".xlsx", dataSource);
+  //   hideLoading();
+  // };
   const Btn_Excel = async () => {
-  
-    FN_ExportGridView("QA_ORT_working_record" + ".xlsx", dataSource);
+    showLoading('กำลังดาวน์โหลด กรุณารอสักครู่');
+    await new Promise(resolve => setTimeout(resolve, 100));
+    try {
+      await FN_ExportGridView("QA_ORT_working_record" + ".xlsx", dataSource);
+    } catch (error) {
+      console.error("Export error:", error);
+    } finally {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      hideLoading();
+      
+    }
   };
 
   const FN_ExportGridView = async (namefile, data) => {
@@ -181,6 +202,7 @@ function fn_QA_ORT_WorkingRecord() {
       const blob = new Blob([buffer], { type: "application/octet-stream" });
       saveAs(blob, `${namefile}`);
     });
+  
   };
 //   const FN_ExportGridView = async (namefile, data) => {
     
@@ -426,7 +448,7 @@ function fn_QA_ORT_WorkingRecord() {
       title: () => <div style={{ textAlign: "center" }}>Cond 2</div>,
       dataIndex: "cond_2",
       key: "cond_2",
-      render: (text) => <div style={{ width: "100px" }}>{text}</div>,
+      render: (text) => <div style={{ width: "250px" }}>{text}</div>,
       align: "left",
     },
     {

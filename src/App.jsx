@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Layout, theme } from "antd";
+import { Layout } from "antd";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import "./StyleCommon.css";
+import { LoadingProvider } from './component/loading/fn_loading';
 
 //import File
 import Header from "./Header/Header";
@@ -16,29 +17,19 @@ const backendUrl = import.meta.env.VITE_SERVICE_URL;
 axios.defaults.baseURL = backendUrl;
 
 const App = () => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
-  const [collapsed, setCollapsed] = useState(true);
-
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
 
   return (
-    <Router>
-      <Layout>
+    <LoadingProvider>
+    <Router > 
+      <Layout >
         <Header/>
       </Layout>
       <Layout>
-        <Layout>
+        <Layout style={{background:'#FFF8F3'}}>
           <Content className="ContentAPP">
             <div
               style={{
-                padding: 24,
-                background: colorBgContainer,
-                borderRadius: borderRadiusLG,
+                paddingTop :65,
               }}
             >
               <Routes>
@@ -64,6 +55,7 @@ const App = () => {
         </Layout>
       </Layout>
     </Router>
+    </LoadingProvider> 
   );
 };
 

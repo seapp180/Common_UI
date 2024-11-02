@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Layout, Button, Table, Select, Modal } from "antd";
+import { Layout, Button, Table, Select, Modal, Spin, Tag, Avatar } from "antd";
 import axios from "axios";
 import {
   SearchOutlined,
@@ -15,6 +15,8 @@ import {
 import { fn_AnalysisUpload } from "./fn_AnalysisUpload";
 import "./AnalysisUpload.css";
 import ImgExcel from "../../assets/excel.png";
+import "../../StyleCommon.css";
+import Imgchemistry from "../../assets/chemistry.png";
 
 //
 const { Content } = Layout;
@@ -69,7 +71,9 @@ const AnalysisUpload = () => {
 
   return (
     <Content>
-      <h1>Analysis Formula Master Upload</h1>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <h2 className="TitlePage_h2">Analysis Formula Master Upload</h2>
+      </div>
       <div style={{ display: "flex", alignItems: "flex-start" }}>
         <div style={{ marginLeft: "30px" }}>
           <span style={{ fontSize: "14px" }}>Unit</span>
@@ -182,7 +186,6 @@ const AnalysisUpload = () => {
         <div style={{ marginLeft: "30px" }}>
           <br />
           <Button
-          
             type="primary"
             icon={loadingSearch ? <LoadingOutlined /> : <SearchOutlined />}
             style={{ background: "#5AA8F5", color: "#fff", marginTop: "5px" }}
@@ -201,7 +204,11 @@ const AnalysisUpload = () => {
             Clear{" "}
           </Button>{" "}
           &nbsp;&nbsp;
-          <Button icon={<UploadOutlined />} onClick={() => showPopUp()}>
+          <Button
+            icon={<UploadOutlined />}
+            onClick={() => showPopUp()}
+            style={{ marginTop: "10px" }}
+          >
             {" "}
             Upload File
           </Button>
@@ -230,15 +237,14 @@ const AnalysisUpload = () => {
         dataSource={DataSearch}
         bordered
         pagination={false}
-        scroll={{ x: "max-content", y: 310 }}
+        scroll={{ x: "max-content", y: 350 }}
       ></Table>
       <Modal
         open={UploadOpen}
         footer={null}
         onCancel={handlePopUpCancel}
-        width={"90%"}
+        width={"95%"}
       >
-        
         <div style={{ display: "flex", alignItems: "flex-start" }}>
           <div style={{}}>
             <span style={{ fontSize: "14px" }}>Unit</span>
@@ -262,7 +268,7 @@ const AnalysisUpload = () => {
               onChange={HandleUnitPopUp}
             />
           </div>
-        
+
           <div style={{ marginLeft: "30px" }}>
             <span style={{ fontSize: "14px" }}>Process</span>
             <Select

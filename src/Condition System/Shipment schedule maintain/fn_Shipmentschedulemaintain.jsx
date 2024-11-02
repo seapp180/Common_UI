@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import swal from "sweetalert";
 import dayjs from 'dayjs';
+import { useLoading } from "../../component/loading/fn_loading";
 
 function fn_Shipmentschedulemaintain() {
   const [txtProduct, settxtProduct] = useState("");
@@ -24,6 +25,9 @@ function fn_Shipmentschedulemaintain() {
   const SystemID = params.get("systemID");
 
   const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY'];
+
+  const { showLoading, hideLoading } = useLoading();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     settxtLineDisabled(true);
@@ -61,7 +65,18 @@ function fn_Shipmentschedulemaintain() {
   const handleChangeBuild = async (value) => {
     console.log(value)
     setselBuild(value.value);
-    getdata(value.value);
+    setLoading(true);
+    showLoading('กำลังโหลด กรุณารอสักครู่');
+    if (value && value.value) {
+      await getdata(value.value);
+      setTimeout(() => {
+      setLoading(false);
+      hideLoading();
+    }, 500);
+    } else {
+      setLoading(false);
+      hideLoading();
+    }
   };
 
   const getdata = async (strbuild) => {
