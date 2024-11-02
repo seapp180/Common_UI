@@ -7,3 +7,17 @@ margin: 0px 16px 0 !important;
 overflow:initial ;
 
 }
+
+.TitlePage_h2{
+background: #CA965C;
+border-radius: 25px;
+padding-left: 15px;
+padding-right: 15px;
+color: #fff;
+padding-top: 10px;
+padding-bottom: 10px;
+display: flex;
+align-items: center;
+box-shadow:0 4px 8px rgba(0, 0, 0, 0.2);
+width: auto; 
+}
