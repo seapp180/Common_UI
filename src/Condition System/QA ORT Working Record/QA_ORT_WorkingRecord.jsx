@@ -956,15 +956,15 @@ function QA_ORT_WorkingRecord() {
                       width: "96%",
                     }}
                     value={
-                      selectedDateFromIn === ""
+                      selectedDateFromOut === ""
                         ? undefined
-                        : moment(selectedDateFromIn, "YYYY-MM-DD")
+                        : moment(selectedDateFromOut, "YYYY-MM-DD")
                     }
                     onChange={(date) => {
                       if (date) {
-                        setSelectedFromIn(date.format("YYYYMMDD"));
+                        setSelectedFromOut(date.format("YYYYMMDD"));
                       } else {
-                        setSelectedFromIn("");
+                        setSelectedFromOut("");
                       }
                     }}
                     allowClear
@@ -982,15 +982,15 @@ function QA_ORT_WorkingRecord() {
                       width: "96%",
                     }}
                     value={
-                      selectedDateToIn === ""
+                      selectedDateToOut === ""
                         ? undefined
-                        : moment(selectedDateToIn, "YYYY-MM-DD")
+                        : moment(selectedDateToOut, "YYYY-MM-DD")
                     }
                     onChange={(date) => {
                       if (date) {
-                        setSelectedToIn(date.format("YYYYMMDD"));
+                        setSelectedToOut(date.format("YYYYMMDD"));
                       } else {
-                        setSelectedToIn("");
+                        setSelectedToOut("");
                       }
                     }}
                     allowClear
@@ -1386,15 +1386,15 @@ function QA_ORT_WorkingRecord() {
                     width: "96%",
                   }}
                   value={
-                    selectedDateFromIn === ""
+                    selectedDateFromOut === ""
                       ? undefined
-                      : moment(selectedDateFromIn, "YYYY-MM-DD")
+                      : moment(selectedDateFromOut, "YYYY-MM-DD")
                   }
                   onChange={(date) => {
                     if (date) {
-                      setSelectedFromIn(date.format("YYYYMMDD"));
+                      setSelectedFromOut(date.format("YYYYMMDD"));
                     } else {
-                      setSelectedFromIn("");
+                      setSelectedFromOut("");
                     }
                   }}
                   allowClear
@@ -1412,15 +1412,15 @@ function QA_ORT_WorkingRecord() {
                     width: "96%",
                   }}
                   value={
-                    selectedDateToIn === ""
+                    selectedDateToOut === ""
                       ? undefined
-                      : moment(selectedDateToIn, "YYYY-MM-DD")
+                      : moment(selectedDateToOut, "YYYY-MM-DD")
                   }
                   onChange={(date) => {
                     if (date) {
-                      setSelectedToIn(date.format("YYYYMMDD"));
+                      setSelectedToOut(date.format("YYYYMMDD"));
                     } else {
-                      setSelectedToIn("");
+                      setSelectedToOut("");
                     }
                   }}
                   allowClear
@@ -1524,462 +1524,463 @@ function QA_ORT_WorkingRecord() {
       {isDesktop && renderDesktopView()}
       {isTablet && renderTabletView()}
     </div>
-    // <div>
-    //   <div style={{ display: "flex", alignItems: "center" }}>
-    //     <h2 className="TitlePage_h2">Analysis Formula Master Upload</h2>
-    //   </div>
-    //   {/* 1 */}
-    //   <Row>
-    //     <Col span={24}>
-    //       <Card className="CardStyle" style={{ border: "none" }}>
-    //         <Row>
-    //           <Col span={2}
-    //           className="ColStyle">
-    //             <Typography className="FontStyle">Factory :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <Select
-    //               size="middle"
-    //               showSearch
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               placeholder="--- Please select ---"
-    //               optionFilterProp="label"
-    //               filterSort={(optionA, optionB) =>
-    //                 (optionA?.label ?? "")
-    //                   .toLowerCase()
-    //                   .localeCompare((optionB?.label ?? "").toLowerCase())
-    //               }
-    //               options={opFactory.map((factory) => ({
-    //                 value: factory.value,
-    //                 label: factory.label,
-    //               }))}
-    //               defaultValue="A1"
-    //               value={drpFactory}
-    //               onChange={(e) => {
-    //                 if (e) {
-    //                   setDrpFactory(e);
-    //                 } else {
-    //                   setDrpFactory("A1");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Product Type :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <Select
-    //               size="middle"
-    //               showSearch
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               placeholder="--- Please select ---"
-    //               optionFilterProp="label"
-    //               filterSort={(optionA, optionB) =>
-    //                 (optionA?.label ?? "")
-    //                   .toLowerCase()
-    //                   .localeCompare((optionB?.label ?? "").toLowerCase())
-    //               }
-    //               options={opProduct_Type.map((product_type) => ({
-    //                 value: product_type.value,
-    //                 label: product_type.label,
-    //               }))}
-    //               defaultValue="ALL"
-    //               value={drpProductType}
-    //               onChange={(e) => {
-    //                 if (e) {
-    //                   setDrpProductType(e);
-    //                 } else {
-    //                   setDrpProductType("ALL");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Product Name :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <Input
-    //               size="middle"
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               value={inputProductName === "" ? undefined : inputProductName}
-    //               onChange={(e) => {
-    //                 if (e.target.value) {
-    //                   setInputProductName(e.target.value);
-    //                 } else {
-    //                   setInputProductName("");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Test Item :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <Input
-    //               size="middle"
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               value={inputTestItem === "" ? undefined : inputTestItem}
-    //               onChange={(e) => {
-    //                 if (e.target.value) {
-    //                   setInputTestItem(e.target.value);
-    //                 } else {
-    //                   setInputTestItem("");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={4} className="ColStyleBtn">
-    //             <Button
-    //               type="primary"
-    //               className="Btn_Search"
-    //               icon={<SearchOutlined className="Icon_Size" />}
-    //               onClick={Btn_Search}
-    //               loading={loading}
-    //             >
-    //               Search
-    //             </Button>
-    //           </Col>
-    //         </Row>
-    //       </Card>
-    //     </Col>
-    //   </Row>
-
-    //   {/* 2 */}
-    //   <Row>
-    //     <Col span={24}>
-    //       <Card className="CardStyle" style={{ border: "none" }}>
-    //         <Row>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Lot No. :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <Input
-    //               size="middle"
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               value={inputLotNo === "" ? undefined : inputLotNo}
-    //               onChange={(e) => {
-    //                 if (e.target.value) {
-    //                   setInputLotNo(e.target.value);
-    //                 } else {
-    //                   setInputLotNo("");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Week No. :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <Input
-    //               size="middle"
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               value={inputWeekNo === "" ? undefined : inputWeekNo}
-    //               onChange={(e) => {
-    //                 if (e.target.value) {
-    //                   setInputWeekNo(e.target.value);
-    //                 } else {
-    //                   setInputWeekNo("");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Serial No. :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <Input
-    //               size="middle"
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               value={inputSerialNo === "" ? undefined : inputSerialNo}
-    //               onChange={(e) => {
-    //                 if (e.target.value) {
-    //                   setInputSerialNo(e.target.value);
-    //                 } else {
-    //                   setInputSerialNo("");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={5} className="ColStyle"></Col>
-
-    //           <Col span={4} className="ColStyleBtn">
-    //             <Button
-    //               type="primary"
-    //               className="Btn_Cancel"
-    //               icon={<RedoOutlined className="Icon_Size" />}
-    //               onClick={Btn_Cancel}
-    //             >
-    //               Cancel
-    //             </Button>
-    //           </Col>
-    //         </Row>
-    //       </Card>
-    //     </Col>
-    //   </Row>
-
-    //   {/* 3 */}
-    //   <Row>
-    //     <Col span={24}>
-    //       <Card className="CardStyle" style={{ border: "none" }}>
-    //         <Row>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Input :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <Select
-    //               size="middle"
-    //               showSearch
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               placeholder="--- Please select ---"
-    //               optionFilterProp="label"
-    //               filterSort={(optionA, optionB) =>
-    //                 (optionA?.label ?? "")
-    //                   .toLowerCase()
-    //                   .localeCompare((optionB?.label ?? "").toLowerCase())
-    //               }
-    //               options={opInput.map((input) => ({
-    //                 value: input.value,
-    //                 label: input.label,
-    //               }))}
-    //               value={drpInPut === "" ? undefined : drpInPut}
-    //               onChange={(e) => {
-    //                 if (e) {
-    //                   setDrpInPut(e);
-    //                 } else {
-    //                   setDrpInPut("");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Date Form :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <DatePicker
-    //               placeholder="dd-mm-yyyy"
-    //               format="DD-MM-YYYY"
-    //               size="middle"
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               value={
-    //                 selectedDateFromIn === ""
-    //                   ? undefined
-    //                   : moment(selectedDateFromIn, "YYYY-MM-DD")
-    //               }
-    //               onChange={(date) => {
-    //                 if (date) {
-    //                   setSelectedFromIn(date.format("YYYYMMDD"));
-    //                 } else {
-    //                   setSelectedFromIn("");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Date To :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <DatePicker
-    //               placeholder="dd-mm-yyyy"
-    //               format="DD-MM-YYYY"
-    //               size="middle"
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               value={
-    //                 selectedDateToIn === ""
-    //                   ? undefined
-    //                   : moment(selectedDateToIn, "YYYY-MM-DD")
-    //               }
-    //               onChange={(date) => {
-    //                 if (date) {
-    //                   setSelectedToIn(date.format("YYYYMMDD"));
-    //                 } else {
-    //                   setSelectedToIn("");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={5} className="ColStyle"></Col>
-
-    //           <Col span={4} className="ColStyleBtn">
-    //             <Button
-    //               type="primary"
-    //               className="Btn_Export"
-    //               disabled={!showTable}
-    //               icon={<FileExcelOutlined className="Icon_Size" />}
-    //               onClick={Btn_Excel}
-    //             >
-    //               Export
-    //             </Button>
-    //           </Col>
-    //         </Row>
-    //       </Card>
-    //     </Col>
-    //   </Row>
-
-    //   {/* 4 */}
-    //   <Row>
-    //     <Col span={24}>
-    //       <Card className="CardStyle" style={{ border: "none" }}>
-    //         <Row>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Output :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <Select
-    //               size="middle"
-    //               showSearch
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               placeholder="--- Please select ---"
-    //               optionFilterProp="label"
-    //               filterSort={(optionA, optionB) =>
-    //                 (optionA?.label ?? "")
-    //                   .toLowerCase()
-    //                   .localeCompare((optionB?.label ?? "").toLowerCase())
-    //               }
-    //               options={opOutput.map((output) => ({
-    //                 value: output.value,
-    //                 label: output.label,
-    //               }))}
-    //               value={drpOutPut === "" ? undefined : drpOutPut}
-    //               onChange={(e) => {
-    //                 if (e) {
-    //                   setDrpOutPut(e);
-    //                 } else {
-    //                   setDrpOutPut("");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Date Form :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <DatePicker
-    //               placeholder="dd-mm-yyyy"
-    //               format="DD-MM-YYYY"
-    //               size="middle"
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               value={
-    //                 selectedDateFromIn === ""
-    //                   ? undefined
-    //                   : moment(selectedDateFromIn, "YYYY-MM-DD")
-    //               }
-    //               onChange={(date) => {
-    //                 if (date) {
-    //                   setSelectedFromIn(date.format("YYYYMMDD"));
-    //                 } else {
-    //                   setSelectedFromIn("");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={2} className="ColStyle">
-    //             <Typography className="FontStyle">Date To :</Typography>
-    //           </Col>
-    //           <Col span={3}>
-    //             <DatePicker
-    //               placeholder="dd-mm-yyyy"
-    //               format="DD-MM-YYYY"
-    //               size="middle"
-    //               style={{
-    //                 width: "96%",
-    //               }}
-    //               value={
-    //                 selectedDateToIn === ""
-    //                   ? undefined
-    //                   : moment(selectedDateToIn, "YYYY-MM-DD")
-    //               }
-    //               onChange={(date) => {
-    //                 if (date) {
-    //                   setSelectedToIn(date.format("YYYYMMDD"));
-    //                 } else {
-    //                   setSelectedToIn("");
-    //                 }
-    //               }}
-    //               allowClear
-    //             />
-    //           </Col>
-    //           <Col span={5} className="ColStyle"></Col>
-
-    //           <Col span={4} className="ColStyleBtn"></Col>
-    //         </Row>
-    //       </Card>
-    //     </Col>
-    //   </Row>
-
-    //   <div
-    //     style={{
-    //       marginTop: "2%",
-    //       padding: "0px",
-    //       maxWidth: "100%",
-    //       overflow: "auto",
-    //     }}
-    //   >
-    //     {showTable && dataSource.length > 0 && (
-    //       <AntTable
-    //         columns={columns}
-    //         dataSource={dataSource}
-    //         className="tabledata"
-    //         style={{
-    //           width: "100%",
-    //           boxShadow: "rgba(0, 0, 0, 0.10) 0px 3px 8px",
-    //           padding: "0px",
-    //         }}
-    //         // pagination={false}
-    //         pagination={{
-    //           pageSize: 200,
-    //           position: ["bottomCenter"],
-    //           showSizeChanger: true,
-    //           showTotal: (total, range) =>
-    //             `${range[0]}-${range[1]} of ${total} items`,
-    //           showSizeChanger: false,
-    //         }}
-    //         scroll={{
-    //           x: "max-content",
-    //           y: 55 * 5.5,
-    //         }}
-    //         size="small"
-    //         bordered
-    //       />
-    //     )}
-    //   </div>
-    // </div>
   );
 }
 
 export default QA_ORT_WorkingRecord;
+
+// <div>
+//   <div style={{ display: "flex", alignItems: "center" }}>
+//     <h2 className="TitlePage_h2">Analysis Formula Master Upload</h2>
+//   </div>
+//   {/* 1 */}
+//   <Row>
+//     <Col span={24}>
+//       <Card className="CardStyle" style={{ border: "none" }}>
+//         <Row>
+//           <Col span={2}
+//           className="ColStyle">
+//             <Typography className="FontStyle">Factory :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <Select
+//               size="middle"
+//               showSearch
+//               style={{
+//                 width: "96%",
+//               }}
+//               placeholder="--- Please select ---"
+//               optionFilterProp="label"
+//               filterSort={(optionA, optionB) =>
+//                 (optionA?.label ?? "")
+//                   .toLowerCase()
+//                   .localeCompare((optionB?.label ?? "").toLowerCase())
+//               }
+//               options={opFactory.map((factory) => ({
+//                 value: factory.value,
+//                 label: factory.label,
+//               }))}
+//               defaultValue="A1"
+//               value={drpFactory}
+//               onChange={(e) => {
+//                 if (e) {
+//                   setDrpFactory(e);
+//                 } else {
+//                   setDrpFactory("A1");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Product Type :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <Select
+//               size="middle"
+//               showSearch
+//               style={{
+//                 width: "96%",
+//               }}
+//               placeholder="--- Please select ---"
+//               optionFilterProp="label"
+//               filterSort={(optionA, optionB) =>
+//                 (optionA?.label ?? "")
+//                   .toLowerCase()
+//                   .localeCompare((optionB?.label ?? "").toLowerCase())
+//               }
+//               options={opProduct_Type.map((product_type) => ({
+//                 value: product_type.value,
+//                 label: product_type.label,
+//               }))}
+//               defaultValue="ALL"
+//               value={drpProductType}
+//               onChange={(e) => {
+//                 if (e) {
+//                   setDrpProductType(e);
+//                 } else {
+//                   setDrpProductType("ALL");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Product Name :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <Input
+//               size="middle"
+//               style={{
+//                 width: "96%",
+//               }}
+//               value={inputProductName === "" ? undefined : inputProductName}
+//               onChange={(e) => {
+//                 if (e.target.value) {
+//                   setInputProductName(e.target.value);
+//                 } else {
+//                   setInputProductName("");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Test Item :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <Input
+//               size="middle"
+//               style={{
+//                 width: "96%",
+//               }}
+//               value={inputTestItem === "" ? undefined : inputTestItem}
+//               onChange={(e) => {
+//                 if (e.target.value) {
+//                   setInputTestItem(e.target.value);
+//                 } else {
+//                   setInputTestItem("");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={4} className="ColStyleBtn">
+//             <Button
+//               type="primary"
+//               className="Btn_Search"
+//               icon={<SearchOutlined className="Icon_Size" />}
+//               onClick={Btn_Search}
+//               loading={loading}
+//             >
+//               Search
+//             </Button>
+//           </Col>
+//         </Row>
+//       </Card>
+//     </Col>
+//   </Row>
+
+//   {/* 2 */}
+//   <Row>
+//     <Col span={24}>
+//       <Card className="CardStyle" style={{ border: "none" }}>
+//         <Row>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Lot No. :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <Input
+//               size="middle"
+//               style={{
+//                 width: "96%",
+//               }}
+//               value={inputLotNo === "" ? undefined : inputLotNo}
+//               onChange={(e) => {
+//                 if (e.target.value) {
+//                   setInputLotNo(e.target.value);
+//                 } else {
+//                   setInputLotNo("");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Week No. :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <Input
+//               size="middle"
+//               style={{
+//                 width: "96%",
+//               }}
+//               value={inputWeekNo === "" ? undefined : inputWeekNo}
+//               onChange={(e) => {
+//                 if (e.target.value) {
+//                   setInputWeekNo(e.target.value);
+//                 } else {
+//                   setInputWeekNo("");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Serial No. :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <Input
+//               size="middle"
+//               style={{
+//                 width: "96%",
+//               }}
+//               value={inputSerialNo === "" ? undefined : inputSerialNo}
+//               onChange={(e) => {
+//                 if (e.target.value) {
+//                   setInputSerialNo(e.target.value);
+//                 } else {
+//                   setInputSerialNo("");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={5} className="ColStyle"></Col>
+
+//           <Col span={4} className="ColStyleBtn">
+//             <Button
+//               type="primary"
+//               className="Btn_Cancel"
+//               icon={<RedoOutlined className="Icon_Size" />}
+//               onClick={Btn_Cancel}
+//             >
+//               Cancel
+//             </Button>
+//           </Col>
+//         </Row>
+//       </Card>
+//     </Col>
+//   </Row>
+
+//   {/* 3 */}
+//   <Row>
+//     <Col span={24}>
+//       <Card className="CardStyle" style={{ border: "none" }}>
+//         <Row>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Input :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <Select
+//               size="middle"
+//               showSearch
+//               style={{
+//                 width: "96%",
+//               }}
+//               placeholder="--- Please select ---"
+//               optionFilterProp="label"
+//               filterSort={(optionA, optionB) =>
+//                 (optionA?.label ?? "")
+//                   .toLowerCase()
+//                   .localeCompare((optionB?.label ?? "").toLowerCase())
+//               }
+//               options={opInput.map((input) => ({
+//                 value: input.value,
+//                 label: input.label,
+//               }))}
+//               value={drpInPut === "" ? undefined : drpInPut}
+//               onChange={(e) => {
+//                 if (e) {
+//                   setDrpInPut(e);
+//                 } else {
+//                   setDrpInPut("");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Date Form :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <DatePicker
+//               placeholder="dd-mm-yyyy"
+//               format="DD-MM-YYYY"
+//               size="middle"
+//               style={{
+//                 width: "96%",
+//               }}
+//               value={
+//                 selectedDateFromIn === ""
+//                   ? undefined
+//                   : moment(selectedDateFromIn, "YYYY-MM-DD")
+//               }
+//               onChange={(date) => {
+//                 if (date) {
+//                   setSelectedFromIn(date.format("YYYYMMDD"));
+//                 } else {
+//                   setSelectedFromIn("");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Date To :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <DatePicker
+//               placeholder="dd-mm-yyyy"
+//               format="DD-MM-YYYY"
+//               size="middle"
+//               style={{
+//                 width: "96%",
+//               }}
+//               value={
+//                 selectedDateToIn === ""
+//                   ? undefined
+//                   : moment(selectedDateToIn, "YYYY-MM-DD")
+//               }
+//               onChange={(date) => {
+//                 if (date) {
+//                   setSelectedToIn(date.format("YYYYMMDD"));
+//                 } else {
+//                   setSelectedToIn("");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={5} className="ColStyle"></Col>
+
+//           <Col span={4} className="ColStyleBtn">
+//             <Button
+//               type="primary"
+//               className="Btn_Export"
+//               disabled={!showTable}
+//               icon={<FileExcelOutlined className="Icon_Size" />}
+//               onClick={Btn_Excel}
+//             >
+//               Export
+//             </Button>
+//           </Col>
+//         </Row>
+//       </Card>
+//     </Col>
+//   </Row>
+
+//   {/* 4 */}
+//   <Row>
+//     <Col span={24}>
+//       <Card className="CardStyle" style={{ border: "none" }}>
+//         <Row>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Output :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <Select
+//               size="middle"
+//               showSearch
+//               style={{
+//                 width: "96%",
+//               }}
+//               placeholder="--- Please select ---"
+//               optionFilterProp="label"
+//               filterSort={(optionA, optionB) =>
+//                 (optionA?.label ?? "")
+//                   .toLowerCase()
+//                   .localeCompare((optionB?.label ?? "").toLowerCase())
+//               }
+//               options={opOutput.map((output) => ({
+//                 value: output.value,
+//                 label: output.label,
+//               }))}
+//               value={drpOutPut === "" ? undefined : drpOutPut}
+//               onChange={(e) => {
+//                 if (e) {
+//                   setDrpOutPut(e);
+//                 } else {
+//                   setDrpOutPut("");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Date Form :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <DatePicker
+//               placeholder="dd-mm-yyyy"
+//               format="DD-MM-YYYY"
+//               size="middle"
+//               style={{
+//                 width: "96%",
+//               }}
+//               value={
+//                 selectedDateFromIn === ""
+//                   ? undefined
+//                   : moment(selectedDateFromIn, "YYYY-MM-DD")
+//               }
+//               onChange={(date) => {
+//                 if (date) {
+//                   setSelectedFromIn(date.format("YYYYMMDD"));
+//                 } else {
+//                   setSelectedFromIn("");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={2} className="ColStyle">
+//             <Typography className="FontStyle">Date To :</Typography>
+//           </Col>
+//           <Col span={3}>
+//             <DatePicker
+//               placeholder="dd-mm-yyyy"
+//               format="DD-MM-YYYY"
+//               size="middle"
+//               style={{
+//                 width: "96%",
+//               }}
+//               value={
+//                 selectedDateToIn === ""
+//                   ? undefined
+//                   : moment(selectedDateToIn, "YYYY-MM-DD")
+//               }
+//               onChange={(date) => {
+//                 if (date) {
+//                   setSelectedToIn(date.format("YYYYMMDD"));
+//                 } else {
+//                   setSelectedToIn("");
+//                 }
+//               }}
+//               allowClear
+//             />
+//           </Col>
+//           <Col span={5} className="ColStyle"></Col>
+
+//           <Col span={4} className="ColStyleBtn"></Col>
+//         </Row>
+//       </Card>
+//     </Col>
+//   </Row>
+
+//   <div
+//     style={{
+//       marginTop: "2%",
+//       padding: "0px",
+//       maxWidth: "100%",
+//       overflow: "auto",
+//     }}
+//   >
+//     {showTable && dataSource.length > 0 && (
+//       <AntTable
+//         columns={columns}
+//         dataSource={dataSource}
+//         className="tabledata"
+//         style={{
+//           width: "100%",
+//           boxShadow: "rgba(0, 0, 0, 0.10) 0px 3px 8px",
+//           padding: "0px",
+//         }}
+//         // pagination={false}
+//         pagination={{
+//           pageSize: 200,
+//           position: ["bottomCenter"],
+//           showSizeChanger: true,
+//           showTotal: (total, range) =>
+//             `${range[0]}-${range[1]} of ${total} items`,
+//           showSizeChanger: false,
+//         }}
+//         scroll={{
+//           x: "max-content",
+//           y: 55 * 5.5,
+//         }}
+//         size="small"
+//         bordered
+//       />
+//     )}
+//   </div>
+// </div>
