@@ -36,8 +36,10 @@ import {
 } from "antd";
 const { TextArea } = Input;
 const { Option } = Select;
+const { Content } = Layout;
 import { SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import "./Shipmentschedulemaintain.css";
+import "../../StyleCommon.css";
 import dayjs from 'dayjs';
 import { fn_Shipmentschedulemaintain } from "./fn_Shipmentschedulemaintain";
 
@@ -49,7 +51,10 @@ function Shipmentschedulemaintain() {
   } = fn_Shipmentschedulemaintain();
 
   return (
-    <div>
+    <Content>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <h2 className="TitlePage_h2">Shipment schedule maintain</h2>
+      </div>
       <Box justifyContent="space-between"
         sx={{
           marginLeft: "10px",
@@ -57,14 +62,14 @@ function Shipmentschedulemaintain() {
         }}
       >
         <TableContainer
-          component={Paper}
           style={{
             width: "430px",
-            margin: "4px",
+            margin: "4px", 
           }}
+          //component={Paper}
         >
           <Table className="TbShipment">
-            <TableHead>
+            {/* <TableHead>
               <TableRow>
                 <TableCell colSpan={2} align="center">
                   <Typography variant="h6">
@@ -72,10 +77,10 @@ function Shipmentschedulemaintain() {
                   </Typography>
                 </TableCell>
               </TableRow>
-            </TableHead>
+            </TableHead> */}
             <TableBody>
               <TableRow>
-                <TableCell>
+                <TableCell align="right">
                   <Typography>Product name :</Typography>
                 </TableCell>
                 <TableCell style={{ width: "250px" }}>
@@ -93,7 +98,7 @@ function Shipmentschedulemaintain() {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>
+                <TableCell align="right">
                   <Typography>Build :</Typography>
                 </TableCell>
                 <TableCell>
@@ -113,7 +118,7 @@ function Shipmentschedulemaintain() {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>
+                <TableCell align="right">
                   <Typography>Line :</Typography>
                 </TableCell>
                 <TableCell>
@@ -130,7 +135,7 @@ function Shipmentschedulemaintain() {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>
+                <TableCell align="right">
                   <Typography
                     style={{ marginTop: "-48px" }}
                   >
@@ -151,7 +156,7 @@ function Shipmentschedulemaintain() {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>
+                <TableCell align="right">
                   <Typography>First shipment plan :</Typography>
                 </TableCell>
                 <TableCell>
@@ -167,7 +172,7 @@ function Shipmentschedulemaintain() {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>
+                <TableCell align="right">
                   <Typography>Second shipment plan :</Typography>
                 </TableCell>
                 <TableCell>
@@ -181,7 +186,7 @@ function Shipmentschedulemaintain() {
                     disabled={txtSecondDisabled}
                     style={{
                       width: "100%",
-                      backgroundColor: txtSecondDisabled ? "#e0e0e0" : "inherit",
+                      backgroundColor: txtSecondDisabled ? "#e0e0e0" : "#fff",
                     }}
                   />
                 </TableCell>
@@ -189,7 +194,7 @@ function Shipmentschedulemaintain() {
             </TableBody>
           </Table>
           <div style={{
-            marginTop: "6px",
+            marginTop: "10px",
             display: "flex",
             justifyContent: "center",
             gap: "10px",
@@ -221,7 +226,7 @@ function Shipmentschedulemaintain() {
           </div>
         </TableContainer>
       </Box>
-    </div>
+    </Content>
   )
 };
 
