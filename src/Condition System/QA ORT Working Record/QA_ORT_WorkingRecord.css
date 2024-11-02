@@ -177,3 +177,34 @@
   background-color: #FCC8D1;
   border-radius: 5px !important;
 }
+
+
+
+/* styles.css */
+.desktop-view {
+  display: none;
+}
+
+.tablet-view {
+  display: none;
+}
+
+/* Desktop */
+@media screen and (min-width: 992px) {
+  .desktop-view {
+    display: block;
+  }
+  .tablet-view {
+    display: none;
+  }
+}
+
+/* Tablet */
+@media screen and (max-width: 991px) {
+  .desktop-view {
+    display: none;
+  }
+  .tablet-view {
+    display: block;
+  }
+}
