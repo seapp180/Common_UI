@@ -101,15 +101,16 @@
 }
 
 .Btn_Search {
-  background-color: #0D92F4;
-  border-color: #0D92F4;
+  background-color: #1640D6;
+  border-color: #1640D6;
   width: 50%;
   font-size: 16px;
+  
 }
 
 .Btn_Cancel {
-  background-color: #fabc3f;
-  border-color: #fabc3f;
+  background-color: #DF2E38;
+  border-color: #DF2E38;
   width: 50%;
   font-size: 16px;
 }
@@ -130,8 +131,22 @@
   font-family: "Montserrat", sans-serif;
 }
 
+.ColStyle {
+  display: flex;
+  align-items: center;
+}
+
+.ColStyleBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .FontStyle {
   font-family: "Montserrat", sans-serif;
+  text-align: end;
+  width: 100%;
+  padding-right: 10px;
 }
 
 .CardStyleIn .ant-card-body {
