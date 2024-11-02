@@ -1,0 +1,41 @@
+.tableSerachAnalysis .ant-table-thead > tr > th {
+    background-color: #71949e;
+    color: white;
+    padding: 0;
+
+  }
+  .tableSerachAnalysis .ant-table-tbody > tr > td {
+      font-family: 'Varela Round', sans-serif;
+  }
+
+  .divTable {
+    display: flex;
+    justify-content: center;
+  }
+
+  .bt_ChooseFile{
+    background-color: #f7faff; 
+    display: block;
+    text-align: center;
+    padding: 5px;
+    border: 2px dashed #B4D4FF;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 450px;
+    margin-top: 10px;
+    padding-bottom: 3px;
+  }
+
+.File_name{
+  border:1px dashed #526D82;
+  width: 100%;
+  height: 30px;
+  border-radius: 5px;
+  align-items: center;
+  padding: 0 5px;
+  max-width: 350px;
+}
+.Edit_form {
+ text-align: right;
+ 
+}
