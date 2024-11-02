@@ -30,9 +30,7 @@ const App = () => {
           <Content className="ContentAPP">
             <div
               style={{
-                // padding: 24,
-                // background: colorBgContainer,
-                // borderRadius: borderRadiusLG,
+                paddingTop :65,
               }}
             >
               <Routes>
