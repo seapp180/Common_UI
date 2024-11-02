@@ -28,8 +28,11 @@ const Page2 = () => {
 
   return (
     <Content>
-      <h1>RDES master upload</h1>
-      <br />
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <h2 className="TitlePage_h2">RDES master upload</h2>
+      </div>
+      
+     
       <div style={{ marginLeft: "30px", marginBottom: "5px" }}>
         <span style={{ fontSize: "18px" }}>Product</span>{" "}
       </div>

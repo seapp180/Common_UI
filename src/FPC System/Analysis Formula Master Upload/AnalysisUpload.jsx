@@ -71,7 +71,6 @@ const AnalysisUpload = () => {
 
   return (
     <Content>
-      {/* <Tag>test</Tag> */}
       <div style={{ display: "flex", alignItems: "center" }}>
         <h2 className="TitlePage_h2">Analysis Formula Master Upload</h2>
       </div>
@@ -208,7 +207,7 @@ const AnalysisUpload = () => {
           <Button
             icon={<UploadOutlined />}
             onClick={() => showPopUp()}
-            style={{ marginTop: "5px" }}
+            style={{ marginTop: "10px" }}
           >
             {" "}
             Upload File
@@ -244,7 +243,7 @@ const AnalysisUpload = () => {
         open={UploadOpen}
         footer={null}
         onCancel={handlePopUpCancel}
-        width={"90%"}
+        width={"95%"}
       >
         <div style={{ display: "flex", alignItems: "flex-start" }}>
           <div style={{}}>

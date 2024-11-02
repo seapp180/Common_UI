@@ -1,6 +1,4 @@
 .ContentAPP{
-    /* margin-top: 50px; */
-/* padding:90px 15px 30px 15px ; */
 min-height: 100vh;
 font-family:Varela Round, sans-serif ;
 margin: 0px 16px 0 !important;
@@ -8,16 +6,36 @@ overflow:initial ;
 
 }
 
-.TitlePage_h2{
-background: #CA965C;
-border-radius: 25px;
-padding-left: 15px;
-padding-right: 15px;
-color: #fff;
-padding-top: 10px;
-padding-bottom: 10px;
+.TitlePage_h2 {
+    background-color: #CA965C;
+    border-radius: 25px;
+    color: #ffffff;
+    padding: 10px 20px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.Header{
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 1000;
 display: flex;
 align-items: center;
-box-shadow:0 4px 8px rgba(0, 0, 0, 0.2);
-width: auto; 
+justify-content: space-between;
+padding: 0 16px;
+background: #705C53;    
+}
+
+.TitleHeader{
+    display: flex;
+    align-items: center;
+    margin-left: 16px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;
+    font-family: Varela Round, sans-serif ;
 }
