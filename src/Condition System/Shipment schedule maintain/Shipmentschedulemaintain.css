@@ -15,25 +15,59 @@
     border: none;
 }
 
+.font {
+    font-family: "Varela Round", sans-serif !important;
+    font-size: 16px !important;
+}
+
+.BtSave {
+    background-color: #1A5D1A !important;
+    color: #fff !important;
+    height: 30px;
+    width: 90px;
+}
+
+.BtCancel {
+    background-color: #E0282E !important;
+    color: #fff !important;
+    height: 30px;
+}
+
+/* สำหรับแท็บเล็ต */
 @media (min-width: 601px) and (max-width: 1024px) {
-    .TbShipment {
-        width: 90%;       /* ลดความกว้างของตารางลงสำหรับหน้าจอแท็บเล็ต */
+    .content { 
+      display: flex;
+      flex-direction: column; 
+      align-items: left; 
     }
-    
-    .TbShipment td {
-        padding: 4px;    /* ขยาย padding ให้เหมาะสม */
-        font-size: 16px; /* ปรับขนาดตัวอักษรให้ใหญ่ขึ้นเล็กน้อย */
+  }
+  
+  /* สำหรับเดสก์ท็อป */
+  @media (min-width: 1025px) {
+    .content {
+      display: flex; 
+      flex-direction: column; 
+      justify-content: space-between; 
+      align-items: flex-start; 
     }
+  }
+
+/* สำหรับมือถือ */
+@media (max-width: 600px) {
+  .content {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    width: 100%; 
+    padding: 0 0px; 
+  }
+
+  .TbShipment { 
+    max-width: 90%; 
+  }
+
+  .font { 
+    font-size: 14px; 
+  }
 }
 
-.BtSave{
-    background-color: #1A5D1A !important ;
-    color: #fff !important;
-    height: 30px;
-}
-
-.BtCancel{
-    background-color: #E0282E!important ;
-    color: #fff !important;
-    height: 30px;
-}
