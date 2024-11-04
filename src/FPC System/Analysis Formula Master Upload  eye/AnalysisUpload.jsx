@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Layout, Button, Table, Select, Modal, Input } from "antd";
+import { Layout, Button, Table, Select, Modal, Spin, Tag, Avatar,Input  } from "antd";
 import axios from "axios";
 import {
   SearchOutlined,
@@ -11,11 +11,13 @@ import {
   SaveOutlined,
   UploadOutlined,
   CloseCircleOutlined,
+  PlusOutlined
 } from "@ant-design/icons";
 import { fn_AnalysisUpload } from "./fn_AnalysisUpload";
 import "./AnalysisUpload.css";
 import ImgExcel from "../../assets/excel.png";
-import { Ls } from "dayjs";
+import "../../StyleCommon.css";
+import Imgchemistry from "../../assets/chemistry.png";
 
 //
 const { Content } = Layout;
@@ -66,6 +68,7 @@ const AnalysisUpload = () => {
     ProcessPopUp,
     MCPopUp,
     UploadFile,
+    columnsUpload,
     openedit,
     handleOk,
     confirmLoading,
@@ -83,12 +86,34 @@ const AnalysisUpload = () => {
     Seq,
     Replenisher,
     Refer1_1,
-    Refer2_1
+    Refer2_1,
+    setUnit,
+    setMachine,
+    setCh,
+    setBath,
+    setProcess,
+    setUnit2,
+    setTarget,
+    setLCL,
+    setUCL,
+    setLSL,
+    setUSL,
+    setFormula,
+    setRefer1,
+    setRefer2,
+    setRefer1_1,
+    setRefer2_1,
+    setInput_value,
+    setSeq,
+    setReplenisher,
+    Insert
   } = fn_AnalysisUpload();
-  const [open1, setOpen1] = useState(false);
+
   return (
     <Content>
-      <h1>Analysis Formula Master Upload</h1>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <h2 className="TitlePage_h2">Analysis Formula Master Upload</h2>
+      </div>
       <div style={{ display: "flex", alignItems: "flex-start" }}>
         <div style={{ marginLeft: "30px" }}>
           <span style={{ fontSize: "14px" }}>Unit</span>
@@ -106,7 +131,7 @@ const AnalysisUpload = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            options={Unit}
+            options={Unit.Search}
             onChange={HandleUnit}
           />
         </div>
@@ -127,7 +152,7 @@ const AnalysisUpload = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            options={Process}
+            options={Process.Search}
             onChange={handleProcess}
           />
         </div>
@@ -148,7 +173,7 @@ const AnalysisUpload = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            options={Machine}
+            options={Machine.Search}
             onChange={handleMachine}
           />
         </div>
@@ -173,7 +198,7 @@ const AnalysisUpload = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            options={Bath}
+            options={Bath.Search}
             onChange={HandleBath}
           />
         </div>
@@ -194,7 +219,7 @@ const AnalysisUpload = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            options={Ch}
+            options={Ch.Search}
             onChange={HandleCh}
           />
         </div>
@@ -208,6 +233,7 @@ const AnalysisUpload = () => {
           >
             Search{" "}
           </Button>{" "}
+          
           &nbsp;&nbsp;
           <Button
             icon={<CloseOutlined />}
@@ -219,7 +245,20 @@ const AnalysisUpload = () => {
             Clear{" "}
           </Button>{" "}
           &nbsp;&nbsp;
-          <Button icon={<UploadOutlined />} onClick={() => showPopUp()}>
+          <Button
+            type="primary"
+            icon={loadingSearch ? <LoadingOutlined /> : <PlusOutlined />}
+            style={{ background: "#4fdf74", color: "#fff", marginTop: "5px" }}
+            onClick={() => Insert()}
+          >
+            Insert{" "}
+          </Button>{" "}
+          &nbsp;&nbsp;
+          <Button
+            icon={<UploadOutlined />}
+            onClick={() => showPopUp()}
+            style={{ marginTop: "10px" }}
+          >
             {" "}
             Upload File
           </Button>
@@ -248,17 +287,19 @@ const AnalysisUpload = () => {
         dataSource={DataSearch}
         bordered
         pagination={false}
-        scroll={{ x: "max-content", y: 310 }}
+        scroll={{ x: "max-content", y: 350 }}
       ></Table>
       <Modal
         open={UploadOpen}
         footer={null}
         onCancel={handlePopUpCancel}
-        width={"90%"}
+        width={"95%"}
+        getContainer={false}
       >
         <div style={{ display: "flex", alignItems: "flex-start" }}>
           <div style={{}}>
             <span style={{ fontSize: "14px" }}>Unit</span>
+           { console.log(Unit,'popopopop')}
             <Select
               showSearch
               value={SL_UnitPopUp}
@@ -275,7 +316,7 @@ const AnalysisUpload = () => {
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              options={UnitPopUp}
+              options={Unit.PopUp}
               onChange={HandleUnitPopUp}
             />
           </div>
@@ -298,7 +339,7 @@ const AnalysisUpload = () => {
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              options={ProcessPopUp}
+              options={Process.PopUp}
               onChange={HandleProcessPopUp}
             />
           </div>
@@ -321,7 +362,7 @@ const AnalysisUpload = () => {
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              options={MCPopUp}
+              options={Machine.PopUp}
               onChange={HandleMachinePopUp}
             />
           </div>
@@ -408,13 +449,14 @@ const AnalysisUpload = () => {
         <br />
         <div className="divTable">
           <Table
-            // columns={columnsUpload}
+            columns={columnsUpload}
             style={{ width: "99%" }}
             className="tableSerachAnalysis"
             dataSource={dataFile}
             pagination={false}
             scroll={{ x: "max-content", y: 310 }}
             size="small"
+            bordered
           ></Table>
         </div>
         <br />
@@ -442,10 +484,9 @@ const AnalysisUpload = () => {
           </Button>
         </div>
       </Modal>
-
       <Modal
         title="Analysis Formula Master maintain"
-        centered
+  
         open={openedit}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -497,79 +538,134 @@ const AnalysisUpload = () => {
               <tr >
                 <td className="Edit_form">Unit :</td>
                 <td>
-                  <Input  value={Unit2} />
+                  <Input  
+                  value={Unit2} 
+                  onChange={(e) => {
+                    setUnit2(e.target.value);
+                  }}
+
+                  />
                 </td>
                 <td></td>
                 <td className="Edit_form">Target :</td>
                 <td>
-                  <Input value={Target} />
+                  <Input value={Target} 
+                    onChange={(e) => {
+                      setTarget(e.target.value);
+                    }}
+                    />
                 </td>
               </tr>
               <tr>
                 <td className="Edit_form">LCL :</td>
                 <td>
-                  <Input value={LCL} />
+                  <Input value={LCL} 
+                     onChange={(e) => {
+                      setLCL(e.target.value);
+                    }}
+                  />
                 </td>
                 <td></td>
                 <td className="Edit_form">UCL :</td>
                 <td>
-                  <Input value={UCL} />
+                  <Input value={UCL}   
+                  onChange={(e) => {
+                      setUCL(e.target.value);
+                    }} />
                 </td>
               </tr>
               <tr>
                 <td className="Edit_form">LSL :</td>
                 <td>
-                  <Input value={LSL} />
+                  <Input value={LSL} 
+                     onChange={(e) => {
+                      setLSL(e.target.value);
+                    }} />
                 </td>
                 <td></td>
                 <td className="Edit_form">USL :</td>
                 <td>
-                  <Input value={USL} />
+                  <Input value={USL} 
+                   onChange={(e) => {
+                    setUSL(e.target.value);
+                  }}  />
                 </td>
               </tr>
               <tr>
                 <td className="Edit_form">Formula :</td>
                 <td colSpan={4}>
-                  <Input value={Formula} />
+                  <Input value={Formula} 
+                    onChange={(e) => {
+                      setFormula(e.target.value);
+                    }} 
+                     />
                 </td>
               </tr>
               <tr>
                 <td className="Edit_form">Refer 1 :</td>
                 <td>
-                  <Input value={Refer1} />
+                  <Input value={Refer1} 
+                  onChange={(e) => {
+                    setRefer1(e.target.value);
+                  }} 
+                  />
                 </td>
                 <td></td>
                 <td className="Edit_form">Refer 2 :</td>
                 <td>
-                  <Input value={Refer2} />
+                  <Input value={Refer2} 
+                   onChange={(e) => {
+                    setRefer2(e.target.value);
+                  }}
+                  />
                 </td>
               </tr>
               <tr>
                 <td className="Edit_form"> Input :</td>
                 <td>
-                  <Input value={Input_value} />
+                  <Input value={Input_value}
+                    onChange={(e) => {
+                      setInput_value(e.target.value);
+                    }}
+                  />
                 </td>
                 <td></td>
                 <td className="Edit_form">Seq :</td>
                 <td>
-                  <Input value={Seq} />
+                  <Input value={Seq} 
+                   onChange={(e) => {
+                    setSeq(e.target.value);
+                  }}
+                  />
                 </td>
               </tr>
               <tr>
                 <td className="Edit_form">Replenisher :</td>
                 <td colSpan={4}>
-                  <Input value={Replenisher} />
+                  <Input value={Replenisher} 
+                    onChange={(e) => {
+                      setReplenisher(e.target.value);
+                    }}
+                  />
                 </td>
               </tr>
               <tr>
                 <td className="Edit_form">Refer 1 :</td>
                 <td>
-                  <Input value={Refer1_1} />
+                  <Input value={Refer1_1} 
+                  onChange={(e) => {
+                    setRefer1_1(e.target.value);
+                  }}
+                  />
                 </td>
                 <td></td>
                 <td className="Edit_form">Refer 2 :</td>
                 <td>
-                  <Input value={Refer2_1} />
+                  <Input value={Refer2_1} 
+                  onChange={(e) => {
+                    setRefer2_1(e.target.value);
+                  }}
+                  />
                 </td>
               </tr>
             </tbody>
