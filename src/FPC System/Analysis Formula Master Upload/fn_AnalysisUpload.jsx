@@ -7,6 +7,8 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 
 import { Button, Tag } from "antd";
+import { useLoading } from "../../component/loading/fn_loading";
+
 
 import {
   CloseOutlined,
@@ -18,11 +20,12 @@ import {
 import { se } from "date-fns/locale";
 
 function fn_AnalysisUpload() {
-  const [Unit, setUnit] = useState([]);
-  const [Process, setProcess] = useState([]);
-  const [Machine, setMachine] = useState([]);
-  const [Bath, setBath] = useState([]);
-  const [Ch, setCh] = useState([]);
+  const [Unit, setUnit] = useState({Search:[],Edit:[],PopUp:[]});
+  const [Process, setProcess] = useState({Search:[],Edit:[],PopUp:[]});
+  const [Machine, setMachine] = useState({Search:[],Edit:[],PopUp:[]});
+  const [Bath, setBath] = useState({Search:[],Edit:[],PopUp:[]});
+  const [Ch, setCh] = useState({Search:[],Edit:[],PopUp:[]});
+
   const [SL_Ch, setSL_Ch] = useState(null);
   const [SL_Bath, setSL_Bath] = useState(null);
   const [SL_Machine, setSL_Machine] = useState(null);
@@ -41,9 +44,26 @@ function fn_AnalysisUpload() {
   const [SL_ProcessPopUp, setSL_ProcessPopUp] = useState(null);
   const [SL_MCPopUp, setSL_MCPopUp] = useState(null);
 
-  const [UnitPopUp, setUnitPopUp] = useState([]);
-  const [ProcessPopUp, setProcessPopUp] = useState([]);
-  const [MCPopUp, setMCPopUp] = useState([]);
+
+  const { showLoading, hideLoading } = useLoading();
+  const [openedit, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  //Edit
+  const [Unit2, setUnit2] = useState([]);
+  const [Target, setTarget] = useState([]);
+  const [LCL, setLCL] = useState([]);
+  const [UCL, setUCL] = useState([]);
+  const [LSL, setLSL] = useState([]);
+  const [USL, setUSL] = useState([]);
+  const [Formula, setFormula] = useState([]);
+  const [Refer1, setRefer1] = useState([]);
+  const [Refer2, setRefer2] = useState([]);
+  const [Input_value, setInput_value] = useState([]);
+  const [Seq, setSeq] = useState([]);
+  const [Replenisher, setReplenisher] = useState([]);
+  const [Refer1_1, setRefer1_1] = useState([]);
+  const [Refer2_1, setRefer2_1] = useState([]);
 
   useEffect(() => {
     GetUnit();
@@ -53,7 +73,7 @@ function fn_AnalysisUpload() {
   const GetUnitPopUP = () => {
     axios.post("/api/Analysis_Formular/GetUnitPopup", {}).then((res) => {
       console.log("UnitPop", res.data);
-      setUnitPopUp(res.data);
+      setUnit((prevState) => ({...prevState,PopUp: res.data}));
     });
   };
 
@@ -65,7 +85,7 @@ function fn_AnalysisUpload() {
       })
       .then((res) => {
         console.log("ProcessPop", res.data);
-        setProcessPopUp(res.data);
+        setProcess((prevState) => ({...prevState,PopUp: res.data}));
       });
   };
 
@@ -77,7 +97,7 @@ function fn_AnalysisUpload() {
       })
       .then((res) => {
         console.log("McPop", res.data);
-        setMCPopUp(res.data);
+        setMachine((prevState) => ({...prevState,PopUp: res.data}));
       });
   };
 
@@ -92,7 +112,8 @@ function fn_AnalysisUpload() {
   const GetUnit = () => {
     axios.post("/api/Analysis_Formular/GetUnit", {}).then((res) => {
       console.log("Unit", res.data);
-      setUnit(res.data);
+      setUnit((prevState) => ({...prevState,Search: res.data}));
+      // setUnit(res.data);
     });
   };
 
@@ -104,7 +125,7 @@ function fn_AnalysisUpload() {
       })
       .then((res) => {
         console.log("Process", res.data);
-        setProcess(res.data);
+        setProcess((prevState) => ({...prevState,Search: res.data}));
       });
   };
 
@@ -116,7 +137,7 @@ function fn_AnalysisUpload() {
       })
       .then((res) => {
         console.log("Machine", res.data);
-        setMachine(res.data);
+        setMachine((prevState) => ({...prevState,Search: res.data}));
       });
   };
 
@@ -128,7 +149,7 @@ function fn_AnalysisUpload() {
       })
       .then((res) => {
         console.log("Bath", res.data);
-        setBath(res.data);
+        setBath((prevState) => ({...prevState,Search: res.data}));
       });
   };
 
@@ -141,7 +162,7 @@ function fn_AnalysisUpload() {
       })
       .then((res) => {
         console.log("Chh", res.data);
-        setCh(res.data);
+        setCh((prevState) => ({...prevState,Search: res.data}));
       });
   };
 
@@ -155,7 +176,7 @@ function fn_AnalysisUpload() {
   };
 
   const Search = () => {
-    setLoadingSearch(true);
+    showLoading('กำลังค้นหา กรุณารอสักครู่');
     if (
       SL_Bath != null ||
       SL_Ch != null ||
@@ -174,11 +195,12 @@ function fn_AnalysisUpload() {
         .then((res) => {
           setTimeout(() => {
             setDataSearch(res.data);
-            setLoadingSearch(false);
+            // setLoadingSearch(false);
+            hideLoading()
           }, 500);
         });
     } else {
-      setLoadingSearch(false);
+      hideLoading()
       Swal.fire({
         icon: "error",
         title: "Please Select Unit",
@@ -200,6 +222,12 @@ function fn_AnalysisUpload() {
     setFileName("");
     setSelectedFiles([]);
     document.getElementById("fileInput").value = "";
+    // setUnitPopUp([])
+    // setProcessPopUp([])
+    // setMCPopUp([])
+    // setSL_UnitPopUp(null)
+    // setSL_MCPopUp(null)
+    // setSL_ProcessPopUp(null)
   };
 
   const readExcelData = (file) => {
@@ -254,8 +282,161 @@ function fn_AnalysisUpload() {
     reader.readAsArrayBuffer(file);
   };
 
+  const CheckConditions= async () => {
+    for (let i = 0; i < selectedFiles.length; i++) {
+      let dataChem = "";
+      let bathValue = "";
+      let bath = selectedFiles[i].BATH;
+      await axios //find Bath Value
+        .post("/api/Analysis_Formular/GetBathValue", {
+          Bath: selectedFiles[i].BATH,
+        })
+        .then((res) => {
+          bathValue = res.data;
+        });
+      await axios //get Chem
+        .post("/api/Analysis_Formular/GetChemical", {
+          PARAMETER_MC: SL_MCPopUp,
+          PARAMETER_BATH: bathValue,
+        })
+        .then((res) => {
+          dataChem = res.data;
+        });
+      let chem = selectedFiles[i].CHEMICAL;
+      let seq = selectedFiles[i].SEQ;
+      let formula = selectedFiles[i].FORMULA||'';
+      let replenisher = selectedFiles[i].REPLENISHER||'';
+      
+      let countFomula = (formula.match(/\b(V1|V2|V3|V4)\b/g) || []).length;
+      let formulaRef1 = formula.match(/\bREF_V1\b/g);
+      let formulaRef2 = formula.match(/\bREF2_V1\b/g);
+      const openParenthesesCount = (formula.match(/\(/g) || []).length; //วงเล็บเปิด
+      const closeParenthesesCount = (formula.match(/\)/g) || []).length; //วงเล็บปิด
+      const regexFormula = /^(\s*[\d]+(\.\d+)?|\s*V[1-4]|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/; //Fomat Formula =V1 V2 V3 V4 REF_V1 REF2_V1 ( ) , * / + - 0-9
+      const regexReplenisher = /^(\s*[\d]+(\.\d+)?|\s*A|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/;
+      let PatternFormula = regexFormula.test(formula);
+      let PatternReplenisher = regexReplenisher.test(replenisher);
+      let ReplenisherRef1 = replenisher.match(/\bREF_V1\b/g);
+      let ReplenisherRef2 = replenisher.match(/\bREF2_V1\b/g);
+      const target =selectedFiles[i].TARGET;
+      const lcl =selectedFiles[i].LCL;
+      const ucl =selectedFiles[i].UCL;
+      const lsl =selectedFiles[i].LSL;
+      const usl =selectedFiles[i].USL;
+      let remark = "";
+
+      //-----------------------------------------------1
+      if (bath == "" && chem == "" && seq == "") {
+        remark = "ไม่พบ Bath/Chemical/Seq";
+      }
+      //-----------------------------------------------3-6
+      if (countFomula != 0) {
+        selectedFiles[i].INPUT = countFomula;
+      }
+      //------------------------------------------------ข้อ7
+      if (formulaRef1 != null) {
+        if (selectedFiles[i].FORMULA_REFER1 != "") {
+          const CheckChem = dataChem.find(
+            (item) => item.label === selectedFiles[i].FORMULA_REFER1
+          );
+          if (!CheckChem) {
+            remark = "Chemical Formula Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
+          }
+        } else {
+          remark = "ไม่พบ Fomula Refer1";
+        }
+      }
+      //------------------------------------------------ข้อ8
+      if (formulaRef2 != null) {
+        if (selectedFiles[i].FORMULA_REFER2 != "") {
+          const CheckChem = dataChem.find(
+            (item) => item.label === selectedFiles[i].FORMULA_REFER2
+          );
+          if (!CheckChem) {
+            remark = "Chemical Formula Refer2  ไม่อยู่ใน MC และ Bath เดียวกัน";
+          }
+        } else {
+          remark = "ไม่พบ Fomula Refer2";
+        }
+      }
+      //------------------------------------------------ข้อ9
+      if (
+        !/\bV[1-4]\b/.test(formula) &&
+        (formulaRef1 != null || formulaRef2 != null)
+      ) {
+        selectedFiles[i].INPUT = "";
+      }
+      //------------------------------------------------ข้อ10
+      if (openParenthesesCount != closeParenthesesCount) {
+        remark = "วงเล็บเปิด-ปิดไม่ครบถ้วน";
+      }
+      //------------------------------------------------ข้อ11
+      if(formula!=''){
+        console.log('เข้า formula',formula)
+        if (!PatternFormula) {
+          remark = "Fomat Formula ไม่ถูกต้อง "+formula;
+        }
+      }
+ 
+      //------------------------------------------------ข้อ12
+      if(replenisher!=''){
+        if (!PatternReplenisher) {
+          remark = "Fomat Replenisher ไม่ถูกต้อง "+replenisher;
+        }
+      }
+
+      //------------------------------------------------ข้อ13
+      if (ReplenisherRef1 != null) {
+        if (selectedFiles[i].REPLENISHER_REFER1 != "") {
+          const CheckChem = dataChem.find(
+            (item) => item.label === selectedFiles[i].REPLENISHER_REFER1
+          );
+          if (!CheckChem) {
+            remark = "Chemical Replenisher Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
+          }
+        } else {
+          remark = "ไม่พบ Replenisher Refer1";
+        }
+      }
+      //------------------------------------------------ข้อ14
+      if (ReplenisherRef2 != null) {
+        if (selectedFiles[i].REPLENISHER_REFER2 != "") {
+          const CheckChem = dataChem.find(
+            (item) => item.label === selectedFiles[i].REPLENISHER_REFER2
+          );
+          if (!CheckChem) {
+            remark = "Chemical Replenisher Refer2 ไม่อยู่ใน MC และ Bath เดียวกัน";
+          }
+        } else {
+          remark = "ไม่พบ Replenisher Refer2";
+        }
+      }
+      //------------------------------------------------ข้อ15
+      if (target !== '' && isNaN(target)) {
+        remark='Target ไม่ใช่ตัวเลข'
+      }
+      if (lcl !== '' && isNaN(lcl)) {
+        remark='LCL ไม่ใช่ตัวเลข'
+      }
+      if (ucl !== '' && isNaN(ucl)) {
+        remark='UCL ไม่ใช่ตัวเลข'
+      }
+      if ( lsl !== '' && isNaN(lsl)) {
+        remark='LSL ไม่ใช่ตัวเลข'
+      }
+      if (usl !== '' && isNaN(usl)) {
+        remark='USL ไม่ใช่ตัวเลข'
+      }
+      //--------------------------end-----------------------
+      selectedFiles[i].REMARK = remark;
+    }
+    SetdataFile(selectedFiles)
+    console.log(selectedFiles, "selectedFiles");
+  }
+
   const UploadFile = async () => {
-    // console.log('upload',selectedFiles)
+
+    showLoading('กำลัง Upload กรุณารอสักครู่');
     if (SL_MCPopUp == null) {
       Swal.fire({
         icon: "error",
@@ -263,135 +444,10 @@ function fn_AnalysisUpload() {
       });
       return;
     } else {
-      for (let i = 0; i < selectedFiles.length; i++) {
-        let dataChem = "";
-        let bathValue = "";
-        let bath = selectedFiles[i].BATH;
-        await axios //find Bath Value
-          .post("/api/Analysis_Formular/GetBathValue", {
-            Bath: selectedFiles[i].BATH,
-          })
-          .then((res) => {
-            bathValue = res.data;
-          });
-        await axios //get Chem
-          .post("/api/Analysis_Formular/GetChemical", {
-            PARAMETER_MC: SL_MCPopUp,
-            PARAMETER_BATH: bathValue,
-          })
-          .then((res) => {
-            dataChem = res.data;
-          });
-        let chem = selectedFiles[i].CHEMICAL;
-        let seq = selectedFiles[i].SEQ;
-        let formula = selectedFiles[i].FORMULA;
-        let replenisher = selectedFiles[i].REPLENISHER;
-        const countFomula = (formula.match(/\b(V1|V2|V3|V4)\b/g) || []).length;
-        let formulaRef1 = formula.match(/\bREF_V1\b/g);
-        let formulaRef2 = formula.match(/\bREF2_V1\b/g);
-        const openParenthesesCount = (formula.match(/\(/g) || []).length; //วงเล็บเปิด
-        const closeParenthesesCount = (formula.match(/\)/g) || []).length; //วงเล็บปิด
-        const regexFormula = /^(\s*[\d]+(\.\d+)?|\s*V[1-4]|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/; //Fomat Formula =V1 V2 V3 V4 REF_V1 REF2_V1 ( ) , * / + - 0-9
-        const regexReplenisher = /^(\s*[\d]+(\.\d+)?|\s*A|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/; //Fomat Replenisher A REF_V1 REF2_V1 ( ) * / + - 0-9
-        let PatternFormula = regexFormula.test(formula);
-        let PatternReplenisher = regexReplenisher.test(formula);
-        let ReplenisherRef1 = replenisher.match(/\bREF_V1\b/g);
-        let ReplenisherRef2 = replenisher.match(/\bREF2_V1\b/g);
-        const target =selectedFiles[i].TARGET;
-        const lcl =selectedFiles[i].LCL;
-        const ucl =selectedFiles[i].UCL;
-        const lsl =selectedFiles[i].LSL;
-        const usl =selectedFiles[i].USL;
-        console.log(PatternFormula, "Pattern", formula);
-        let remark = "";
-
-        //-----------------------------------------------1
-        if (bath == "" && chem == "" && seq == "") {
-          remark = "Not Found Bath or Chemical or Seq";
-        }
-        //-----------------------------------------------3-6
-        if (countFomula != 0) {
-          selectedFiles[i].INPUT = countFomula;
-        }
-        //------------------------------------------------ข้อ7
-        if (formulaRef1 != null) {
-          if (selectedFiles[i].FORMULA_REFER1 != "") {
-            const CheckChem = dataChem.find(
-              (item) => item.label === selectedFiles[i].FORMULA_REFER1
-            );
-            if (!CheckChem) {
-              remark = "Chemical Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
-            }
-          } else {
-            remark = "Not Found Fomula Refer1";
-          }
-        }
-        //------------------------------------------------ข้อ8
-        if (formulaRef2 != null) {
-          if (selectedFiles[i].FORMULA_REFER2 != "") {
-            const CheckChem = dataChem.find(
-              (item) => item.label === selectedFiles[i].FORMULA_REFER2
-            );
-            if (!CheckChem) {
-              remark = "Chemical Refer2  ไม่อยู่ใน MC และ Bath เดียวกัน";
-            }
-          } else {
-            remark = "Not Found Fomula Refer1";
-          }
-        }
-        //------------------------------------------------ข้อ9
-        if (
-          !/\bV[1-4]\b/.test(formula) &&
-          (formulaRef1 != null || formulaRef2 != null)
-        ) {
-          selectedFiles[i].INPUT = "";
-        }
-        //------------------------------------------------ข้อ10
-        if (openParenthesesCount != closeParenthesesCount) {
-          remark = "วงเล็บเปิด-ปิดไม่ครบถ้วน";
-        }
-        //------------------------------------------------ข้อ11
-        if (!PatternFormula) {
-          remark = "Fomat Formula ผิด";
-        }
-        //------------------------------------------------ข้อ12
-        if (!PatternReplenisher) {
-          remark = "Fomat Replenisher ผิด";
-        }
-        //------------------------------------------------ข้อ13
-        if (ReplenisherRef1 != null) {
-          if (selectedFiles[i].REPLENISHER_REFER1 != "") {
-            const CheckChem = dataChem.find(
-              (item) => item.label === selectedFiles[i].REPLENISHER_REFER1
-            );
-            if (!CheckChem) {
-              remark = "Chemical Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
-            }
-          } else {
-            remark = "Not Found Fomula Refer1";
-          }
-        }
-        //------------------------------------------------ข้อ14
-        if (ReplenisherRef2 != null) {
-          if (selectedFiles[i].REPLENISHER_REFER2 != "") {
-            const CheckChem = dataChem.find(
-              (item) => item.label === selectedFiles[i].REPLENISHER_REFER2
-            );
-            if (!CheckChem) {
-              remark = "Chemical Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
-            }
-          } else {
-            remark = "Not Found Fomula Refer1";
-          }
-        }
-        //------------------------------------------------ข้อ15
-        if(target)
-
-        //--------------------------end-----------------------
-        selectedFiles[i].REMARK = remark;
-      }
+      await CheckConditions()
     }
-    console.log(selectedFiles, "selectedFiles");
+    hideLoading()
+
   };
 
   const handleDrop = (e) => {
@@ -477,7 +533,8 @@ function fn_AnalysisUpload() {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Sheet1");
 
-    const filteredColumns = columns.filter((col) => col.title !== "No.");
+    const filteredColumns = columns.filter((col, colIndex) => col.title !== "No." && colIndex !== 1 && colIndex !== 2);
+
     const mainHeaderRow = [
       "No.",
       ...filteredColumns.flatMap((col) =>
@@ -510,6 +567,10 @@ function fn_AnalysisUpload() {
     // รวมเซลล์
     worksheet.mergeCells("I1:K1");
     worksheet.mergeCells("L1:N1");
+
+    // worksheet.mergeCells("K1:M1");
+    // worksheet.mergeCells("N1:P1");
+
     worksheet.mergeCells("A1:A2");
     worksheet.mergeCells("B1:B2");
     worksheet.mergeCells("C1:C2");
@@ -518,6 +579,7 @@ function fn_AnalysisUpload() {
     worksheet.mergeCells("F1:F2");
     worksheet.mergeCells("G1:G2");
     worksheet.mergeCells("H1:H2");
+
     worksheet.mergeCells("O1:O2");
     worksheet.mergeCells("P1:P2");
     worksheet.mergeCells("Q1:Q2");
@@ -564,6 +626,45 @@ function fn_AnalysisUpload() {
     saveAs(dataBlob, `${NameFile}.xlsx`);
   };
 
+  const Btn_Edit = (record) => {
+    console.log("OKKKK", record)
+    setUnit((prevState) => ({...prevState,Edit: record.FAUM_UNIT_DESC}))
+    setProcess((prevState) => ({...prevState,Edit: record.FAPM_PROCESS_DESC}))
+    setMachine((prevState) => ({...prevState,Edit: record.FAMM_MC_ID}))
+    setBath((prevState) => ({...prevState,Edit: record.FAB_BATH_DESC}))
+    setCh((prevState) => ({...prevState,Edit: record.FAM_CHEMICAL_DESC}))
+    setUnit2(record.FAM_UNIT)
+    setTarget(record.FAM_TARGET)
+    setLCL(record.FAM_LCL)
+    setUCL(record.FAM_UCL)
+    setUSL(record.FAM_USL)
+    setLSL(record.FAM_LSL)
+    setFormula(record.FAM_FORMULA)
+    setRefer1(record.FAM_FORMULA_REFER_ID)
+    setRefer2(record.FAM_FORMULA_REFER_ID2)
+    setInput_value(record.FAM_INPUT)
+    setSeq(record.FAM_SEQ)
+    setReplenisher(record.FAM_REPLENISHER)
+    setRefer1_1(record.FAM_REP_REFER_ID1)
+    setRefer2_1(record.FAM_REP_REFER_ID2)
+    setOpen(true);
+  
+    
+    
+  };
+  const handleOk = () => {
+    setModalText('The modal will be closed after two seconds');
+    setConfirmLoading(true);
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+    }, 2000);
+  };
+  const handleCancel = () => {
+    console.log('Clicked cancel button');
+    setOpen(false);
+  };
+
   const columns = [
     {
       title: "No.",
@@ -583,7 +684,7 @@ function fn_AnalysisUpload() {
         text = (
           <Button
             icon={<EditOutlined />}
-            onClick={() => Btn_Delete(record.PRODUCT, record.PROCESS)}
+            onClick={() => Btn_Edit(record)}
             size="large"
           ></Button>
         );
@@ -598,7 +699,7 @@ function fn_AnalysisUpload() {
         text = (
           <Button
             icon={<CloseOutlined style={{ color: "red" }} />}
-            onClick={() => Btn_Delete(record.PRODUCT, record.PROCESS)}
+            // onClick={() => Btn_Delete(record.PRODUCT, record.PROCESS)}
             size="large"
           ></Button>
         );
@@ -807,6 +908,200 @@ function fn_AnalysisUpload() {
     },
   ];
 
+  const columnsUpload = [
+    {
+      title: "No.",
+      dataIndex: "No",
+      key: "No.",
+      render: (text, record, index) => {
+        text = index + 1;
+        return text;
+      },
+      align: "center",
+      width: 50,
+    },
+    {
+      title: "Bath",
+      dataIndex: "BATH",
+      key: "Bath",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 150,
+    },
+    {
+      title: "Chemical",
+      dataIndex: "CHEMICAL",
+      key: "Chemical",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 150,
+    },
+    {
+      title: "Seq",
+      dataIndex: "SEQ",
+      key: "Seq",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 50,
+    },
+    {
+      title: "Input",
+      dataIndex: "INPUT",
+      key: "Input",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 60,
+    },
+    {
+      title: "Formula",
+      children: [
+        {
+          title: "",
+          dataIndex: "FORMULA",
+          key: "",
+          render: (text, record, index) => {
+            return text;
+          },
+          align: "left",
+          width: 350,
+        },
+        {
+          title: "Refer1",
+          dataIndex: "FORMULA_REFER1",
+          key: "Refer1",
+          render: (text, record, index) => {
+            return text;
+          },
+          align: "center",
+          width: 60,
+        },
+        {
+          title: "Refer2",
+          dataIndex: "FORMULA_REFER2",
+          key: "Refer2",
+          render: (text, record, index) => {
+            return text;
+          },
+          align: "center",
+          width: 60,
+        },
+      ],
+    },
+    {
+      title: "Replenisher",
+      children: [
+        {
+          title: "",
+          dataIndex: "REPLENISHER",
+          key: "",
+          render: (text, record, index) => {
+            return text;
+          },
+          align: "left",
+          width: 350,
+        },
+        {
+          title: "Refer1",
+          dataIndex: "REPLENISHER_REFER1",
+          key: "Refer1",
+          render: (text, record, index) => {
+            return text;
+          },
+          align: "center",
+          width: 60,
+        },
+        {
+          title: "Refer2",
+          dataIndex: "REPLENISHER_REFER2",
+          key: "Refer2",
+          render: (text, record, index) => {
+            return text;
+          },
+          align: "center",
+          width: 60,
+        },
+      ],
+    },
+    {
+      title: "Unit",
+      dataIndex: "UNIT",
+      key: "Unit",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 60,
+    },
+    {
+      title: "Target",
+      dataIndex: "TARGET",
+      key: "Target",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 60,
+    },
+    {
+      title: "LCL",
+      dataIndex: "LCL",
+      key: "LCL",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 50,
+    },
+    {
+      title: "UCL",
+      dataIndex: "UCL",
+      key: "UCL",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 50,
+    },
+    {
+      title: "LSL",
+      dataIndex: "LSL",
+      key: "LSL",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 50,
+    },
+    {
+      title: "USL",
+      dataIndex: "USL",
+      key: "USL",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 50,
+    },
+    {
+      title: "Remark",
+      dataIndex: "REMARK",
+      key: "Remark",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "left",
+      width: 400,
+    },
+  ];
+
   return {
     columns,
     Unit,
@@ -848,10 +1143,27 @@ function fn_AnalysisUpload() {
     SL_ProcessPopUp,
     SL_UnitPopUp,
     SL_MCPopUp,
-    UnitPopUp,
-    ProcessPopUp,
-    MCPopUp,
+
     UploadFile,
+    columnsUpload,
+    openedit,
+    handleOk,
+    confirmLoading,
+    handleCancel,
+    Unit2,
+    Target,
+    LCL,
+    UCL,
+    LSL,
+    USL,
+    Formula,
+    Refer1,
+    Refer2,
+    Input_value,
+    Seq,
+    Replenisher,
+    Refer1_1,
+    Refer2_1
   };
 }
 

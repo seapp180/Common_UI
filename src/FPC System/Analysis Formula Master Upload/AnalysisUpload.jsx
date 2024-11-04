@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Layout, Button, Table, Select, Modal, Spin, Tag, Avatar } from "antd";
+import { Layout, Button, Table, Select, Modal, Spin, Tag, Avatar,Input  } from "antd";
 import axios from "axios";
 import {
   SearchOutlined,
@@ -67,6 +67,25 @@ const AnalysisUpload = () => {
     ProcessPopUp,
     MCPopUp,
     UploadFile,
+    columnsUpload,
+    openedit,
+    handleOk,
+    confirmLoading,
+    handleCancel,
+    Unit2,
+    Target,
+    LCL,
+    UCL,
+    LSL,
+    USL,
+    Formula,
+    Refer1,
+    Refer2,
+    Input_value,
+    Seq,
+    Replenisher,
+    Refer1_1,
+    Refer2_1
   } = fn_AnalysisUpload();
 
   return (
@@ -91,7 +110,7 @@ const AnalysisUpload = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            options={Unit}
+            options={Unit.Search}
             onChange={HandleUnit}
           />
         </div>
@@ -112,7 +131,7 @@ const AnalysisUpload = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            options={Process}
+            options={Process.Search}
             onChange={handleProcess}
           />
         </div>
@@ -133,7 +152,7 @@ const AnalysisUpload = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            options={Machine}
+            options={Machine.Search}
             onChange={handleMachine}
           />
         </div>
@@ -158,7 +177,7 @@ const AnalysisUpload = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            options={Bath}
+            options={Bath.Search}
             onChange={HandleBath}
           />
         </div>
@@ -179,7 +198,7 @@ const AnalysisUpload = () => {
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
-            options={Ch}
+            options={Ch.Search}
             onChange={HandleCh}
           />
         </div>
@@ -244,10 +263,12 @@ const AnalysisUpload = () => {
         footer={null}
         onCancel={handlePopUpCancel}
         width={"95%"}
+        getContainer={false}
       >
         <div style={{ display: "flex", alignItems: "flex-start" }}>
           <div style={{}}>
             <span style={{ fontSize: "14px" }}>Unit</span>
+           { console.log(Unit,'popopopop')}
             <Select
               showSearch
               value={SL_UnitPopUp}
@@ -264,7 +285,7 @@ const AnalysisUpload = () => {
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              options={UnitPopUp}
+              options={Unit.PopUp}
               onChange={HandleUnitPopUp}
             />
           </div>
@@ -287,7 +308,7 @@ const AnalysisUpload = () => {
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              options={ProcessPopUp}
+              options={Process.PopUp}
               onChange={HandleProcessPopUp}
             />
           </div>
@@ -310,7 +331,7 @@ const AnalysisUpload = () => {
                   .toLowerCase()
                   .includes(input.toLowerCase())
               }
-              options={MCPopUp}
+              options={Machine.PopUp}
               onChange={HandleMachinePopUp}
             />
           </div>
@@ -397,13 +418,14 @@ const AnalysisUpload = () => {
         <br />
         <div className="divTable">
           <Table
-            // columns={columnsUpload}
+            columns={columnsUpload}
             style={{ width: "99%" }}
             className="tableSerachAnalysis"
             dataSource={dataFile}
             pagination={false}
             scroll={{ x: "max-content", y: 310 }}
             size="small"
+            bordered
           ></Table>
         </div>
         <br />
@@ -429,6 +451,139 @@ const AnalysisUpload = () => {
           >
             Cancel
           </Button>
+        </div>
+      </Modal>
+      <Modal
+        title="Analysis Formula Master maintain"
+        centered
+        open={openedit}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        width={650}
+        okText="Save"
+        okButtonProps={{ style: { backgroundColor: '#e84e40' } }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <table
+     
+            className="TableEdit"
+          >
+            <tbody>
+              <tr >
+                <td className="Edit_form">Unit :</td>
+                <td>
+                  <Input disabled  value={Unit.Edit} />
+                </td>
+                <td></td>
+                <td className="Edit_form">Process :</td>
+                <td>
+                  <Input disabled value={Process.Edit} />
+                </td>
+              </tr>
+              <tr>
+                <td className="Edit_form">Machine :</td>
+                <td>
+                  <Input disabled value={Machine.Edit} />
+                </td>
+                <td></td>
+                <td className="Edit_form">Bath :</td>
+                <td>
+                  <Input disabled value={Bath.Edit} />
+                </td>
+              </tr>
+              <tr >
+                <td className="Edit_form">Chemical :</td>
+                <td  >
+                  <Input disabled value={Ch.Edit} />
+                </td>
+                
+              </tr>
+              <tr >
+                <td className="Edit_form">Unit :</td>
+                <td>
+                  <Input  value={Unit2} />
+                </td>
+                <td></td>
+                <td className="Edit_form">Target :</td>
+                <td>
+                  <Input value={Target} />
+                </td>
+              </tr>
+              <tr>
+                <td className="Edit_form">LCL :</td>
+                <td>
+                  <Input value={LCL} />
+                </td>
+                <td></td>
+                <td className="Edit_form">UCL :</td>
+                <td>
+                  <Input value={UCL} />
+                </td>
+              </tr>
+              <tr>
+                <td className="Edit_form">LSL :</td>
+                <td>
+                  <Input value={LSL} />
+                </td>
+                <td></td>
+                <td className="Edit_form">USL :</td>
+                <td>
+                  <Input value={USL} />
+                </td>
+              </tr>
+              <tr>
+                <td className="Edit_form">Formula :</td>
+                <td colSpan={4}>
+                  <Input value={Formula} />
+                </td>
+              </tr>
+              <tr>
+                <td className="Edit_form">Refer 1 :</td>
+                <td>
+                  <Input value={Refer1} />
+                </td>
+                <td></td>
+                <td className="Edit_form">Refer 2 :</td>
+                <td>
+                  <Input value={Refer2} />
+                </td>
+              </tr>
+              <tr>
+                <td className="Edit_form"> Input :</td>
+                <td>
+                  <Input value={Input_value} />
+                </td>
+                <td></td>
+                <td className="Edit_form">Seq :</td>
+                <td>
+                  <Input value={Seq} />
+                </td>
+              </tr>
+              <tr>
+                <td className="Edit_form">Replenisher :</td>
+                <td colSpan={4}>
+                  <Input value={Replenisher} />
+                </td>
+              </tr>
+              <tr>
+                <td className="Edit_form">Refer 1 :</td>
+                <td>
+                  <Input value={Refer1_1} />
+                </td>
+                <td></td>
+                <td className="Edit_form">Refer 2 :</td>
+                <td>
+                  <Input value={Refer2_1} />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </Modal>
     </Content>
