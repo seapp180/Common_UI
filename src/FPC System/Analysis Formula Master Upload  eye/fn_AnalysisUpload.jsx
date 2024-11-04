@@ -19,7 +19,7 @@ import {
 } from "@ant-design/icons";
 
 function fn_AnalysisUpload() {
-  const [Unit, setUnit] = useState({Search:[],Edit:[],PopUp:[]});
+  const [Unit, setUnit] = useState({Search:[],Edit:[],PopUp:[],disabled:false});
   const [Process, setProcess] = useState({Search:[],Edit:[],PopUp:[]});
   const [Machine, setMachine] = useState({Search:[],Edit:[],PopUp:[]});
   const [Bath, setBath] = useState({Search:[],Edit:[],PopUp:[]});
@@ -209,7 +209,7 @@ function fn_AnalysisUpload() {
   };
   
   const Insert = () => {
-   setOpen(true)
+   Btn_Edit("","insert");
   };
   
   const showPopUp = () => {
@@ -630,33 +630,57 @@ function fn_AnalysisUpload() {
     saveAs(dataBlob, `${NameFile}.xlsx`);
   };
 
-  const Btn_Edit = (record) => {
-    console.log("OKKKK", record)
-    setUnit((prevState) => ({...prevState,Edit: record.FAUM_UNIT_DESC}))
-    setProcess((prevState) => ({...prevState,Edit: record.FAPM_PROCESS_DESC}))
-    setMachine((prevState) => ({...prevState,Edit: record.FAMM_MC_ID}))
-    setBath((prevState) => ({...prevState,Edit: record.FAB_BATH_DESC}))
-    setCh((prevState) => ({...prevState,Edit: record.FAM_CHEMICAL_DESC}))
-    setUnit2(record.FAM_UNIT)
-    setTarget(record.FAM_TARGET)
-    setLCL(record.FAM_LCL)
-    setUCL(record.FAM_UCL)
-    setUSL(record.FAM_USL)
-    setLSL(record.FAM_LSL)
-    setFormula(record.FAM_FORMULA)
-    setRefer1(record.FAM_FORMULA_REFER_ID)
-    setRefer2(record.FAM_FORMULA_REFER_ID2)
-    setInput_value(record.FAM_INPUT)
-    setSeq(record.FAM_SEQ)
-    setReplenisher(record.FAM_REPLENISHER)
-    setRefer1_1(record.FAM_REP_REFER_ID1)
-    setRefer2_1(record.FAM_REP_REFER_ID2)
+  const Btn_Edit = (record,page) => {
+    console.log("OKKKK", record,page)
+    if (page == 'edit'){
+      setUnit((prevState) => ({...prevState,Edit: record.FAUM_UNIT_DESC,disabled:true}))
+      setProcess((prevState) => ({...prevState,Edit: record.FAPM_PROCESS_DESC,disabled:true}))
+      setMachine((prevState) => ({...prevState,Edit: record.FAMM_MC_ID,disabled:true}))
+      setBath((prevState) => ({...prevState,Edit: record.FAB_BATH_DESC,disabled:true}))
+      setCh((prevState) => ({...prevState,Edit: record.FAM_CHEMICAL_DESC,disabled:true}))
+      setUnit2(record.FAM_UNIT)
+      setTarget(record.FAM_TARGET)
+      setLCL(record.FAM_LCL)
+      setUCL(record.FAM_UCL)
+      setUSL(record.FAM_USL)
+      setLSL(record.FAM_LSL)
+      setFormula(record.FAM_FORMULA)
+      setRefer1(record.FAM_FORMULA_REFER_ID)
+      setRefer2(record.FAM_FORMULA_REFER_ID2)
+      setInput_value(record.FAM_INPUT)
+      setSeq(record.FAM_SEQ)
+      setReplenisher(record.FAM_REPLENISHER)
+      setRefer1_1(record.FAM_REP_REFER_ID1)
+      setRefer2_1(record.FAM_REP_REFER_ID2)
+    }else if (page == 'insert'){
+      setUnit((prevState) => ({...prevState,Edit: [],disabled:false}))
+      setProcess((prevState) => ({...prevState,Edit: [],disabled:false}))
+      setMachine((prevState) => ({...prevState,Edit: [],disabled:false}))
+      setBath((prevState) => ({...prevState,Edit: [],disabled:false}))
+      setCh((prevState) => ({...prevState,Edit: [],disabled:false}))
+      setUnit2([])
+      setTarget([])
+      setLCL([])
+      setUCL([])
+      setUSL([])
+      setLSL([])
+      setFormula([])
+      setRefer1([])
+      setRefer2([])
+      setInput_value([])
+      setSeq([])
+      setReplenisher([])
+      setRefer1_1([])
+      setRefer2_1([])
+    }
+  
     setOpen(true);
   
     
     
   };
   const handleOk = () => {
+    console.log(Unit2,"OKSAVE")
     setModalText('The modal will be closed after two seconds');
     setConfirmLoading(true);
     setTimeout(() => {
@@ -688,7 +712,7 @@ function fn_AnalysisUpload() {
         text = (
           <Button
             icon={<EditOutlined />}
-            onClick={() => Btn_Edit(record)}
+            onClick={() => Btn_Edit(record,"edit")}
             size="large"
           ></Button>
         );

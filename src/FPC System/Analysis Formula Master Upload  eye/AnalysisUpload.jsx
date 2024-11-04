@@ -18,6 +18,7 @@ import "./AnalysisUpload.css";
 import ImgExcel from "../../assets/excel.png";
 import "../../StyleCommon.css";
 import Imgchemistry from "../../assets/chemistry.png";
+import { tr } from "date-fns/locale";
 
 //
 const { Content } = Layout;
@@ -285,8 +286,14 @@ const AnalysisUpload = () => {
         style={{ marginTop: "5px" }}
         className="tableSerachAnalysis"
         dataSource={DataSearch}
-        bordered
-        pagination={false}
+        pagination={{
+          pageSize: 100,
+          position: ["bottomCenter"],
+          showSizeChanger: true,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} items`,
+          showSizeChanger: false,
+        }}
         scroll={{ x: "max-content", y: 350 }}
       ></Table>
       <Modal
@@ -509,29 +516,29 @@ const AnalysisUpload = () => {
               <tr >
                 <td className="Edit_form">Unit :</td>
                 <td>
-                  <Input disabled  value={Unit.Edit} />
+                  <Input disabled={Unit.disabled}  value={Unit.Edit} />
                 </td>
                 <td></td>
                 <td className="Edit_form">Process :</td>
                 <td>
-                  <Input disabled value={Process.Edit} />
+                  <Input disabled={Process.disabled}  value={Process.Edit} />
                 </td>
               </tr>
               <tr>
                 <td className="Edit_form">Machine :</td>
                 <td>
-                  <Input disabled value={Machine.Edit} />
+                  <Input disabled={Machine.disabled} value={Machine.Edit} />
                 </td>
                 <td></td>
                 <td className="Edit_form">Bath :</td>
                 <td>
-                  <Input disabled value={Bath.Edit} />
+                  <Input disabled={Bath.disabled} value={Bath.Edit} />
                 </td>
               </tr>
               <tr >
                 <td className="Edit_form">Chemical :</td>
                 <td  >
-                  <Input disabled value={Ch.Edit} />
+                  <Input disabled={Ch.disabled} value={Ch.Edit} />
                 </td>
                 
               </tr>
