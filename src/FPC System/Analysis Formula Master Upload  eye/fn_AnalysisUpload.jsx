@@ -684,7 +684,7 @@ function fn_AnalysisUpload() {
     {
       align: "center",
       render: (text, record, index) => {
-        // console.log(record, "record");
+
         text = (
           <Button
             icon={<EditOutlined />}
