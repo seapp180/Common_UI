@@ -51,7 +51,7 @@ function Shipmentschedulemaintain() {
   } = fn_Shipmentschedulemaintain();
 
   return (
-    <Content>
+    <Content className="content">
       <div style={{ display: "flex", alignItems: "center" }}>
         <h2 className="TitlePage_h2">Shipment schedule maintain</h2>
       </div>
@@ -63,25 +63,16 @@ function Shipmentschedulemaintain() {
       >
         <TableContainer
           style={{
-            width: "430px",
-            margin: "4px", 
+            width: "440px",
+            margin: "4px",
           }}
-          //component={Paper}
+        //component={Paper}
         >
           <Table className="TbShipment">
-            {/* <TableHead>
-              <TableRow>
-                <TableCell colSpan={2} align="center">
-                  <Typography variant="h6">
-                    Shipment schedule maintain
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            </TableHead> */}
             <TableBody>
               <TableRow>
-                <TableCell align="right">
-                  <Typography>Product name :</Typography>
+                <TableCell>
+                  <Typography className="font">Product name :</Typography>
                 </TableCell>
                 <TableCell style={{ width: "250px" }}>
                   <Input
@@ -98,8 +89,8 @@ function Shipmentschedulemaintain() {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell align="right">
-                  <Typography>Build :</Typography>
+                <TableCell >
+                  <Typography className="font">Build :</Typography>
                 </TableCell>
                 <TableCell>
                   <Select
@@ -118,8 +109,8 @@ function Shipmentschedulemaintain() {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell align="right">
-                  <Typography>Line :</Typography>
+                <TableCell>
+                  <Typography className="font">Line :</Typography>
                 </TableCell>
                 <TableCell>
                   <Input
@@ -135,8 +126,9 @@ function Shipmentschedulemaintain() {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell align="right">
+                <TableCell>
                   <Typography
+                    className="font"
                     style={{ marginTop: "-48px" }}
                   >
                     Lot No. :
@@ -156,8 +148,8 @@ function Shipmentschedulemaintain() {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell align="right">
-                  <Typography>First shipment plan :</Typography>
+                <TableCell>
+                  <Typography className="font">First shipment plan :</Typography>
                 </TableCell>
                 <TableCell>
                   <DatePicker
@@ -172,8 +164,8 @@ function Shipmentschedulemaintain() {
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell align="right">
-                  <Typography>Second shipment plan :</Typography>
+                <TableCell>
+                  <Typography className="font">Second shipment plan :</Typography>
                 </TableCell>
                 <TableCell>
                   <DatePicker
@@ -198,7 +190,7 @@ function Shipmentschedulemaintain() {
             display: "flex",
             justifyContent: "center",
             gap: "10px",
-            marginLeft: "5px",
+            marginLeft: "180px",
             marginBottom: "2px"
           }}
           >
@@ -215,7 +207,7 @@ function Shipmentschedulemaintain() {
               <SaveOutlined />
               Save
             </Button>{" "}
-            &nbsp;&nbsp;
+            &nbsp;
             <Button
               className="BtCancel"
               onClick={btnCancelClick}

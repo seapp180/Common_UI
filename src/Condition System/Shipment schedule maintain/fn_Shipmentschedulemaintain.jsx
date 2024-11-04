@@ -56,6 +56,7 @@ function fn_Shipmentschedulemaintain() {
     })
       .then((res) => {
         let data = res.data.flat();
+        console.log(data)
         setBuildData(data);
         setselBuild(data[0].build);
       });
