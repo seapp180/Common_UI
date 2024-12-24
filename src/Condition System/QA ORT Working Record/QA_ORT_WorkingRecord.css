@@ -103,7 +103,7 @@
 .Btn_Search {
   background-color: #1640D6;
   border-color: #1640D6;
-  width: 50%;
+  width: 100%;
   font-size: 16px;
   
 }
@@ -111,14 +111,14 @@
 .Btn_Cancel {
   background-color: #DF2E38;
   border-color: #DF2E38;
-  width: 50%;
+  width: 100%;
   font-size: 16px;
 }
 
 .Btn_Export {
   background-color: #399918;
   border-color: #399918;
-  width: 50%;
+  width: 100%;
   font-size: 16px;
 }
 

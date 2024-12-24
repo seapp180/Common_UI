@@ -6,9 +6,8 @@ import { notification } from "antd";
 import { CloseCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import { useLoading } from "../../component/loading/fn_loading";
 
-
 function fn_QA_ORT_WorkingRecord() {
-   const { showLoading, hideLoading } = useLoading();
+  const { showLoading, hideLoading } = useLoading();
   const [opFactory, setOpFactory] = useState([
     { value: "A1", label: "A1" },
     { value: "N1", label: "N1" },
@@ -27,9 +26,17 @@ function fn_QA_ORT_WorkingRecord() {
     { value: "OUTPUT2", label: "OUTPUT2" },
   ]);
   const [selectedDateFromIn, setSelectedFromIn] = useState("");
+  const [selectedDateFromIn1, setSelectedFromIn1] = useState("");
+  const [selectedDateFromIn2, setSelectedFromIn2] = useState("");
   const [selectedDateFromOut, setSelectedFromOut] = useState("");
+  const [selectedDateFromOut1, setSelectedFromOut1] = useState("");
+  const [selectedDateFromOut2, setSelectedFromOut2] = useState("");
   const [selectedDateToIn, setSelectedToIn] = useState("");
+  const [selectedDateToIn1, setSelectedToIn1] = useState("");
+  const [selectedDateToIn2, setSelectedToIn2] = useState("");
   const [selectedDateToOut, setSelectedToOut] = useState("");
+  const [selectedDateToOut1, setSelectedToOut1] = useState("");
+  const [selectedDateToOut2, setSelectedToOut2] = useState("");
   const [drpFactory, setDrpFactory] = useState("A1");
   const [drpProductType, setDrpProductType] = useState("ALL");
   const [drpInPut, setDrpInPut] = useState("");
@@ -42,16 +49,90 @@ function fn_QA_ORT_WorkingRecord() {
   const [dataSource, setDataSource] = useState("");
   const [showTable, setShowTable] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [opProductName, setOpProductName] = useState([]);
+  const [drpProductName, setDrpProductName] = useState("");
+  const [opItemTest, setOpItemTest] = useState([]);
+  const [drpItemTest, setDrpItemTest] = useState("");
 
   useEffect(() => {
-    setShowTable(false);
+    const fetchProductName = async () => {
+      try {
+        const getProductName = await axios.post(
+          "/api/QAORTWorkingRecord/ProductNameQAORTWorkingRecord"
+        );
+
+        let data = getProductName.data;
+        if (data && data.length > 0) {
+          const flatData = data.flat().map((item) => ({
+            value: item.PRODUCT_NAME,
+            label: item.PRODUCT_NAME,
+          }));
+
+          setOpProductName(flatData);
+        } else {
+          setOpProductName([]);
+        }
+      } catch (error) {
+        console.error("An error occurred in fetchProductName:", error);
+        setOpProductName([]);
+      }
+    };
+
+    const fetchItemTest = async () => {
+      try {
+        const getItemTest = await axios.post(
+          "/api/QAORTWorkingRecord/ItemTestQAORTWorkingRecord"
+        );
+
+        let data = getItemTest.data;
+        if (data && data.length > 0) {
+          const flatData = data.flat().map((item) => ({
+            value: item.ITEM_TEST,
+            label: item.ITEM_TEST,
+          }));
+          console.log("getItemTest", data);
+          setOpItemTest(flatData);
+        } else {
+          setOpItemTest([]);
+        }
+      } catch (error) {
+        console.error("An error occurred in fetchItemTest:", error);
+        setOpItemTest([]);
+      }
+    };
+    const fetchData = async () => {
+      setShowTable(false);
+      await Promise.all([fetchProductName(), fetchItemTest()]);
+    };
+
+    fetchData();
   }, []);
 
   const Btn_Search = async () => {
-    // console.log("Btn_Search",drpFactory, drpProductType, drpInPut, drpOutPut, inputProductName, inputTestItem, inputLotNo, inputWeekNo, inputSerialNo, selectedDateFromIn, selectedDateFromOut, selectedDateToIn, selectedDateToOut);
+    console.log(
+      "Btn_Search",
+      drpFactory,
+      drpProductType,
+      drpInPut,
+      drpOutPut,
+      inputProductName,
+      drpProductName,
+      inputTestItem,
+      drpItemTest,
+      inputLotNo,
+      inputWeekNo,
+      inputSerialNo,
+      selectedDateFromIn1,
+      selectedDateFromIn2,
+      selectedDateFromOut1,
+      selectedDateFromOut2,
+      selectedDateToIn1,
+      selectedDateToIn2,
+      selectedDateToOut1,
+      selectedDateToOut2
+    );
     setLoading(true);
-    showLoading('กำลังค้นหา กรุณารอสักครู่');
-    // showLoading();
+    showLoading("กำลังค้นหา กรุณารอสักครู่");
     if (drpFactory.trim() === "" || drpProductType.trim() === "") {
       openNotification("Error");
       setTimeout(() => {
@@ -70,15 +151,18 @@ function fn_QA_ORT_WorkingRecord() {
         ptrLotNo: inputLotNo,
         ptrWeekNo: inputWeekNo,
         ptrSerialNo: inputSerialNo,
-        ptrDateFromIn: selectedDateFromIn,
-        ptrDateFromOut: selectedDateFromOut,
-        ptrDateToIn: selectedDateToIn,
-        ptrDateToOut: selectedDateToOut,
+        ptrDateFromIn1: selectedDateFromIn1,
+        ptrDateFromIn2: selectedDateFromIn2,
+        ptrDateFromOut1: selectedDateFromOut1,
+        ptrDateFromOut2: selectedDateFromOut2,
+        ptrDateToIn1: selectedDateToIn1,
+        ptrDateToIn2: selectedDateToIn2,
+        ptrDateToOut1: selectedDateToOut1,
+        ptrDateToOut2: selectedDateToOut2,
       })
       .then((res) => {
         let data = res.data;
         if (data.length > 0) {
-      
           setDataSource(data);
           setShowTable(true);
           setLoading(false);
@@ -91,46 +175,40 @@ function fn_QA_ORT_WorkingRecord() {
           hideLoading();
         }
       });
-    // setTimeout(() => {
-    //   setLoading(false);
-    // }, 2000);
   };
 
   const Btn_Cancel = async () => {
-   
-    setSelectedFromIn("");
-    setSelectedFromOut("");
-    setSelectedToIn("");
-    setSelectedToOut("");
+    setSelectedFromIn1("");
+    setSelectedFromIn2("");
+    setSelectedFromOut1("");
+    setSelectedFromOut2("");
+    setSelectedToIn1("");
+    setSelectedToIn2("");
+    setSelectedToOut1("");
+    setSelectedToOut2("");
     setDrpFactory("A1");
     setDrpProductType("ALL");
-    setDrpInPut("");
-    setDrpOutPut("");
     setInputProductName("");
     setInputTestItem("");
     setInputLotNo("");
     setInputWeekNo("");
     setInputSerialNo("");
     setDataSource("");
+    setDrpProductName("");
+    setDrpItemTest("");
     setShowTable(false);
   };
 
-  // const Btn_Excel = async () => {
-  //   showLoading('กรุณารอสักครู่');
-  //   await  FN_ExportGridView("QA_ORT_working_record" + ".xlsx", dataSource);
-  //   hideLoading();
-  // };
   const Btn_Excel = async () => {
-    showLoading('กำลังดาวน์โหลด กรุณารอสักครู่');
-    await new Promise(resolve => setTimeout(resolve, 100));
+    showLoading("กำลังดาวน์โหลด กรุณารอสักครู่");
+    await new Promise((resolve) => setTimeout(resolve, 100));
     try {
       await FN_ExportGridView("QA_ORT_working_record" + ".xlsx", dataSource);
     } catch (error) {
       console.error("Export error:", error);
     } finally {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       hideLoading();
-      
     }
   };
 
@@ -139,7 +217,6 @@ function fn_QA_ORT_WorkingRecord() {
     const sheet = workbook.addWorksheet("My Sheet");
     sheet.properties.defaultRowHeight = 20;
 
-    // ดึงชื่อคีย์จาก data[0] เพื่อสร้าง header อัตโนมัติ
     const dynamicColumns = Object.keys(data[0] || {}).map((key) => ({
       header: key.toUpperCase(),
       key: key,
@@ -202,141 +279,7 @@ function fn_QA_ORT_WorkingRecord() {
       const blob = new Blob([buffer], { type: "application/octet-stream" });
       saveAs(blob, `${namefile}`);
     });
-  
   };
-//   const FN_ExportGridView = async (namefile, data) => {
-    
-//     const workbook = new ExcelJS.Workbook();
-//     const sheet = workbook.addWorksheet("My Sheet");
-//     sheet.properties.defaultRowHeight = 20;
-
-//     // กำหนด headers ตามที่ต้องการ
-//     const headers = [
-//         { header: 'No.', key: 'no', width: 8 },
-//         { header: 'Unit', key: 'unit', width: 10 },
-//         { header: 'Process', key: 'process', width: 12 },
-//         { header: 'Machine', key: 'machine', width: 12 },
-//         { header: 'Bath', key: 'bath', width: 15 },
-//         { header: 'Chemical', key: 'chemical', width: 12 },
-//         { header: 'Seq', key: 'seq', width: 8 },
-//         { header: 'Input', key: 'input', width: 8 },
-//         { 
-//             header: 'Formula', 
-//             key: 'formula', 
-//             width: 20,
-//             children: [
-//                 { header: 'Refer1', key: 'refer1', width: 10 },
-//                 { header: 'Refer2', key: 'refer2', width: 10 }
-//             ]
-//         }
-//     ];
-
-//     // สร้าง columns
-//     sheet.columns = headers.flatMap(header => {
-//         if (header.children) {
-//             return header.children;
-//         }
-//         return header;
-//     });
-
-//     // สร้าง header rows
-//     const headerRow1 = sheet.getRow(1);
-//     const headerRow2 = sheet.getRow(2);
-
-//     // จัดการ header แถวแรก
-//     let colIndex = 1;
-//     headers.forEach(header => {
-//         const cell = headerRow1.getCell(colIndex);
-//         cell.value = header.header;
-        
-//         if (header.children) {
-//             // Merge cells สำหรับ Formula
-//             sheet.mergeCells(1, colIndex, 1, colIndex + header.children.length - 1);
-            
-//             // เพิ่ม sub-headers
-//             header.children.forEach((child, index) => {
-//                 const subCell = headerRow2.getCell(colIndex + index);
-//                 subCell.value = child.header;
-//                 subCell.fill = {
-//                     type: 'pattern',
-//                     pattern: 'solid',
-//                     fgColor: { argb: 'B8CCE4' } // สีพื้นหลัง header
-//                 };
-//                 subCell.border = {
-//                     top: { style: 'thin' },
-//                     left: { style: 'thin' },
-//                     bottom: { style: 'thin' },
-//                     right: { style: 'thin' }
-//                 };
-//                 subCell.font = {
-//                     bold: true,
-//                     size: 11
-//                 };
-//                 subCell.alignment = { horizontal: 'center', vertical: 'middle' };
-//             });
-//             colIndex += header.children.length;
-//         } else {
-//             // Merge cells สำหรับ header ปกติ
-//             sheet.mergeCells(1, colIndex, 2, colIndex);
-//             colIndex += 1;
-//         }
-
-//         cell.fill = {
-//             type: 'pattern',
-//             pattern: 'solid',
-//             fgColor: { argb: 'B8CCE4' } // สีพื้นหลัง header
-//         };
-//         cell.border = {
-//             top: { style: 'thin' },
-//             left: { style: 'thin' },
-//             bottom: { style: 'thin' },
-//             right: { style: 'thin' }
-//         };
-//         cell.font = {
-//             bold: true,
-//             size: 11
-//         };
-//         cell.alignment = { horizontal: 'center', vertical: 'middle' };
-//     });
-
-//     // เพิ่มข้อมูลเริ่มจากแถวที่ 3
-//     data.forEach((row, index) => {
-//         const dataRow = sheet.addRow({
-//             no: index + 1,
-//             unit: row.unit,
-//             process: row.process,
-//             machine: row.machine,
-//             bath: row.bath,
-//             chemical: row.chemical,
-//             seq: row.seq,
-//             input: row.input,
-//             refer1: row.refer1,
-//             refer2: row.refer2
-//         });
-
-//         // จัดรูปแบบแถวข้อมูล
-//         dataRow.eachCell({ includeEmpty: true }, cell => {
-//             cell.alignment = { horizontal: 'center', vertical: 'middle' };
-//             cell.border = {
-//                 top: { style: 'thin' },
-//                 left: { style: 'thin' },
-//                 bottom: { style: 'thin' },
-//                 right: { style: 'thin' }
-//             };
-//         });
-//     });
-
-//     // ปรับความสูงของ header rows
-//     headerRow1.height = 25;
-//     headerRow2.height = 25;
-
-//     // สร้างและดาวน์โหลดไฟล์
-//     workbook.xlsx.writeBuffer().then((buffer) => {
-//         const blob = new Blob([buffer], { type: "application/octet-stream" });
-//         saveAs(blob, `${namefile}`);
-//     });
-// };
-
   const columns = [
     {
       title: () => <div style={{ textAlign: "center" }}>Factory</div>,
@@ -640,20 +583,35 @@ function fn_QA_ORT_WorkingRecord() {
     }
   };
 
-
   return {
     opFactory,
     opProduct_Type,
     opInput,
     opOutput,
     setSelectedFromIn,
+    setSelectedFromIn1,
+    setSelectedFromIn2,
     selectedDateFromIn,
+    selectedDateFromIn1,
+    selectedDateFromIn2,
     setSelectedFromOut,
+    setSelectedFromOut1,
+    setSelectedFromOut2,
     selectedDateFromOut,
+    selectedDateFromOut1,
+    selectedDateFromOut2,
     setSelectedToIn,
+    setSelectedToIn1,
+    setSelectedToIn2,
     selectedDateToIn,
+    selectedDateToIn1,
+    selectedDateToIn2,
     setSelectedToOut,
+    setSelectedToOut1,
+    setSelectedToOut2,
     selectedDateToOut,
+    selectedDateToOut1,
+    selectedDateToOut2,
     drpFactory,
     setDrpFactory,
     drpProductType,
@@ -679,98 +637,13 @@ function fn_QA_ORT_WorkingRecord() {
     columns,
     showTable,
     loading,
+    opProductName,
+    drpProductName,
+    setDrpProductName,
+    drpItemTest,
+    setDrpItemTest,
+    opItemTest,
   };
 }
 
 export { fn_QA_ORT_WorkingRecord };
-
-// const ibtExcel_Click = async () => {
-//   console.log("เข้ามาในเงื่อนไขแล้ว : ");
-//   await axios
-//     .post("/api/GetSerialMagazineByLot", {
-//       dataList: {
-//         strplant_code: plantCode,
-//         strlot: txtLotNo.value,
-//       },
-//     })
-//     .then((res) => {
-//       let data = res.data.flat().flat();
-//       console.log("data ibtExcel_Click", data);
-//       setGvScanResult((prevState) => ({
-//         ...prevState,
-//         value: data,
-//       }));
-//       FN_ExportGridView("Serail_" + txtLotNo.value + ".xls", data);
-//     });
-// };
-
-// const FN_ExportGridView = async (namefile, data) => {
-//   console.log(data, "hhhhhhhh", namefile);
-//   const workbook = new ExcelJS.Workbook();
-//   const sheet = workbook.addWorksheet("My Sheet");
-//   sheet.properties.defaultRowHeight = 20;
-
-//   // ดึงชื่อคีย์จาก data[0] เพื่อสร้าง header อัตโนมัติ
-//   const dynamicColumns = Object.keys(data[0] || {}).map((key) => ({
-//     header: key.toUpperCase(),
-//     key: key,
-//     width: 10,
-//     style: { alignment: { horizontal: "center" } },
-//   }));
-//   sheet.columns = dynamicColumns;
-
-//   if (data.length === 0) {
-//     const emptyRow = {};
-//     dynamicColumns.forEach((col) => (emptyRow[col.dataIndex] = "")); // เติมค่าค่าว่าง
-//     data.push(emptyRow);
-//   }
-
-//   data.forEach((row) => {
-//     const newRow = sheet.addRow(row);
-//     newRow.eachCell({ includeEmpty: true }, (cell) => {
-//       cell.alignment = { horizontal: "center" };
-
-//       cell.border = {
-//         top: { style: "thin" },
-//         left: { style: "thin" },
-//         bottom: { style: "thin" },
-//         right: { style: "thin" },
-//       };
-//     });
-//   });
-
-//   const firstRow = sheet.getRow(1);
-//   firstRow.eachCell({ includeEmpty: true }, (cell) => {
-//     cell.fill = {
-//       type: "pattern",
-//       pattern: "solid",
-//       fgColor: { argb: "FFFF00" },
-//     };
-//     cell.font = {
-//       name: "Roboto",
-//       size: 9,
-//       bold: true,
-//     };
-
-//     cell.border = {
-//       top: { style: "thin" },
-//       left: { style: "thin" },
-//       bottom: { style: "thin" },
-//       right: { style: "thin" },
-//     };
-//   });
-
-//   sheet.columns.forEach((column) => {
-//     let maxWidth = column.header.length;
-//     data.forEach((row) => {
-//       const cellValue = String(row[column.key] || "");
-//       maxWidth = Math.max(maxWidth, cellValue.length);
-//     });
-//     column.width = maxWidth + 2;
-//   });
-
-//   workbook.xlsx.writeBuffer().then((buffer) => {
-//     const blob = new Blob([buffer], { type: "application/octet-stream" });
-//     saveAs(blob, `${namefile}`);
-//   });
-// };
