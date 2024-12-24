@@ -54,6 +54,8 @@ function fn_QA_ORT_WorkingRecord() {
   const [opItemTest, setOpItemTest] = useState([]);
   const [drpItemTest, setDrpItemTest] = useState("");
 
+  const [scrollY, setScrollY] = useState(0);
+
   useEffect(() => {
     const fetchProductName = async () => {
       try {
@@ -67,7 +69,7 @@ function fn_QA_ORT_WorkingRecord() {
             value: item.PRODUCT_NAME,
             label: item.PRODUCT_NAME,
           }));
-
+          console.log("getProductName", flatData);
           setOpProductName(flatData);
         } else {
           setOpProductName([]);
@@ -100,9 +102,21 @@ function fn_QA_ORT_WorkingRecord() {
         setOpItemTest([]);
       }
     };
+
+    const Resize = async () => {
+      const handleResize = () => {
+        const availableHeight = window.innerHeight - 520; 
+        setScrollY(availableHeight);
+      };
+      handleResize();
+      window.addEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    };
     const fetchData = async () => {
       setShowTable(false);
-      await Promise.all([fetchProductName(), fetchItemTest()]);
+      await Promise.all([Resize(), fetchItemTest(), fetchProductName()]);
     };
 
     fetchData();
@@ -146,8 +160,8 @@ function fn_QA_ORT_WorkingRecord() {
         ptrProductType: drpProductType,
         ptrInput: drpInPut,
         ptrOutput: drpOutPut,
-        ptrProductName: inputProductName,
-        ptrTestItem: inputTestItem,
+        ptrProductName: drpProductName,
+        ptrTestItem: drpItemTest,
         ptrLotNo: inputLotNo,
         ptrWeekNo: inputWeekNo,
         ptrSerialNo: inputSerialNo,
@@ -194,8 +208,8 @@ function fn_QA_ORT_WorkingRecord() {
     setInputWeekNo("");
     setInputSerialNo("");
     setDataSource("");
-    setDrpProductName("");
-    setDrpItemTest("");
+    setDrpProductName("ALL");
+    setDrpItemTest("ALL");
     setShowTable(false);
   };
 
@@ -643,6 +657,7 @@ function fn_QA_ORT_WorkingRecord() {
     drpItemTest,
     setDrpItemTest,
     opItemTest,
+    scrollY,
   };
 }
 

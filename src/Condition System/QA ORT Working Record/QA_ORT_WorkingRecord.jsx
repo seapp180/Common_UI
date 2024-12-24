@@ -1103,6 +1103,7 @@ import "./QA_ORT_WorkingRecord.css";
 import "../../StyleCommon.css";
 import { fn_QA_ORT_WorkingRecord } from "./fn_QA_ORT_WorkingRecord";
 import moment from "moment";
+import dayjs from "dayjs";
 
 function QA_ORT_WorkingRecord() {
   const {
@@ -1165,6 +1166,7 @@ function QA_ORT_WorkingRecord() {
     drpItemTest,
     setDrpItemTest,
     opItemTest,
+    scrollY,
   } = fn_QA_ORT_WorkingRecord();
   return (
     <>
@@ -1266,12 +1268,17 @@ function QA_ORT_WorkingRecord() {
                           .localeCompare((optionB?.label ?? "").toLowerCase())
                       }
                       options={opProductName.map((ProductName) => ({
-                        value: ProductName.value,
-                        label: ProductName.label,
+                        value: ProductName.value.trim(),
+                        label: ProductName.label.trim(),
                       }))}
                       value={drpProductName || undefined}
+                      defaultValue="ALL"
                       onChange={(e) => {
-                        setDrpProductName(e || undefined);
+                        if (e) {
+                          setDrpProductName(e || undefined);
+                        } else {
+                          setDrpProductName("ALL");
+                        }
                       }}
                       allowClear
                     />
@@ -1298,8 +1305,13 @@ function QA_ORT_WorkingRecord() {
                         label: ItemTest.label,
                       }))}
                       value={drpItemTest || undefined}
+                      defaultValue="ALL"
                       onChange={(e) => {
-                        setDrpItemTest(e || undefined);
+                        if (e) {
+                          setDrpItemTest(e || undefined);
+                        } else {
+                          setDrpItemTest("ALL");
+                        }
                       }}
                       allowClear
                     />
@@ -1403,17 +1415,28 @@ function QA_ORT_WorkingRecord() {
                       style={{
                         width: "96%",
                       }}
+                      // value={
+                      //   selectedDateFromIn1 === ""
+                      //     ? undefined
+                      //     : moment(selectedDateFromIn1, "YYYY-MM-DD")
+                      // }
+                      // onChange={(date) => {
+                      //   if (date) {
+                      //     setSelectedFromIn1(date.format("YYYYMMDD"));
+                      //   } else {
+                      //     setSelectedFromIn1("");
+                      //   }
+                      // }}
                       value={
-                        selectedDateFromIn1 === ""
-                          ? undefined
-                          : moment(selectedDateFromIn1, "YYYY-MM-DD")
+                        selectedDateFromIn1
+                          ? dayjs(selectedDateFromIn1, "YYYYMMDD")
+                          : null
                       }
                       onChange={(date) => {
-                        if (date) {
-                          setSelectedFromIn1(date.format("YYYYMMDD"));
-                        } else {
-                          setSelectedFromIn1("");
-                        }
+                        const formattedDate = date
+                          ? dayjs(date).format("YYYYMMDD")
+                          : "";
+                        setSelectedFromIn1(formattedDate);
                       }}
                       allowClear
                     />
@@ -1429,17 +1452,28 @@ function QA_ORT_WorkingRecord() {
                       style={{
                         width: "96%",
                       }}
+                      // value={
+                      //   selectedDateToIn1 === ""
+                      //     ? undefined
+                      //     : moment(selectedDateToIn1, "YYYY-MM-DD")
+                      // }
+                      // onChange={(date) => {
+                      //   if (date) {
+                      //     setSelectedToIn1(date.format("YYYYMMDD"));
+                      //   } else {
+                      //     setSelectedToIn1("");
+                      //   }
+                      // }}
                       value={
-                        selectedDateToIn1 === ""
-                          ? undefined
-                          : moment(selectedDateToIn1, "YYYY-MM-DD")
+                        selectedDateToIn1
+                          ? dayjs(selectedDateToIn1, "YYYYMMDD")
+                          : null
                       }
                       onChange={(date) => {
-                        if (date) {
-                          setSelectedToIn1(date.format("YYYYMMDD"));
-                        } else {
-                          setSelectedToIn1("");
-                        }
+                        const formattedDate = date
+                          ? dayjs(date).format("YYYYMMDD")
+                          : "";
+                        setSelectedToIn1(formattedDate);
                       }}
                       allowClear
                     />
@@ -1468,17 +1502,28 @@ function QA_ORT_WorkingRecord() {
                       style={{
                         width: "96%",
                       }}
+                      // value={
+                      //   selectedDateFromOut1 === ""
+                      //     ? undefined
+                      //     : moment(selectedDateFromOut1, "YYYY-MM-DD")
+                      // }
+                      // onChange={(date) => {
+                      //   if (date) {
+                      //     setSelectedFromOut1(date.format("YYYYMMDD"));
+                      //   } else {
+                      //     setSelectedFromOut1("");
+                      //   }
+                      // }}
                       value={
-                        selectedDateFromOut1 === ""
-                          ? undefined
-                          : moment(selectedDateFromOut1, "YYYY-MM-DD")
+                        selectedDateFromOut1
+                          ? dayjs(selectedDateFromOut1, "YYYYMMDD")
+                          : null
                       }
                       onChange={(date) => {
-                        if (date) {
-                          setSelectedFromOut1(date.format("YYYYMMDD"));
-                        } else {
-                          setSelectedFromOut1("");
-                        }
+                        const formattedDate = date
+                          ? dayjs(date).format("YYYYMMDD")
+                          : "";
+                        setSelectedFromOut1(formattedDate);
                       }}
                       allowClear
                     />
@@ -1494,17 +1539,29 @@ function QA_ORT_WorkingRecord() {
                       style={{
                         width: "96%",
                       }}
+                      // value={
+                      //   selectedDateToOut1 === ""
+                      //     ? undefined
+                      //     : moment(selectedDateToOut1, "YYYY-MM-DD")
+                      // }
+                      // onChange={(date) => {
+                      //   if (date) {
+                      //     setSelectedToOut1(date.format("YYYYMMDD"));
+                      //   } else {
+                      //     setSelectedToOut1("");
+                      //   }
+                      // }}
+
                       value={
-                        selectedDateToOut1 === ""
-                          ? undefined
-                          : moment(selectedDateToOut1, "YYYY-MM-DD")
+                        selectedDateToOut1
+                          ? dayjs(selectedDateToOut1, "YYYYMMDD")
+                          : null
                       }
                       onChange={(date) => {
-                        if (date) {
-                          setSelectedToOut1(date.format("YYYYMMDD"));
-                        } else {
-                          setSelectedToOut1("");
-                        }
+                        const formattedDate = date
+                          ? dayjs(date).format("YYYYMMDD")
+                          : "";
+                        setSelectedToOut1(formattedDate);
                       }}
                       allowClear
                     />
@@ -1546,17 +1603,28 @@ function QA_ORT_WorkingRecord() {
                       style={{
                         width: "96%",
                       }}
+                      // value={
+                      //   selectedDateFromIn2 === ""
+                      //     ? undefined
+                      //     : moment(selectedDateFromIn2, "YYYY-MM-DD")
+                      // }
+                      // onChange={(date) => {
+                      //   if (date) {
+                      //     setSelectedFromIn2(date.format("YYYYMMDD"));
+                      //   } else {
+                      //     setSelectedFromIn2("");
+                      //   }
+                      // }}
                       value={
-                        selectedDateFromIn2 === ""
-                          ? undefined
-                          : moment(selectedDateFromIn2, "YYYY-MM-DD")
+                        selectedDateFromIn2
+                          ? dayjs(selectedDateFromIn2, "YYYYMMDD")
+                          : null
                       }
                       onChange={(date) => {
-                        if (date) {
-                          setSelectedFromIn2(date.format("YYYYMMDD"));
-                        } else {
-                          setSelectedFromIn2("");
-                        }
+                        const formattedDate = date
+                          ? dayjs(date).format("YYYYMMDD")
+                          : "";
+                        setSelectedFromIn2(formattedDate);
                       }}
                       allowClear
                     />
@@ -1572,17 +1640,28 @@ function QA_ORT_WorkingRecord() {
                       style={{
                         width: "96%",
                       }}
+                      // value={
+                      //   selectedDateToIn2 === ""
+                      //     ? undefined
+                      //     : moment(selectedDateToIn2, "YYYY-MM-DD")
+                      // }
+                      // onChange={(date) => {
+                      //   if (date) {
+                      //     setSelectedToIn2(date.format("YYYYMMDD"));
+                      //   } else {
+                      //     setSelectedToIn2("");
+                      //   }
+                      // }}
                       value={
-                        selectedDateToIn2 === ""
-                          ? undefined
-                          : moment(selectedDateToIn2, "YYYY-MM-DD")
+                        selectedDateToIn2
+                          ? dayjs(selectedDateToIn2, "YYYYMMDD")
+                          : null
                       }
                       onChange={(date) => {
-                        if (date) {
-                          setSelectedToIn2(date.format("YYYYMMDD"));
-                        } else {
-                          setSelectedToIn2("");
-                        }
+                        const formattedDate = date
+                          ? dayjs(date).format("YYYYMMDD")
+                          : "";
+                        setSelectedToIn2(formattedDate);
                       }}
                       allowClear
                     />
@@ -1623,17 +1702,28 @@ function QA_ORT_WorkingRecord() {
                       style={{
                         width: "96%",
                       }}
+                      // value={
+                      //   selectedDateFromOut2 === ""
+                      //     ? undefined
+                      //     : moment(selectedDateFromOut2, "YYYY-MM-DD")
+                      // }
+                      // onChange={(date) => {
+                      //   if (date) {
+                      //     setSelectedFromOut2(date.format("YYYYMMDD"));
+                      //   } else {
+                      //     setSelectedFromOut2("");
+                      //   }
+                      // }}
                       value={
-                        selectedDateFromOut2 === ""
-                          ? undefined
-                          : moment(selectedDateFromOut2, "YYYY-MM-DD")
+                        selectedDateFromOut2
+                          ? dayjs(selectedDateFromOut2, "YYYYMMDD")
+                          : null
                       }
                       onChange={(date) => {
-                        if (date) {
-                          setSelectedFromOut2(date.format("YYYYMMDD"));
-                        } else {
-                          setSelectedFromOut2("");
-                        }
+                        const formattedDate = date
+                          ? dayjs(date).format("YYYYMMDD")
+                          : "";
+                        setSelectedFromOut2(formattedDate);
                       }}
                       allowClear
                     />
@@ -1649,17 +1739,28 @@ function QA_ORT_WorkingRecord() {
                       style={{
                         width: "96%",
                       }}
+                      // value={
+                      //   selectedDateToOut2 === ""
+                      //     ? undefined
+                      //     : moment(selectedDateToOut2, "YYYY-MM-DD")
+                      // }
+                      // onChange={(date) => {
+                      //   if (date) {
+                      //     setSelectedToOut2(date.format("YYYYMMDD"));
+                      //   } else {
+                      //     setSelectedToOut2("");
+                      //   }
+                      // }}
                       value={
-                        selectedDateToOut2 === ""
-                          ? undefined
-                          : moment(selectedDateToOut2, "YYYY-MM-DD")
+                        selectedDateToOut2
+                          ? dayjs(selectedDateToOut2, "YYYYMMDD")
+                          : null
                       }
                       onChange={(date) => {
-                        if (date) {
-                          setSelectedToOut2(date.format("YYYYMMDD"));
-                        } else {
-                          setSelectedToOut2("");
-                        }
+                        const formattedDate = date
+                          ? dayjs(date).format("YYYYMMDD")
+                          : "";
+                        setSelectedToOut2(formattedDate);
                       }}
                       allowClear
                     />
@@ -1711,7 +1812,7 @@ function QA_ORT_WorkingRecord() {
               }}
               scroll={{
                 x: "max-content",
-                y: 40 * 5.5,
+                y: scrollY,
               }}
               size="small"
               bordered
@@ -1955,17 +2056,28 @@ function QA_ORT_WorkingRecord() {
                     style={{
                       width: "96%",
                     }}
+                    // value={
+                    //   selectedDateFromIn1 === ""
+                    //     ? undefined
+                    //     : moment(selectedDateFromIn1, "YYYY-MM-DD")
+                    // }
+                    // onChange={(date) => {
+                    //   if (date) {
+                    //     setSelectedFromIn1(date.format("YYYYMMDD"));
+                    //   } else {
+                    //     setSelectedFromIn1("");
+                    //   }
+                    // }}
                     value={
-                      selectedDateFromIn1 === ""
-                        ? undefined
-                        : moment(selectedDateFromIn1, "YYYY-MM-DD")
+                      selectedDateFromIn1
+                        ? dayjs(selectedDateFromIn1, "YYYYMMDD")
+                        : null
                     }
                     onChange={(date) => {
-                      if (date) {
-                        setSelectedFromIn1(date.format("YYYYMMDD"));
-                      } else {
-                        setSelectedFromIn1("");
-                      }
+                      const formattedDate = date
+                        ? dayjs(date).format("YYYYMMDD")
+                        : "";
+                      setSelectedFromIn1(formattedDate);
                     }}
                     allowClear
                   />
@@ -1981,17 +2093,28 @@ function QA_ORT_WorkingRecord() {
                     style={{
                       width: "96%",
                     }}
+                    // value={
+                    //   selectedDateToIn1 === ""
+                    //     ? undefined
+                    //     : moment(selectedDateToIn1, "YYYY-MM-DD")
+                    // }
+                    // onChange={(date) => {
+                    //   if (date) {
+                    //     setSelectedToIn1(date.format("YYYYMMDD"));
+                    //   } else {
+                    //     setSelectedToIn1("");
+                    //   }
+                    // }}
                     value={
-                      selectedDateToIn1 === ""
-                        ? undefined
-                        : moment(selectedDateToIn1, "YYYY-MM-DD")
+                      selectedDateToIn1
+                        ? dayjs(selectedDateToIn1, "YYYYMMDD")
+                        : null
                     }
                     onChange={(date) => {
-                      if (date) {
-                        setSelectedToIn1(date.format("YYYYMMDD"));
-                      } else {
-                        setSelectedToIn1("");
-                      }
+                      const formattedDate = date
+                        ? dayjs(date).format("YYYYMMDD")
+                        : "";
+                      setSelectedToIn1(formattedDate);
                     }}
                     allowClear
                   />
@@ -2020,17 +2143,28 @@ function QA_ORT_WorkingRecord() {
                     style={{
                       width: "96%",
                     }}
+                    // value={
+                    //   selectedDateFromOut1 === ""
+                    //     ? undefined
+                    //     : moment(selectedDateFromOut1, "YYYY-MM-DD")
+                    // }
+                    // onChange={(date) => {
+                    //   if (date) {
+                    //     setSelectedFromOut1(date.format("YYYYMMDD"));
+                    //   } else {
+                    //     setSelectedFromOut1("");
+                    //   }
+                    // }}
                     value={
-                      selectedDateFromOut1 === ""
-                        ? undefined
-                        : moment(selectedDateFromOut1, "YYYY-MM-DD")
+                      selectedDateFromOut1
+                        ? dayjs(selectedDateFromOut1, "YYYYMMDD")
+                        : null
                     }
                     onChange={(date) => {
-                      if (date) {
-                        setSelectedFromOut1(date.format("YYYYMMDD"));
-                      } else {
-                        setSelectedFromOut1("");
-                      }
+                      const formattedDate = date
+                        ? dayjs(date).format("YYYYMMDD")
+                        : "";
+                      setSelectedFromOut1(formattedDate);
                     }}
                     allowClear
                   />
@@ -2046,17 +2180,28 @@ function QA_ORT_WorkingRecord() {
                     style={{
                       width: "96%",
                     }}
+                    // value={
+                    //   selectedDateToOut1 === ""
+                    //     ? undefined
+                    //     : moment(selectedDateToOut1, "YYYY-MM-DD")
+                    // }
+                    // onChange={(date) => {
+                    //   if (date) {
+                    //     setSelectedToOut1(date.format("YYYYMMDD"));
+                    //   } else {
+                    //     setSelectedToOut1("");
+                    //   }
+                    // }}
                     value={
-                      selectedDateToOut1 === ""
-                        ? undefined
-                        : moment(selectedDateToOut1, "YYYY-MM-DD")
+                      selectedDateToOut1
+                        ? dayjs(selectedDateToOut1, "YYYYMMDD")
+                        : null
                     }
                     onChange={(date) => {
-                      if (date) {
-                        setSelectedToOut1(date.format("YYYYMMDD"));
-                      } else {
-                        setSelectedToOut1("");
-                      }
+                      const formattedDate = date
+                        ? dayjs(date).format("YYYYMMDD")
+                        : "";
+                      setSelectedToOut1(formattedDate);
                     }}
                     allowClear
                   />
@@ -2085,17 +2230,28 @@ function QA_ORT_WorkingRecord() {
                     style={{
                       width: "96%",
                     }}
+                    // value={
+                    //   selectedDateFromIn2 === ""
+                    //     ? undefined
+                    //     : moment(selectedDateFromIn2, "YYYY-MM-DD")
+                    // }
+                    // onChange={(date) => {
+                    //   if (date) {
+                    //     setSelectedFromIn2(date.format("YYYYMMDD"));
+                    //   } else {
+                    //     setSelectedFromIn2("");
+                    //   }
+                    // }}
                     value={
-                      selectedDateFromIn2 === ""
-                        ? undefined
-                        : moment(selectedDateFromIn2, "YYYY-MM-DD")
+                      selectedDateFromIn2
+                        ? dayjs(selectedDateFromIn2, "YYYYMMDD")
+                        : null
                     }
                     onChange={(date) => {
-                      if (date) {
-                        setSelectedFromIn2(date.format("YYYYMMDD"));
-                      } else {
-                        setSelectedFromIn2("");
-                      }
+                      const formattedDate = date
+                        ? dayjs(date).format("YYYYMMDD")
+                        : "";
+                      setSelectedFromIn2(formattedDate);
                     }}
                     allowClear
                   />
@@ -2111,17 +2267,28 @@ function QA_ORT_WorkingRecord() {
                     style={{
                       width: "96%",
                     }}
+                    // value={
+                    //   selectedDateToIn2 === ""
+                    //     ? undefined
+                    //     : moment(selectedDateToIn2, "YYYY-MM-DD")
+                    // }
+                    // onChange={(date) => {
+                    //   if (date) {
+                    //     setSelectedToIn2(date.format("YYYYMMDD"));
+                    //   } else {
+                    //     setSelectedToIn2("");
+                    //   }
+                    // }}
                     value={
-                      selectedDateToIn2 === ""
-                        ? undefined
-                        : moment(selectedDateToIn2, "YYYY-MM-DD")
+                      selectedDateToIn2
+                        ? dayjs(selectedDateToIn2, "YYYYMMDD")
+                        : null
                     }
                     onChange={(date) => {
-                      if (date) {
-                        setSelectedToIn2(date.format("YYYYMMDD"));
-                      } else {
-                        setSelectedToIn2("");
-                      }
+                      const formattedDate = date
+                        ? dayjs(date).format("YYYYMMDD")
+                        : "";
+                      setSelectedToIn2(formattedDate);
                     }}
                     allowClear
                   />
@@ -2142,53 +2309,75 @@ function QA_ORT_WorkingRecord() {
                 </Col>
 
                 <Col span={4}>
-                <DatePicker
-                      placeholder="dd-mm-yyyy"
-                      format="DD-MM-YYYY"
-                      size="middle"
-                      style={{
-                        width: "96%",
-                      }}
-                      value={
-                        selectedDateFromOut2 === ""
-                          ? undefined
-                          : moment(selectedDateFromOut2, "YYYY-MM-DD")
-                      }
-                      onChange={(date) => {
-                        if (date) {
-                          setSelectedFromOut2(date.format("YYYYMMDD"));
-                        } else {
-                          setSelectedFromOut2("");
-                        }
-                      }}
-                      allowClear
-                    />
+                  <DatePicker
+                    placeholder="dd-mm-yyyy"
+                    format="DD-MM-YYYY"
+                    size="middle"
+                    style={{
+                      width: "96%",
+                    }}
+                    // value={
+                    //   selectedDateFromOut2 === ""
+                    //     ? undefined
+                    //     : moment(selectedDateFromOut2, "YYYY-MM-DD")
+                    // }
+                    // onChange={(date) => {
+                    //   if (date) {
+                    //     setSelectedFromOut2(date.format("YYYYMMDD"));
+                    //   } else {
+                    //     setSelectedFromOut2("");
+                    //   }
+                    // }}
+                    value={
+                      selectedDateFromOut2
+                        ? dayjs(selectedDateFromOut2, "YYYYMMDD")
+                        : null
+                    }
+                    onChange={(date) => {
+                      const formattedDate = date
+                        ? dayjs(date).format("YYYYMMDD")
+                        : "";
+                      setSelectedFromOut2(formattedDate);
+                    }}
+                    allowClear
+                  />
                 </Col>
                 <Col span={4} className="ColStyle">
                   <Typography className="FontStyle">Date To :</Typography>
                 </Col>
                 <Col span={4}>
-                <DatePicker
-                      placeholder="dd-mm-yyyy"
-                      format="DD-MM-YYYY"
-                      size="middle"
-                      style={{
-                        width: "96%",
-                      }}
-                      value={
-                        selectedDateToOut2 === ""
-                          ? undefined
-                          : moment(selectedDateToOut2, "YYYY-MM-DD")
-                      }
-                      onChange={(date) => {
-                        if (date) {
-                          setSelectedToOut2(date.format("YYYYMMDD"));
-                        } else {
-                          setSelectedToOut2("");
-                        }
-                      }}
-                      allowClear
-                    />
+                  <DatePicker
+                    placeholder="dd-mm-yyyy"
+                    format="DD-MM-YYYY"
+                    size="middle"
+                    style={{
+                      width: "96%",
+                    }}
+                    // value={
+                    //   selectedDateToOut2 === ""
+                    //     ? undefined
+                    //     : moment(selectedDateToOut2, "YYYY-MM-DD")
+                    // }
+                    // onChange={(date) => {
+                    //   if (date) {
+                    //     setSelectedToOut2(date.format("YYYYMMDD"));
+                    //   } else {
+                    //     setSelectedToOut2("");
+                    //   }
+                    // }}
+                    value={
+                      selectedDateToOut2
+                        ? dayjs(selectedDateToOut2, "YYYYMMDD")
+                        : null
+                    }
+                    onChange={(date) => {
+                      const formattedDate = date
+                        ? dayjs(date).format("YYYYMMDD")
+                        : "";
+                      setSelectedToOut2(formattedDate);
+                    }}
+                    allowClear
+                  />
                 </Col>
               </Row>
             </Card>
@@ -2274,7 +2463,7 @@ function QA_ORT_WorkingRecord() {
               }}
               scroll={{
                 x: "max-content",
-                y: 55 * 9,
+                y: scrollY,
               }}
               size="small"
               bordered
