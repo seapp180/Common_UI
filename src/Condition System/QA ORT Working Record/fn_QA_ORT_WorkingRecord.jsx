@@ -69,7 +69,6 @@ function fn_QA_ORT_WorkingRecord() {
             value: item.PRODUCT_NAME,
             label: item.PRODUCT_NAME,
           }));
-          console.log("getProductName", flatData);
           setOpProductName(flatData);
         } else {
           setOpProductName([]);
@@ -92,7 +91,6 @@ function fn_QA_ORT_WorkingRecord() {
             value: item.ITEM_TEST,
             label: item.ITEM_TEST,
           }));
-          console.log("getItemTest", data);
           setOpItemTest(flatData);
         } else {
           setOpItemTest([]);
@@ -123,28 +121,28 @@ function fn_QA_ORT_WorkingRecord() {
   }, []);
 
   const Btn_Search = async () => {
-    console.log(
-      "Btn_Search",
-      drpFactory,
-      drpProductType,
-      drpInPut,
-      drpOutPut,
-      inputProductName,
-      drpProductName,
-      inputTestItem,
-      drpItemTest,
-      inputLotNo,
-      inputWeekNo,
-      inputSerialNo,
-      selectedDateFromIn1,
-      selectedDateFromIn2,
-      selectedDateFromOut1,
-      selectedDateFromOut2,
-      selectedDateToIn1,
-      selectedDateToIn2,
-      selectedDateToOut1,
-      selectedDateToOut2
-    );
+    // console.log(
+    //   "Btn_Search",
+    //   drpFactory,
+    //   drpProductType,
+    //   drpInPut,
+    //   drpOutPut,
+    //   inputProductName,
+    //   drpProductName,
+    //   inputTestItem,
+    //   drpItemTest,
+    //   inputLotNo,
+    //   inputWeekNo,
+    //   inputSerialNo,
+    //   selectedDateFromIn1,
+    //   selectedDateFromIn2,
+    //   selectedDateFromOut1,
+    //   selectedDateFromOut2,
+    //   selectedDateToIn1,
+    //   selectedDateToIn2,
+    //   selectedDateToOut1,
+    //   selectedDateToOut2
+    // );
     setLoading(true);
     showLoading("กำลังค้นหา กรุณารอสักครู่");
     if (drpFactory.trim() === "" || drpProductType.trim() === "") {
