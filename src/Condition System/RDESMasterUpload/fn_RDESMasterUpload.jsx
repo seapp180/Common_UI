@@ -55,7 +55,7 @@ function fn_RDESMasterUpload() {
     axios
       .post("/api/RDESMasterUpload/FileFormat", {}, { responseType: "blob" })
       .then((res) => {
-        console.log(res.data, "GetFileFormat");
+
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement("a");
         link.href = url;
@@ -128,7 +128,7 @@ function fn_RDESMasterUpload() {
     }
   
     SetdataFile(selectedFiles);
-    console.log(selectedFiles, "Check");
+
   };
 
   const handleFileUpload = (event) => {
@@ -156,7 +156,7 @@ function fn_RDESMasterUpload() {
     );
 
     if (validFiles.length > 0) {
-      console.log("mamamamam", validFiles);
+
       setFileName(validFiles.map((file) => file.name));
       readExcelData(validFiles[0]);
     } else {
@@ -184,7 +184,7 @@ function fn_RDESMasterUpload() {
         )
         .filter((row) => row.some((cell) => cell !== ""));
   
-      console.log(filteredData, "filteredData");
+ 
   
       const datajson = filteredData.slice(1).map((row) => ({
         PRODUCT: row[1] || "",
@@ -199,7 +199,7 @@ function fn_RDESMasterUpload() {
       .filter((row) => row.PRODUCT !== "" || row.PROCESS !== "")
   
       setSelectedFiles(datajson);
-      console.log(datajson, "datajson");
+
     };
   
     reader.readAsArrayBuffer(file);
@@ -207,7 +207,7 @@ function fn_RDESMasterUpload() {
   
   const Btn_Delete = async (Product, Process) => {
 
-    console.log(Product, Process,'BTN_DEL')
+
     axios.post("/api/RDESMasterUpload/DeleteUploadFile", {        
       Product: Product,
       Process: Process
@@ -226,7 +226,6 @@ function fn_RDESMasterUpload() {
         title: err.message,
        
       });
-      console.error(err);
     });
   
   };
@@ -238,7 +237,7 @@ function fn_RDESMasterUpload() {
     setLoadingSave(true)
     try {
       for (let i = 0; i < dataFile.length; i++) {
-        console.log('SaveFile', dataFile[i]);
+
   
       
         const deleteRes = await axios.post("/api/RDESMasterUpload/DeleteUploadFile", {
@@ -247,7 +246,7 @@ function fn_RDESMasterUpload() {
         });
   
         if (deleteRes.data !== "") {
-          console.log('Delete', deleteRes.data);
+
           Error = deleteRes.data;
           break; 
         }
@@ -289,7 +288,7 @@ function fn_RDESMasterUpload() {
         icon: "error",
         title:  err.message,
       });
-      console.error(err);
+
       setLoadingSave(false)
       hideLoading();
       
@@ -375,7 +374,7 @@ function fn_RDESMasterUpload() {
       key: "",
       align: "center",
       render: (text, record, index) => {
-        console.log(record,'record')
+
         text = (
           <Button
             icon={<CloseOutlined style={{ color: "red" }} />}
@@ -491,7 +490,7 @@ function fn_RDESMasterUpload() {
   };
 
   const exportExcelFile = (HeaderColumn, data, namefile) => {
-    console.log(HeaderColumn, 'hhhhhhhh');
+
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("My Sheet");
     sheet.properties.defaultRowHeight = 20;

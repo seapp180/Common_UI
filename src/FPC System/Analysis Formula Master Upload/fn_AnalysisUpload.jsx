@@ -16,6 +16,7 @@ import {
   UploadOutlined,
   CloseCircleOutlined,
   EditOutlined,
+  LoadingOutlined
 } from "@ant-design/icons";
 import { se } from "date-fns/locale";
 
@@ -37,8 +38,9 @@ function fn_AnalysisUpload() {
   const [dataFile, SetdataFile] = useState([]);
   const [FileName, setFileName] = useState("");
   const [DisableSave, setDisableSave] = useState(false);
-  const [loadingSave, setLoadingSave] = useState(false);
-  const [loadingSearch, setLoadingSearch] = useState(false);
+  // const [loadingSave, setLoadingSave] = useState(false);
+  // const [loadingSearch, setLoadingSearch] = useState(false);
+  const [loadingEdit, setloadingEdit] = useState(null);
 
   const [SL_UnitPopUp, setSL_UnitPopUp] = useState(null);
   const [SL_ProcessPopUp, setSL_ProcessPopUp] = useState(null);
@@ -209,7 +211,7 @@ function fn_AnalysisUpload() {
   };
 
   const showPopUp = () => {
-    setUploadOpen(true);
+    setUploadOpen(true);  
   };
 
   const handlePopUpOk = () => {
@@ -326,8 +328,8 @@ function fn_AnalysisUpload() {
       let remark = "";
 
       //-----------------------------------------------1
-      if (bath == "" && chem == "" && seq == "") {
-        remark = "ไม่พบ Bath/Chemical/Seq";
+      if (bath == "" || chem == "" || seq == "") {
+        remark = remark ? remark + ", ไม่พบ Bath/Chemical/Seq" : "ไม่พบ Bath/Chemical/Seq";
       }
       //-----------------------------------------------3-6
       if (countFomula != 0) {
@@ -340,10 +342,10 @@ function fn_AnalysisUpload() {
             (item) => item.label === selectedFiles[i].FORMULA_REFER1
           );
           if (!CheckChem) {
-            remark = "Chemical Formula Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
+            remark =  remark ? remark + ", Chemical Formula Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน" : "Chemical Formula Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
           }
         } else {
-          remark = "ไม่พบ Fomula Refer1";
+          remark = remark ? remark + ", ไม่พบ Fomula Refer1" : "ไม่พบ Fomula Refer1";
         }
       }
       //------------------------------------------------ข้อ8
@@ -353,10 +355,10 @@ function fn_AnalysisUpload() {
             (item) => item.label === selectedFiles[i].FORMULA_REFER2
           );
           if (!CheckChem) {
-            remark = "Chemical Formula Refer2  ไม่อยู่ใน MC และ Bath เดียวกัน";
+            remark =remark ? remark + ", Chemical Formula Refer2  ไม่อยู่ใน MC และ Bath เดียวกัน" : "Chemical Formula Refer2  ไม่อยู่ใน MC และ Bath เดียวกัน";
           }
         } else {
-          remark = "ไม่พบ Fomula Refer2";
+          remark = remark ? remark + ", ไม่พบ Fomula Refer2" : "ไม่พบ Fomula Refer2";
         }
       }
       //------------------------------------------------ข้อ9
@@ -368,20 +370,20 @@ function fn_AnalysisUpload() {
       }
       //------------------------------------------------ข้อ10
       if (openParenthesesCount != closeParenthesesCount) {
-        remark = "วงเล็บเปิด-ปิดไม่ครบถ้วน";
+        remark = remark ? remark + ", วงเล็บเปิด-ปิดไม่ครบถ้วน" : "วงเล็บเปิด-ปิดไม่ครบถ้วน";
       }
       //------------------------------------------------ข้อ11
       if(formula!=''){
         console.log('เข้า formula',formula)
         if (!PatternFormula) {
-          remark = "Fomat Formula ไม่ถูกต้อง "+formula;
+          remark = remark ? remark + ", Fomat Formula ไม่ถูกต้อง "+formula : "Fomat Formula ไม่ถูกต้อง "+formula;
         }
       }
  
       //------------------------------------------------ข้อ12
       if(replenisher!=''){
         if (!PatternReplenisher) {
-          remark = "Fomat Replenisher ไม่ถูกต้อง "+replenisher;
+          remark = remark ? remark + ", Fomat Replenisher ไม่ถูกต้อง "+replenisher : "Fomat Replenisher ไม่ถูกต้อง "+replenisher;
         }
       }
 
@@ -392,10 +394,10 @@ function fn_AnalysisUpload() {
             (item) => item.label === selectedFiles[i].REPLENISHER_REFER1
           );
           if (!CheckChem) {
-            remark = "Chemical Replenisher Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
+            remark = remark ? remark + ", Chemical Replenisher Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน" : "Chemical Replenisher Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
           }
         } else {
-          remark = "ไม่พบ Replenisher Refer1";
+          remark = remark ? remark + ", ไม่พบ Replenisher Refer1" :  "ไม่พบ Replenisher Refer1";
         }
       }
       //------------------------------------------------ข้อ14
@@ -405,29 +407,32 @@ function fn_AnalysisUpload() {
             (item) => item.label === selectedFiles[i].REPLENISHER_REFER2
           );
           if (!CheckChem) {
-            remark = "Chemical Replenisher Refer2 ไม่อยู่ใน MC และ Bath เดียวกัน";
+            remark = remark ? remark + ", Chemical Replenisher Refer2 ไม่อยู่ใน MC และ Bath เดียวกัน" :  "Chemical Replenisher Refer2 ไม่อยู่ใน MC และ Bath เดียวกัน";
           }
         } else {
-          remark = "ไม่พบ Replenisher Refer2";
+          remark = remark ? remark + ", ไม่พบ Replenisher Refer2" : "ไม่พบ Replenisher Refer2";
         }
       }
       //------------------------------------------------ข้อ15
       if (target !== '' && isNaN(target)) {
-        remark='Target ไม่ใช่ตัวเลข'
+        remark= remark ? remark + ", Target ไม่ใช่ตัวเลข" : 'Target ไม่ใช่ตัวเลข'
       }
       if (lcl !== '' && isNaN(lcl)) {
-        remark='LCL ไม่ใช่ตัวเลข'
+        remark=remark ? remark + ", LCL ไม่ใช่ตัวเลข" :'LCL ไม่ใช่ตัวเลข'
       }
       if (ucl !== '' && isNaN(ucl)) {
-        remark='UCL ไม่ใช่ตัวเลข'
+        remark=remark ? remark + ", UCL ไม่ใช่ตัวเลข" :'UCL ไม่ใช่ตัวเลข'
       }
       if ( lsl !== '' && isNaN(lsl)) {
-        remark='LSL ไม่ใช่ตัวเลข'
+        remark=remark ? remark + ", LSL ไม่ใช่ตัวเลข" :'LSL ไม่ใช่ตัวเลข'
       }
       if (usl !== '' && isNaN(usl)) {
-        remark='USL ไม่ใช่ตัวเลข'
+        remark=remark ? remark + ", USL ไม่ใช่ตัวเลข" :'USL ไม่ใช่ตัวเลข'
       }
       //--------------------------end-----------------------
+      if(remark!=''){
+        setDisableSave(true)
+      }
       selectedFiles[i].REMARK = remark;
     }
     SetdataFile(selectedFiles)
@@ -626,42 +631,71 @@ function fn_AnalysisUpload() {
     saveAs(dataBlob, `${NameFile}.xlsx`);
   };
 
-  const Btn_Edit = (record) => {
-    console.log("OKKKK", record)
-    setUnit((prevState) => ({...prevState,Edit: record.FAUM_UNIT_DESC}))
-    setProcess((prevState) => ({...prevState,Edit: record.FAPM_PROCESS_DESC}))
-    setMachine((prevState) => ({...prevState,Edit: record.FAMM_MC_ID}))
-    setBath((prevState) => ({...prevState,Edit: record.FAB_BATH_DESC}))
-    setCh((prevState) => ({...prevState,Edit: record.FAM_CHEMICAL_DESC}))
-    setUnit2(record.FAM_UNIT)
-    setTarget(record.FAM_TARGET)
-    setLCL(record.FAM_LCL)
-    setUCL(record.FAM_UCL)
-    setUSL(record.FAM_USL)
-    setLSL(record.FAM_LSL)
-    setFormula(record.FAM_FORMULA)
-    setRefer1(record.FAM_FORMULA_REFER_ID)
-    setRefer2(record.FAM_FORMULA_REFER_ID2)
-    setInput_value(record.FAM_INPUT)
-    setSeq(record.FAM_SEQ)
-    setReplenisher(record.FAM_REPLENISHER)
-    setRefer1_1(record.FAM_REP_REFER_ID1)
-    setRefer2_1(record.FAM_REP_REFER_ID2)
-    setOpen(true);
-  
+  const Btn_OpenModal = (Menu,record,index) => {
+    if(Menu=='Edit'){
+      // setloadingEdit(index)
+      setOpen(true);
+      setUnit((prevState) => ({...prevState,Edit: record.FAUM_UNIT_DESC}))
+      setProcess((prevState) => ({...prevState,Edit: record.FAPM_PROCESS_DESC}))
+      setMachine((prevState) => ({...prevState,Edit: record.FAMM_MC_ID}))
+      setBath((prevState) => ({...prevState,Edit: record.FAB_BATH_DESC}))
+      setCh((prevState) => ({...prevState,Edit: record.FAM_CHEMICAL_DESC}))
+      setUnit2(record.FAM_UNIT)
+      setTarget(record.FAM_TARGET)
+      setLCL(record.FAM_LCL)
+      setUCL(record.FAM_UCL)
+      setUSL(record.FAM_USL)
+      setLSL(record.FAM_LSL)
+      setFormula(record.FAM_FORMULA)
+      setRefer1(record.FAM_FORMULA_REFER_ID)
+      setRefer2(record.FAM_FORMULA_REFER_ID2)
+      setInput_value(record.FAM_INPUT)
+      setSeq(record.FAM_SEQ)
+      setReplenisher(record.FAM_REPLENISHER)
+      setRefer1_1(record.FAM_REP_REFER_ID1)
+      setRefer2_1(record.FAM_REP_REFER_ID2)
     
-    
+      // setTimeout(() => {
+      //   setloadingEdit(null); 
+      // }, 500); 
+    }
+    else if(Menu=='Insert'){
+      setOpen(true);
+    }
+
+   
+
   };
   const handleOk = () => {
-    setModalText('The modal will be closed after two seconds');
+    // setModalText('The modal will be closed after two seconds');
     setConfirmLoading(true);
     setTimeout(() => {
       setOpen(false);
       setConfirmLoading(false);
     }, 2000);
   };
+
   const handleCancel = () => {
     console.log('Clicked cancel button');
+    setUnit((prevState) => ({...prevState,Edit: ''}))
+    setProcess((prevState) => ({...prevState,Edit: ''}))
+    setMachine((prevState) => ({...prevState,Edit: ''}))
+    setBath((prevState) => ({...prevState,Edit: ''}))
+    setCh((prevState) => ({...prevState,Edit: ''}))
+    setUnit2('')
+    setTarget('')
+    setLCL('')
+    setUCL('')
+    setUSL('')
+    setLSL('')
+    setFormula('')
+    setRefer1('')
+    setRefer2('')
+    setInput_value('')
+    setSeq('')
+    setReplenisher('')
+    setRefer1_1('')
+    setRefer2_1('')
     setOpen(false);
   };
 
@@ -680,15 +714,15 @@ function fn_AnalysisUpload() {
     {
       align: "center",
       render: (text, record, index) => {
-        // console.log(record, "record");
-        text = (
+        // const isLoading = loadingEdit === index; 
+        return (
           <Button
-            icon={<EditOutlined />}
-            onClick={() => Btn_Edit(record)}
+          icon={ <EditOutlined />}
+            // icon={isLoading ? <LoadingOutlined /> : <EditOutlined />}
+            onClick={() => Btn_OpenModal('Edit',record,index)}
             size="large"
           ></Button>
         );
-        return text;
       },
       width: 30,
     },
@@ -1131,11 +1165,11 @@ function fn_AnalysisUpload() {
     dataFile,
     FileName,
     DisableSave,
-    loadingSave,
+    // loadingSave,
     ClearFile,
     GetFileFormat,
     BtnExport,
-    loadingSearch,
+    // loadingSearch,
     Clear,
     HandleUnitPopUp,
     HandleProcessPopUp,
@@ -1163,7 +1197,8 @@ function fn_AnalysisUpload() {
     Seq,
     Replenisher,
     Refer1_1,
-    Refer2_1
+    Refer2_1,
+    Btn_OpenModal
   };
 }
 
