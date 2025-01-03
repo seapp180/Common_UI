@@ -1268,8 +1268,8 @@ function QA_ORT_WorkingRecord() {
                           .localeCompare((optionB?.label ?? "").toLowerCase())
                       }
                       options={opProductName.map((ProductName) => ({
-                        value: ProductName.value.trim(),
-                        label: ProductName.label.trim(),
+                        value: ProductName.value,
+                        label: ProductName.label,
                       }))}
                       value={drpProductName || undefined}
                       defaultValue="ALL"
