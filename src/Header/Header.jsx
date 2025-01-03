@@ -62,7 +62,6 @@ const CustomHeader = () => {
       })
       .then((res) => {
         let link = res.data[0].URL;
-        console.log(link, loginID, systemID);
         window.location.href = link;
       });
   };

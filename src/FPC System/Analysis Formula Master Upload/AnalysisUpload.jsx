@@ -11,6 +11,7 @@ import {
   SaveOutlined,
   UploadOutlined,
   CloseCircleOutlined,
+  PlusCircleOutlined
 } from "@ant-design/icons";
 import { fn_AnalysisUpload } from "./fn_AnalysisUpload";
 import "./AnalysisUpload.css";
@@ -51,11 +52,11 @@ const AnalysisUpload = () => {
     dataFile,
     FileName,
     DisableSave,
-    loadingSave,
+    // loadingSave,
     ClearFile,
     GetFileFormat,
     BtnExport,
-    loadingSearch,
+    // loadingSearch,
     Clear,
     HandleUnitPopUp,
     HandleProcessPopUp,
@@ -63,9 +64,7 @@ const AnalysisUpload = () => {
     SL_ProcessPopUp,
     SL_UnitPopUp,
     SL_MCPopUp,
-    UnitPopUp,
-    ProcessPopUp,
-    MCPopUp,
+
     UploadFile,
     columnsUpload,
     openedit,
@@ -85,7 +84,8 @@ const AnalysisUpload = () => {
     Seq,
     Replenisher,
     Refer1_1,
-    Refer2_1
+    Refer2_1,
+    Btn_OpenModal
   } = fn_AnalysisUpload();
 
   return (
@@ -206,7 +206,8 @@ const AnalysisUpload = () => {
           <br />
           <Button
             type="primary"
-            icon={loadingSearch ? <LoadingOutlined /> : <SearchOutlined />}
+            // icon={loadingSearch ? <LoadingOutlined /> : <SearchOutlined />}
+            icon={<SearchOutlined />}
             style={{ background: "#5AA8F5", color: "#fff", marginTop: "5px" }}
             onClick={() => Search()}
           >
@@ -221,8 +222,8 @@ const AnalysisUpload = () => {
             onClick={() => Clear()}
           >
             Clear{" "}
-          </Button>{" "}
-          &nbsp;&nbsp;
+          </Button>{" "} &nbsp;&nbsp;
+      
           <Button
             icon={<UploadOutlined />}
             onClick={() => showPopUp()}
@@ -235,11 +236,21 @@ const AnalysisUpload = () => {
       </div>
       <br></br>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
+      {/* <Button
+            icon={<PlusCircleOutlined />}
+            
+            type="primary"
+            style={{ background: "#399918" }}
+            onClick={() => Btn_OpenModal('Insert')}
+          >
+            Insert{" "}
+          </Button>{" "}
+          &nbsp;&nbsp; */}
         <Button
           icon={
             <img
               src={ImgExcel}
-              alt="Excel Icon"
+              // alt="Excel Icon"
               style={{ width: 20, height: 20 }}
             />
           }
@@ -255,8 +266,9 @@ const AnalysisUpload = () => {
         className="tableSerachAnalysis"
         dataSource={DataSearch}
         bordered
-        pagination={false}
+        pagination={true}
         scroll={{ x: "max-content", y: 350 }}
+        // pagination=
       ></Table>
       <Modal
         open={UploadOpen}
@@ -426,6 +438,7 @@ const AnalysisUpload = () => {
             scroll={{ x: "max-content", y: 310 }}
             size="small"
             bordered
+            rowClassName={(record) => (record.REMARK !== '' ? 'row-red' : '')}
           ></Table>
         </div>
         <br />
@@ -437,7 +450,8 @@ const AnalysisUpload = () => {
           }}
         >
           <Button
-            icon={loadingSave ? <LoadingOutlined /> : <SaveOutlined />}
+            // icon={loadingSave ? <LoadingOutlined /> : <SaveOutlined />}
+            icon={ <SaveOutlined />}
             disabled={DisableSave}
             style={{ marginLeft: "5px", background: "#399918", color: "#fff" }}
             // onClick={() => Save()}
@@ -457,11 +471,11 @@ const AnalysisUpload = () => {
         title="Analysis Formula Master maintain"
         centered
         open={openedit}
-        onOk={handleOk}
+        // onOk={handleOk}
         onCancel={handleCancel}
         width={650}
-        okText="Save"
-        okButtonProps={{ style: { backgroundColor: '#e84e40' } }}
+        // okText="Save"
+        // okButtonProps={{ style: { backgroundColor: '#e84e40' } }}
       >
         <div
           style={{
@@ -483,7 +497,7 @@ const AnalysisUpload = () => {
                 <td></td>
                 <td className="Edit_form">Process :</td>
                 <td>
-                  <Input disabled value={Process.Edit} />
+                  <Input disabled value={Process.Edit}  />
                 </td>
               </tr>
               <tr>
