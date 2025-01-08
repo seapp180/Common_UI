@@ -85,7 +85,8 @@ const AnalysisUpload = () => {
     Replenisher,
     Refer1_1,
     Refer2_1,
-    Btn_OpenModal
+    Btn_OpenModal,
+    Button_Save
   } = fn_AnalysisUpload();
 
   return (
@@ -454,7 +455,7 @@ const AnalysisUpload = () => {
             icon={ <SaveOutlined />}
             disabled={DisableSave}
             style={{ marginLeft: "5px", background: "#399918", color: "#fff" }}
-            // onClick={() => Save()}
+            onClick={() => Button_Save()}
           >
             Save
           </Button>

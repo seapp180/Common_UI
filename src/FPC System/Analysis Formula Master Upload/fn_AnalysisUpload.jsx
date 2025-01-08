@@ -9,7 +9,7 @@ import { saveAs } from "file-saver";
 import { Button, Tag } from "antd";
 import { useLoading } from "../../component/loading/fn_loading";
 
-
+import { fn_Header } from "../../Header/fn_Header";
 import {
   CloseOutlined,
   SaveOutlined,
@@ -21,6 +21,7 @@ import {
 import { se } from "date-fns/locale";
 
 function fn_AnalysisUpload() {
+  const { loginID} = fn_Header();
   const [Unit, setUnit] = useState({Search:[],Edit:[],PopUp:[]});
   const [Process, setProcess] = useState({Search:[],Edit:[],PopUp:[]});
   const [Machine, setMachine] = useState({Search:[],Edit:[],PopUp:[]});
@@ -219,17 +220,16 @@ function fn_AnalysisUpload() {
   };
 
   const handlePopUpCancel = async () => {
+
     SetdataFile([]);
     setUploadOpen(false);
     setFileName("");
     setSelectedFiles([]);
     document.getElementById("fileInput").value = "";
-    // setUnitPopUp([])
-    // setProcessPopUp([])
-    // setMCPopUp([])
-    // setSL_UnitPopUp(null)
-    // setSL_MCPopUp(null)
-    // setSL_ProcessPopUp(null)
+    //กลับมาเปิดด้วย
+    setSL_UnitPopUp(null)
+    setSL_MCPopUp(null)
+    setSL_ProcessPopUp(null)
   };
 
   const readExcelData = (file) => {
@@ -293,8 +293,9 @@ function fn_AnalysisUpload() {
         .post("/api/Analysis_Formular/GetBathValue", {
           Bath: selectedFiles[i].BATH,
         })
-        .then((res) => {
+        .then((res) => {console.log('bathValue',res.data);
           bathValue = res.data;
+          selectedFiles[i].BATH_ID=res.data;
         });
       await axios //get Chem
         .post("/api/Analysis_Formular/GetChemical", {
@@ -302,8 +303,11 @@ function fn_AnalysisUpload() {
           PARAMETER_BATH: bathValue,
         })
         .then((res) => {
+          console.log('dataChem',res.data);
           dataChem = res.data;
         });
+
+      
       let chem = selectedFiles[i].CHEMICAL;
       let seq = selectedFiles[i].SEQ;
       let formula = selectedFiles[i].FORMULA||'';
@@ -335,6 +339,22 @@ function fn_AnalysisUpload() {
       if (countFomula != 0) {
         selectedFiles[i].INPUT = countFomula;
       }
+       //-----------------------------------------------Check ซ้ำ ใน MC Bath เดียวกัน
+      await axios //
+      .post("/api/Analysis_Formular/CheckMcChemBath", {
+        BATH:selectedFiles[i].BATH_ID,
+        MACHINE: SL_MCPopUp,
+        CHEM: selectedFiles[i].CHEMICAL,
+      })
+      .then((res) => {
+        console.log('CheckMcChemBath',res.data);
+        if(res.data.length>0){
+          // remark = "พบ Chemical ซ้ำใน Machine และ Bath เดียวกัน";
+          remark =  remark ? remark + ", พบ Chemical ซ้ำใน Machine และ Bath เดียวกัน" : "พบ Chemical ซ้ำใน Machine และ Bath เดียวกัน";
+          // setDisableSave(true)
+        }
+        // dataChem = res.data;
+      });
       //------------------------------------------------ข้อ7
       if (formulaRef1 != null) {
         if (selectedFiles[i].FORMULA_REFER1 != "") {
@@ -433,6 +453,9 @@ function fn_AnalysisUpload() {
       if(remark!=''){
         setDisableSave(true)
       }
+      else{
+        setDisableSave(false)
+      }
       selectedFiles[i].REMARK = remark;
     }
     SetdataFile(selectedFiles)
@@ -447,6 +470,7 @@ function fn_AnalysisUpload() {
         icon: "error",
         title: "Please Select Machine",
       });
+      hideLoading()
       return;
     } else {
       await CheckConditions()
@@ -475,6 +499,7 @@ function fn_AnalysisUpload() {
   };
 
   const ClearFile = () => {
+    console.log("ClearFile");
     setFileName("");
     setSelectedFiles([]);
     document.getElementById("fileInput").value = "";
@@ -666,6 +691,7 @@ function fn_AnalysisUpload() {
    
 
   };
+
   const handleOk = () => {
     // setModalText('The modal will be closed after two seconds');
     setConfirmLoading(true);
@@ -697,10 +723,135 @@ function fn_AnalysisUpload() {
     setRefer1_1('')
     setRefer2_1('')
     setOpen(false);
+    setSL_MCPopUp(null)
+    setSL_ProcessPopUp(null)
+    setSL_UnitPopUp(null)
   };
+
+  const Change_ChemID = async() => {
+    await axios 
+    .post("/api/Analysis_Formular/CheckChemical", {})
+    .then(async(res) => {
+      console.log('CheckChemical',res.data);
+      if(res.data.length>0){
+      
+        for(let i=0;i<res.data.length;i++){
+          await axios 
+          .post("/api/Analysis_Formular/Change_ChemID", {
+            data:res.data[i]
+          })
+          .then(async(res) => {
+            console.log('Chang Success',res.data);
+          })
+        }
+      }
+    }
+    
+  )
+  }
+
+  const Button_Save = async() => {
+    showLoading('กำลังบันทึก กรุณารอสักครู่');
+    for(let i=0;i<dataFile.length;i++){
+      await axios 
+      .post("/api/Analysis_Formular/CheckChemical", {
+        MC_Code: SL_MCPopUp,
+        Chem_Desc: dataFile[i].CHEMICAL,
+      })
+      .then(async(res) => {
+       console.log('CheckChemical',res.data);
+       if(res.data.length<=0){
+        await axios 
+        .post("/api/Analysis_Formular/Ins_Chem", {
+          data:dataFile[i],
+          Machine: SL_MCPopUp,
+          loginID:loginID
+        })
+        .then(async(res) => {
+          if(res.data==''){
+            console.log('insert Sucess',);
+           await  Change_ChemID()
+          }
+          else{
+            Swal.fire({
+              icon: "error",
+              title:"Can't Save Chemical",
+              text: res.data,
+            });
+          }
+       
+        });
+      
+       }
+       else{
+        console.log('Update',);
+        // Update_Chem
+        await axios 
+        .post("/api/Analysis_Formular/Update_Chem", {
+          data:dataFile[i],
+          Machine: SL_MCPopUp,
+          loginID:loginID
+        })
+        .then(async(res) => {
+          if(res.data==''){
+            console.log('Update Sucess',);
+            await  Change_ChemID()
+          }
+          else{
+            Swal.fire({
+              icon: "error",
+              title:"Can't Save Chemical",
+              text: res.data,
+            });
+          }
+       
+        });
+        
+       }
+      });
+    }
+    Swal.fire({
+      icon: "success",
+      title:"Save Success",
+      // text: res.data,
+    });
+    // showLoading('กำลังค้นหา กรุณารอสักครู่');
+    SetdataFile([]);
+    // setUploadOpen(false);
+    setFileName("");
+    setSelectedFiles([]);
+    document.getElementById("fileInput").value = "";
+    hideLoading()
+  }
+
+  const Button_Delete = async(BATH,MACHINE,CHEM) => {
+    await axios 
+    .post("/api/Analysis_Formular/DeleteChem", {
+      BATH: SL_MCPopUp,
+      MACHINE: dataFile[i].CHEMICAL,
+      CHEM: dataFile[i].CHEMICAL,
+    })
+    .then(async(res) => {
+
+    })
+  }
 
   const columns = [
     {
+      align: "center",
+      render: (text, record, index) => {
+        // console.log(record, "record");
+        text = (
+          <Button
+            icon={<CloseOutlined style={{ color: "red" }} />}
+            onClick={() => Button_Delete(record.PRODUCT, record.PROCESS)}
+            size="large"
+          ></Button>
+        );
+        return text;
+      },
+      width: 30,
+    }, {
       title: "No.",
       dataIndex: "No",
       key: "No.",
@@ -711,36 +862,22 @@ function fn_AnalysisUpload() {
       align: "center",
       width: 30,
     },
-    {
-      align: "center",
-      render: (text, record, index) => {
-        // const isLoading = loadingEdit === index; 
-        return (
-          <Button
-          icon={ <EditOutlined />}
-            // icon={isLoading ? <LoadingOutlined /> : <EditOutlined />}
-            onClick={() => Btn_OpenModal('Edit',record,index)}
-            size="large"
-          ></Button>
-        );
-      },
-      width: 30,
-    },
-    {
-      align: "center",
-      render: (text, record, index) => {
-        // console.log(record, "record");
-        text = (
-          <Button
-            icon={<CloseOutlined style={{ color: "red" }} />}
-            // onClick={() => Btn_Delete(record.PRODUCT, record.PROCESS)}
-            size="large"
-          ></Button>
-        );
-        return text;
-      },
-      width: 30,
-    },
+    // {
+    //   align: "center",
+    //   render: (text, record, index) => {
+    //     // const isLoading = loadingEdit === index; 
+    //     return (
+    //       <Button
+    //       icon={ <EditOutlined />}
+    //         // icon={isLoading ? <LoadingOutlined /> : <EditOutlined />}
+    //         onClick={() => Btn_OpenModal('Edit',record,index)}
+    //         size="large"
+    //       ></Button>
+    //     );
+    //   },
+    //   width: 30,
+    // },
+   
     {
       title: "Fac Unit",
       dataIndex: "FAUM_UNIT_DESC",
@@ -1198,7 +1335,8 @@ function fn_AnalysisUpload() {
     Replenisher,
     Refer1_1,
     Refer2_1,
-    Btn_OpenModal
+    Btn_OpenModal,
+    Button_Save
   };
 }
 
