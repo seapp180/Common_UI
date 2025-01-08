@@ -824,16 +824,34 @@ function fn_AnalysisUpload() {
     hideLoading()
   }
 
-  const Button_Delete = async(BATH,MACHINE,CHEM) => {
+  const Button_Delete = async(BATH_Desc,MACHINE,CHEM) => {
+    showLoading('กำลังลบ กรุณารอสักครู่');
+    console.log('BATH',BATH_Desc,MACHINE,CHEM);
+    let Bath_Id=''
+    await axios //find Bath Value
+    .post("/api/Analysis_Formular/GetBathValue", {
+      Bath: BATH_Desc,
+    })
+    .then((res) => {console.log('bathValue',res.data);
+      // bathValue = res.data;
+      Bath_Id=res.data;
+    });
     await axios 
     .post("/api/Analysis_Formular/DeleteChem", {
-      BATH: SL_MCPopUp,
-      MACHINE: dataFile[i].CHEMICAL,
-      CHEM: dataFile[i].CHEMICAL,
+      BATH: Bath_Id,
+      MACHINE: MACHINE,
+      CHEM: CHEM
     })
     .then(async(res) => {
-
+      console.log('DeleteChem',res.data);
     })
+    Swal.fire({
+      icon: "success",
+      title:"Delete Success",
+      // text: res.data,
+    });
+    hideLoading()
+    Search()
   }
 
   const columns = [
@@ -844,7 +862,7 @@ function fn_AnalysisUpload() {
         text = (
           <Button
             icon={<CloseOutlined style={{ color: "red" }} />}
-            onClick={() => Button_Delete(record.PRODUCT, record.PROCESS)}
+            onClick={() => Button_Delete(record.FAB_BATH_DESC, record.FAMM_MC_ID,record.FAM_CHEMICAL_DESC)}
             size="large"
           ></Button>
         );
