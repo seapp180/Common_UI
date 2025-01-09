@@ -129,7 +129,7 @@ function Shipmentschedulemaintain() {
                 <TableCell>
                   <Typography
                     className="font"
-                    style={{ marginTop: "-48px" }}
+                    style={{ marginBottom: "65px" }}
                   >
                     Lot No. :
                   </Typography>
