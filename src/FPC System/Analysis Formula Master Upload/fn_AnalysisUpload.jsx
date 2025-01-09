@@ -18,6 +18,8 @@ import {
   EditOutlined,
   LoadingOutlined
 } from "@ant-design/icons";
+import ImgDelete from "../../assets/delete.png";
+
 import { se } from "date-fns/locale";
 
 function fn_AnalysisUpload() {
@@ -256,22 +258,22 @@ function fn_AnalysisUpload() {
         // UNIT : row[1] || "", // เริ่มจากคอลัมน์ B
         // PROCESS: row[2] || "",
         // MACHINE: row[3] ,
-        BATH: row[4] || "",
-        CHEMICAL: row[5] || "",
-        SEQ: row[6] || "",
+        BATH: row[1] || "",
+        CHEMICAL: row[2] || "",
+        SEQ: row[3] || "",
         INPUT: "", //row[7],
-        FORMULA: row[8],
-        FORMULA_REFER1: row[9],
-        FORMULA_REFER2: row[10],
-        REPLENISHER: row[11],
-        REPLENISHER_REFER1: row[12],
-        REPLENISHER_REFER2: row[13],
-        UNIT: row[14],
-        TARGET: row[15],
-        LCL: row[16],
-        UCL: row[17],
-        LSL: row[18],
-        USL: row[19],
+        FORMULA: row[5],
+        FORMULA_REFER1: row[6],
+        FORMULA_REFER2: row[7],
+        REPLENISHER: row[8],
+        REPLENISHER_REFER1: row[9],
+        REPLENISHER_REFER2: row[10],
+        UNIT: row[11],
+        TARGET: row[12],
+        LCL: row[13],
+        UCL: row[14],
+        LSL: row[15],
+        USL: row[16],
         REMARK: "",
       }));
       // กรองเฉพาะแถวที่มี PRODUCT และ PROCESS ไม่เป็นค่าว่าง
@@ -285,6 +287,7 @@ function fn_AnalysisUpload() {
   };
 
   const CheckConditions= async () => {
+    setDisableSave(false)
     for (let i = 0; i < selectedFiles.length; i++) {
       let dataChem = "";
       let bathValue = "";
@@ -453,9 +456,9 @@ function fn_AnalysisUpload() {
       if(remark!=''){
         setDisableSave(true)
       }
-      else{
-        setDisableSave(false)
-      }
+      // else{
+      //   setDisableSave(false)
+      // }
       selectedFiles[i].REMARK = remark;
     }
     SetdataFile(selectedFiles)
@@ -463,8 +466,7 @@ function fn_AnalysisUpload() {
   }
 
   const UploadFile = async () => {
-
-    showLoading('กำลัง Upload กรุณารอสักครู่');
+    showLoading('กำลังอ่านไฟล์ กรุณารอสักครู่');
     if (SL_MCPopUp == null) {
       Swal.fire({
         icon: "error",
@@ -503,6 +505,7 @@ function fn_AnalysisUpload() {
     setFileName("");
     setSelectedFiles([]);
     document.getElementById("fileInput").value = "";
+    SetdataFile([]);
   };
 
   const handleFileUpload = (event) => {
@@ -730,9 +733,9 @@ function fn_AnalysisUpload() {
 
   const Change_ChemID = async() => {
     await axios 
-    .post("/api/Analysis_Formular/CheckChemical", {})
+    .post("/api/Analysis_Formular/CheckChemDesc", {})
     .then(async(res) => {
-      console.log('CheckChemical',res.data);
+      console.log('CheckChemDesc',res.data);
       if(res.data.length>0){
       
         for(let i=0;i<res.data.length;i++){
@@ -770,7 +773,7 @@ function fn_AnalysisUpload() {
         .then(async(res) => {
           if(res.data==''){
             console.log('insert Sucess',);
-           await  Change_ChemID()
+           await Change_ChemID()
           }
           else{
             Swal.fire({
@@ -861,7 +864,7 @@ function fn_AnalysisUpload() {
         // console.log(record, "record");
         text = (
           <Button
-            icon={<CloseOutlined style={{ color: "red" }} />}
+          icon={<img src={ImgDelete} alt="Delete" style={{ width: '20px', height: '20px' }} />}
             onClick={() => Button_Delete(record.FAB_BATH_DESC, record.FAMM_MC_ID,record.FAM_CHEMICAL_DESC)}
             size="large"
           ></Button>
