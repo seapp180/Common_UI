@@ -20,7 +20,7 @@ import {
 } from "@ant-design/icons";
 import ImgDelete from "../../assets/delete.png";
 
-import { se } from "date-fns/locale";
+import { el, se } from "date-fns/locale";
 
 function fn_AnalysisUpload() {
   const { loginID} = fn_Header();
@@ -342,7 +342,32 @@ function fn_AnalysisUpload() {
       if (countFomula != 0) {
         selectedFiles[i].INPUT = countFomula;
       }
-       //-----------------------------------------------Check ซ้ำ ใน MC Bath เดียวกัน
+       //-----------------------------------------------Check SEQ ซ้ำ ใน MC Bath เดียวกัน
+      await axios //
+      .post("/api/Analysis_Formular/CheckSEQChemBath", {
+        BATH:selectedFiles[i].BATH_ID,
+        MACHINE: SL_MCPopUp,
+        SEQ: seq,
+      })
+      .then((res) => {
+        console.log('CheckSEQChemBath',res.data);
+        
+        if(res.data.length>0){
+          remark =  remark ? remark + ", พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database" : "พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database";
+        }
+        else{
+          const isDuplicate = selectedFiles.some((file, index) => seq!=''&&i !== index && seq === file.SEQ&&bath === file.BATH);
+          if (isDuplicate) {
+            console.log('ซ้ำ SEQ', chem, seq);
+            remark =  remark ? remark + ", พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน" : "พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน";
+          }
+        }
+      });
+      
+
+     
+    
+       //-----------------------------------------------Check CHEM ซ้ำ ใน MC Bath เดียวกัน
       await axios //
       .post("/api/Analysis_Formular/CheckMcChemBath", {
         BATH:selectedFiles[i].BATH_ID,
@@ -351,12 +376,13 @@ function fn_AnalysisUpload() {
       })
       .then((res) => {
         console.log('CheckMcChemBath',res.data);
+        
         if(res.data.length>0){
           // remark = "พบ Chemical ซ้ำใน Machine และ Bath เดียวกัน";
-          remark =  remark ? remark + ", พบ Chemical ซ้ำใน Machine และ Bath เดียวกัน" : "พบ Chemical ซ้ำใน Machine และ Bath เดียวกัน";
+          remark =  remark ? remark + ", พบ Chemical ซ้ำ Machine และ Bath เดียวกันใน Database" : "พบ Chemical ซ้ำใน Machine และ Bath เดียวกันใน Database";
           // setDisableSave(true)
         }
-        // dataChem = res.data;
+
       });
       //------------------------------------------------ข้อ7
       if (formulaRef1 != null) {
