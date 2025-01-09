@@ -363,10 +363,7 @@ function fn_AnalysisUpload() {
           }
         }
       });
-      
-
-     
-    
+         
        //-----------------------------------------------Check CHEM ซ้ำ ใน MC Bath เดียวกัน
       await axios //
       .post("/api/Analysis_Formular/CheckMcChemBath", {
