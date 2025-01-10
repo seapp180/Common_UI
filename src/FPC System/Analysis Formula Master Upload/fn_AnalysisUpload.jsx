@@ -211,9 +211,7 @@ function fn_AnalysisUpload() {
     }
   };
 
-  const showPopUp = () => {
-    setUploadOpen(true);  
-  };
+ 
 
   const handlePopUpOk = () => {
     setUploadOpen(false);

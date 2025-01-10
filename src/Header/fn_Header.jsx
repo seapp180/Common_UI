@@ -39,6 +39,13 @@ function fn_Header() {
           &nbsp;FPC System
         </span>
       );
+    }else if (partweb === "MFGReportSystem") {
+      setPageHeader(
+        <span className="TitleHeader">
+          <Avatar src={Imgtime} shape="square" />
+          &nbsp;MFG Report System
+        </span>
+      );
     } else {
       setPageHeader(
         <span className="TitleHeader">
@@ -47,6 +54,7 @@ function fn_Header() {
         </span>
       );
     }
+    
   };
 
   const Gohome = () => {
