@@ -532,158 +532,46 @@ function Box_Search() {
           ></Table>
         </div>
         <br />
-        {/* <div style={{ display: "flex", alignItems: "flex-start" }}>
-          <Card className="ManualPack">
-            <table width={"100%"}>
-              <tr>
-                <td style={{ textAlign: "right" }}>Seq :</td>
-                <td>
-                  <Input
-                    disabled
-                    showSearch
-                    // value={SL_Unit}
-                    style={{
-                      width: "65px",
-                      display: "block",
-                      marginTop: "5px",
-                    }}
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-                <td style={{ textAlign: "right" }}>Lot No :</td>
-                <td>
-                  <Select
-                    showSearch
-                    // value={SL_Unit}
-                    style={{
-                      width: "200px",
-                      display: "block",
-                      marginTop: "5px",
-                    }}
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-                <td style={{ textAlign: "right" }}>Remind Qty :</td>
-                <td>
-                  <Input
-                    disabled
-                    showSearch
-                    // value={SL_Unit}
-                    style={{
-                      width: "130px",
-                      display: "block",
-                      marginTop: "5px",
-                    }}
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-                <td style={{ textAlign: "right" }}>Packing Qty :</td>
-                <td>
-                  <Input
-                    disabled
-                    showSearch
-                    // value={SL_Unit}
-                    style={{
-                      width: "130px",
-                      display: "block",
-                      marginTop: "5px",
-                    }}
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td
-                  colSpan={8}
-                  style={{ textAlign: "center", padding: "10px" }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Button
-                      icon={<MedicineBoxOutlined />}
-                      type="primary"
-                      style={{
-                        background: "#3498db",
-                        color: "#fff",
-                        marginLeft: "10px",
-                      }}
-                      onClick={() => GenPack("ManualPack")}
-                    >
-                      Manual
-                    </Button>
-                    <Button
-                      icon={<MedicineBoxOutlined />}
-                      type="primary"
-                      style={{ marginLeft: "10px", backgroundColor: "#f4d03f" }}
-                      onClick={() => GenPack("AutoPack")}
-                    >
-                      Auto Pack
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </Card>
-        </div> */}
-<div style={{ display: "flex", alignItems: "flex-start", width: "67%", flexWrap: 'wrap' }}>
-  <span style={{ textAlign: "right", width: "100px",marginTop:'10px' }}>Seq :</span>
+
+<Card style={{ display: "flex", alignItems: "flex-start", width: "65%", flexWrap: 'wrap' }}>
+  <span style={{ textAlign: "right", width: "100px", marginLeft: "50px", }}>Seq : </span>
   <Input
     disabled
     showSearch
     style={{
       width: "65px",
-      marginLeft: "10px",
-      marginTop:'10px'
     }}
   />
-  <span style={{ textAlign: "right", width: "100px",marginTop:'10px' }}>Lot No :</span>
+  <span style={{ textAlign: "right", width: "100px", marginLeft: "100px", }}>Lot No : </span>
   <Select
     showSearch
     style={{
       width: "200px",
       marginLeft: "10px",
-      marginTop:'10px'
+     
     }}
   />
-  <span style={{ textAlign: "right", width: "100px" ,marginTop:'10px'}}>Remind Qty :</span>
+
+ <br/>
+ <span style={{ textAlign: "right", width: "100px" ,}}>Remind Qty : </span>
   <Input
     disabled
     showSearch
     style={{
       width: "130px",
-      marginLeft: "10px",
-      marginTop:'10px'
+    
+     
     }}
   />
-  <span style={{ textAlign: "right", width: "100px" ,marginTop:'10px'}}>Packing Qty :</span>
+  <span style={{ textAlign: "right", width: "100px" ,marginLeft: "10px"}}>Packing Qty :</span>
   <Input
     disabled
     showSearch
     style={{
-      width: "130px",
+      width: "200px",
       marginLeft: "10px",
-      marginTop:'10px'}}
+      marginTop:'10px'
+     }}
   />
   <div style={{ width: "100%", marginTop: "10px" ,textAlign:'center'}}>
     <Button
@@ -707,82 +595,8 @@ function Box_Search() {
       Auto Pack
     </Button>
   </div>
-</div>
-{/* <div style={{ display: "flex", alignItems: "flex-start", width: "100%" }}>
-  <Card  style={{ width: "100%", maxWidth: "1200px", margin: "10px" }}>
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", width: "100%", marginBottom: "10px" }}>
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-          <span style={{ textAlign: "right", width: "100px" }}>Seq :</span>
-          <Input
-            disabled
-            showSearch
-            style={{
-              width: "65px",
-              marginLeft: "10px",
-            }}
-          />
-        </div>
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-          <span style={{ textAlign: "right", width: "100px" }}>Lot No :</span>
-          <Select
-            showSearch
-            style={{
-              width: "200px",
-              marginLeft: "10px",
-            }}
-          />
-        </div>
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-          <span style={{ textAlign: "right", width: "100px" }}>Remind Qty :</span>
-          <Input
-            disabled
-            showSearch
-            style={{
-              width: "130px",
-              marginLeft: "10px",
-            }}
-          />
-        </div>
-        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-          <span style={{ textAlign: "right", width: "100px" }}>Packing Qty :</span>
-          <Input
-            disabled
-            showSearch
-            style={{
-              width: "130px",
-              marginLeft: "10px",
-            }}
-          />
-        </div>
-      </div>
-      <div style={{ textAlign: "center", padding: "10px", width: "100%" }}>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <Button
-            icon={<MedicineBoxOutlined />}
-            type="primary"
-            style={{
-              background: "#3498db",
-              color: "#fff",
-              marginLeft: "10px",
-            }}
-            onClick={() => GenPack("ManualPack")}
-          >
-            Manual
-          </Button>
-          <Button
-            icon={<MedicineBoxOutlined />}
-            type="primary"
-            style={{ marginLeft: "10px", backgroundColor: "#f4d03f" }}
-            onClick={() => GenPack("AutoPack")}
-          >
-            Auto Pack
-          </Button>
-        </div>
-      </div>
-    </div>
-  </Card>
-</div> */}
+</Card>
+
       </Modal>
     </Content>
   );
