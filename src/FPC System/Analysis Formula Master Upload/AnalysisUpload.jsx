@@ -17,9 +17,6 @@ import { fn_AnalysisUpload } from "./fn_AnalysisUpload";
 import "./AnalysisUpload.css";
 import ImgExcel from "../../assets/excel.png";
 import "../../StyleCommon.css";
-import Imgchemistry from "../../assets/chemistry.png";
-
-//
 const { Content } = Layout;
 
 const AnalysisUpload = () => {
@@ -43,20 +40,16 @@ const AnalysisUpload = () => {
     Search,
     DataSearch,
     showPopUp,
-    handlePopUpOk,
     handlePopUpCancel,
     UploadOpen,
     handleDrop,
     handleFileUpload,
-    selectedFiles,
     dataFile,
     FileName,
     DisableSave,
-    // loadingSave,
     ClearFile,
     GetFileFormat,
     BtnExport,
-    // loadingSearch,
     Clear,
     HandleUnitPopUp,
     HandleProcessPopUp,
@@ -64,28 +57,8 @@ const AnalysisUpload = () => {
     SL_ProcessPopUp,
     SL_UnitPopUp,
     SL_MCPopUp,
-
     UploadFile,
     columnsUpload,
-    openedit,
-    handleOk,
-    confirmLoading,
-    handleCancel,
-    Unit2,
-    Target,
-    LCL,
-    UCL,
-    LSL,
-    USL,
-    Formula,
-    Refer1,
-    Refer2,
-    Input_value,
-    Seq,
-    Replenisher,
-    Refer1_1,
-    Refer2_1,
-    Btn_OpenModal,
     Button_Save
   } = fn_AnalysisUpload();
 
@@ -207,7 +180,6 @@ const AnalysisUpload = () => {
           <br />
           <Button
             type="primary"
-            // icon={loadingSearch ? <LoadingOutlined /> : <SearchOutlined />}
             icon={<SearchOutlined />}
             style={{ background: "#5AA8F5", color: "#fff", marginTop: "5px" }}
             onClick={() => Search()}
@@ -237,21 +209,11 @@ const AnalysisUpload = () => {
       </div>
       <br></br>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
-      {/* <Button
-            icon={<PlusCircleOutlined />}
-            
-            type="primary"
-            style={{ background: "#399918" }}
-            onClick={() => Btn_OpenModal('Insert')}
-          >
-            Insert{" "}
-          </Button>{" "}
-          &nbsp;&nbsp; */}
+    
         <Button
           icon={
             <img
               src={ImgExcel}
-              // alt="Excel Icon"
               style={{ width: 20, height: 20 }}
             />
           }
@@ -269,7 +231,7 @@ const AnalysisUpload = () => {
         bordered
         pagination={true}
         scroll={{ x: "max-content", y: 350 }}
-        // pagination=
+      
       ></Table>
       <Modal
         open={UploadOpen}
@@ -281,7 +243,7 @@ const AnalysisUpload = () => {
         <div style={{ display: "flex", alignItems: "flex-start" }}>
           <div style={{}}>
             <span style={{ fontSize: "14px" }}>Unit</span>
-           {/* { console.log(Unit,'popopopop')} */}
+         
             <Select
               showSearch
               value={SL_UnitPopUp}
@@ -451,7 +413,7 @@ const AnalysisUpload = () => {
           }}
         >
           <Button
-            // icon={loadingSave ? <LoadingOutlined /> : <SaveOutlined />}
+           
             icon={ <SaveOutlined />}
             disabled={DisableSave}
             style={{ marginLeft: "5px", background: "#399918", color: "#fff" }}
@@ -468,139 +430,7 @@ const AnalysisUpload = () => {
           </Button>
         </div>
       </Modal>
-      <Modal
-        title="Analysis Formula Master maintain"
-        centered
-        open={openedit}
-        // onOk={handleOk}
-        onCancel={handleCancel}
-        width={650}
-        // okText="Save"
-        // okButtonProps={{ style: { backgroundColor: '#e84e40' } }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <table
      
-            className="TableEdit"
-          >
-            <tbody>
-              <tr >
-                <td className="Edit_form">Unit :</td>
-                <td>
-                  <Input disabled  value={Unit.Edit} />
-                </td>
-                <td></td>
-                <td className="Edit_form">Process :</td>
-                <td>
-                  <Input disabled value={Process.Edit}  />
-                </td>
-              </tr>
-              <tr>
-                <td className="Edit_form">Machine :</td>
-                <td>
-                  <Input disabled value={Machine.Edit} />
-                </td>
-                <td></td>
-                <td className="Edit_form">Bath :</td>
-                <td>
-                  <Input disabled value={Bath.Edit} />
-                </td>
-              </tr>
-              <tr >
-                <td className="Edit_form">Chemical :</td>
-                <td  >
-                  <Input disabled value={Ch.Edit} />
-                </td>
-                
-              </tr>
-              <tr >
-                <td className="Edit_form">Unit :</td>
-                <td>
-                  <Input  value={Unit2} />
-                </td>
-                <td></td>
-                <td className="Edit_form">Target :</td>
-                <td>
-                  <Input value={Target} />
-                </td>
-              </tr>
-              <tr>
-                <td className="Edit_form">LCL :</td>
-                <td>
-                  <Input value={LCL} />
-                </td>
-                <td></td>
-                <td className="Edit_form">UCL :</td>
-                <td>
-                  <Input value={UCL} />
-                </td>
-              </tr>
-              <tr>
-                <td className="Edit_form">LSL :</td>
-                <td>
-                  <Input value={LSL} />
-                </td>
-                <td></td>
-                <td className="Edit_form">USL :</td>
-                <td>
-                  <Input value={USL} />
-                </td>
-              </tr>
-              <tr>
-                <td className="Edit_form">Formula :</td>
-                <td colSpan={4}>
-                  <Input value={Formula} />
-                </td>
-              </tr>
-              <tr>
-                <td className="Edit_form">Refer 1 :</td>
-                <td>
-                  <Input value={Refer1} />
-                </td>
-                <td></td>
-                <td className="Edit_form">Refer 2 :</td>
-                <td>
-                  <Input value={Refer2} />
-                </td>
-              </tr>
-              <tr>
-                <td className="Edit_form"> Input :</td>
-                <td>
-                  <Input value={Input_value} />
-                </td>
-                <td></td>
-                <td className="Edit_form">Seq :</td>
-                <td>
-                  <Input value={Seq} />
-                </td>
-              </tr>
-              <tr>
-                <td className="Edit_form">Replenisher :</td>
-                <td colSpan={4}>
-                  <Input value={Replenisher} />
-                </td>
-              </tr>
-              <tr>
-                <td className="Edit_form">Refer 1 :</td>
-                <td>
-                  <Input value={Refer1_1} />
-                </td>
-                <td></td>
-                <td className="Edit_form">Refer 2 :</td>
-                <td>
-                  <Input value={Refer2_1} />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </Modal>
     </Content>
   );
 };
