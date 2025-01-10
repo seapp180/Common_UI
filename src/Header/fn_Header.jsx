@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Avatar } from "antd";
-// import {
-//   LaptopOutlined,
-//   NotificationOutlined,
-//   UserOutlined,
-// } from "@ant-design/icons";
 import axios from "axios";
-
 import ImgReport from "../assets/report.png";
 import Imgsubmit from "../assets/submit.png";
 import Imgtime from "../assets/time.png";
 import ImgScanner from "../assets/barcode-scanner.png";
 
-//002097 1
 function fn_Header() {
   const [PageHeader, setPageHeader] = useState("");
   const url = window.location.href;
@@ -65,7 +58,6 @@ function fn_Header() {
         systemID: systemID,
       })
       .then((res) => {
-        console.log(res.data);
         let link = res.data[0].URL;
         window.location.href = link;
       });
