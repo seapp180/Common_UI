@@ -23,7 +23,7 @@ import {
   UploadOutlined,
   CloseCircleOutlined,
   PlusOutlined,
-  MedicineBoxOutlined
+  MedicineBoxOutlined,
 } from "@ant-design/icons";
 const { Content } = Layout;
 import "./BoxCapacity.css";
@@ -39,7 +39,7 @@ function Box_Search() {
     packingTable,
     ChooseMenu,
     radioselect,
-    GenPack
+    GenPack,
   } = fn_Box_Search();
   return (
     <Content>
@@ -465,7 +465,7 @@ function Box_Search() {
                 </td>
               </tr>
               <tr>
-                <td style={{ textAlign: "right" }}>Packing By :</td>
+                <td style={{ textAlign: "right" }}>Remark :</td>
                 <td colSpan={3}>
                   <Input
                     fullWidth
@@ -476,7 +476,7 @@ function Box_Search() {
                       marginTop: "5px",
                       marginLeft: "5px",
                     }}
-                    placeholder="Packing By"
+                    placeholder="Remark"
                     // filterOption={(input, option) =>
                     //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                     // }
@@ -485,42 +485,40 @@ function Box_Search() {
                   />
                 </td>
               </tr>
-              <br/>
+              <br />
               <tr>
-            <td>
-              <div style={{ marginLeft: "30px", textAlign: "right" }}>
-                <span style={{ fontSize: "14px" }}></span>
-              </div>
-            </td>
-            <td>
-              <div>
-            
-                <Button
-                  icon={<MedicineBoxOutlined />}
-                  type="primary"
-                  style={{
-                    background: "#3498db",
-                    color: "#fff",
-                    marginLeft: "10px",
-                  }}
-                  onClick={() => GenPack("ManaulPack")}
-                >
-                  Manual
-                </Button>
-                <Button
-                  icon={<MedicineBoxOutlined />}
-                  type="primary"
-                  style={{ marginLeft: "10px" ,backgroundColor:'#f4d03f' }}
-                  onClick={() => GenPack("AutoPack")}
-                >
-                  Auto Pack
-                </Button>
-              </div>
-            </td>
-            <td></td>
-          </tr>
+                <td>
+                  <div style={{ marginLeft: "30px", textAlign: "right" }}>
+                    <span style={{ fontSize: "14px" }}></span>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <Button
+                      icon={<MedicineBoxOutlined />}
+                      type="primary"
+                      style={{
+                        background: "#3498db",
+                        color: "#fff",
+                        marginLeft: "10px",
+                      }}
+                      onClick={() => GenPack("ManaulPack")}
+                    >
+                      Manual
+                    </Button>
+                    <Button
+                      icon={<MedicineBoxOutlined />}
+                      type="primary"
+                      style={{ marginLeft: "10px", backgroundColor: "#f4d03f" }}
+                      onClick={() => GenPack("AutoPack")}
+                    >
+                      Auto Pack
+                    </Button>
+                  </div>
+                </td>
+                <td></td>
+              </tr>
             </table>
-            
           </Card>
           <Table
             columns={packingTable}
@@ -533,14 +531,197 @@ function Box_Search() {
             // pagination=
           ></Table>
         </div>
-        <br/>
-        <div style={{ display: "flex", alignItems: "flex-start" }}>
+        <br />
+        {/* <div style={{ display: "flex", alignItems: "flex-start" }}>
           <Card className="ManualPack">
-        
-      </Card>
+            <table width={"100%"}>
+              <tr>
+                <td style={{ textAlign: "right" }}>Seq :</td>
+                <td>
+                  <Input
+                    disabled
+                    showSearch
+                    // value={SL_Unit}
+                    style={{
+                      width: "65px",
+                      display: "block",
+                      marginTop: "5px",
+                    }}
+                    // filterOption={(input, option) =>
+                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                    // }
+                    // options={Unit.Search}
+                    // onChange={HandleUnit}
+                  />
+                </td>
+                <td style={{ textAlign: "right" }}>Lot No :</td>
+                <td>
+                  <Select
+                    showSearch
+                    // value={SL_Unit}
+                    style={{
+                      width: "200px",
+                      display: "block",
+                      marginTop: "5px",
+                    }}
+                    // filterOption={(input, option) =>
+                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                    // }
+                    // options={Unit.Search}
+                    // onChange={HandleUnit}
+                  />
+                </td>
+                <td style={{ textAlign: "right" }}>Remind Qty :</td>
+                <td>
+                  <Input
+                    disabled
+                    showSearch
+                    // value={SL_Unit}
+                    style={{
+                      width: "130px",
+                      display: "block",
+                      marginTop: "5px",
+                    }}
+                    // filterOption={(input, option) =>
+                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                    // }
+                    // options={Unit.Search}
+                    // onChange={HandleUnit}
+                  />
+                </td>
+                <td style={{ textAlign: "right" }}>Packing Qty :</td>
+                <td>
+                  <Input
+                    disabled
+                    showSearch
+                    // value={SL_Unit}
+                    style={{
+                      width: "130px",
+                      display: "block",
+                      marginTop: "5px",
+                    }}
+                    // filterOption={(input, option) =>
+                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                    // }
+                    // options={Unit.Search}
+                    // onChange={HandleUnit}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td
+                  colSpan={8}
+                  style={{ textAlign: "center", padding: "10px" }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button
+                      icon={<MedicineBoxOutlined />}
+                      type="primary"
+                      style={{
+                        background: "#3498db",
+                        color: "#fff",
+                        marginLeft: "10px",
+                      }}
+                      onClick={() => GenPack("ManualPack")}
+                    >
+                      Manual
+                    </Button>
+                    <Button
+                      icon={<MedicineBoxOutlined />}
+                      type="primary"
+                      style={{ marginLeft: "10px", backgroundColor: "#f4d03f" }}
+                      onClick={() => GenPack("AutoPack")}
+                    >
+                      Auto Pack
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </Card>
+        </div> */}
+<div style={{ display: "flex", alignItems: "flex-start", width: "100%" }}>
+  <Card  style={{ width: "100%", maxWidth: "1200px", margin: "10px" }}>
+    <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", width: "100%", marginBottom: "10px" }}>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+          <span style={{ textAlign: "right", width: "100px" }}>Seq :</span>
+          <Input
+            disabled
+            showSearch
+            style={{
+              width: "65px",
+              marginLeft: "10px",
+            }}
+          />
         </div>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+          <span style={{ textAlign: "right", width: "100px" }}>Lot No :</span>
+          <Select
+            showSearch
+            style={{
+              width: "200px",
+              marginLeft: "10px",
+            }}
+          />
+        </div>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+          <span style={{ textAlign: "right", width: "100px" }}>Remind Qty :</span>
+          <Input
+            disabled
+            showSearch
+            style={{
+              width: "130px",
+              marginLeft: "10px",
+            }}
+          />
+        </div>
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+          <span style={{ textAlign: "right", width: "100px" }}>Packing Qty :</span>
+          <Input
+            disabled
+            showSearch
+            style={{
+              width: "130px",
+              marginLeft: "10px",
+            }}
+          />
+        </div>
+      </div>
+      <div style={{ textAlign: "center", padding: "10px", width: "100%" }}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <Button
+            icon={<MedicineBoxOutlined />}
+            type="primary"
+            style={{
+              background: "#3498db",
+              color: "#fff",
+              marginLeft: "10px",
+            }}
+            onClick={() => GenPack("ManualPack")}
+          >
+            Manual
+          </Button>
+          <Button
+            icon={<MedicineBoxOutlined />}
+            type="primary"
+            style={{ marginLeft: "10px", backgroundColor: "#f4d03f" }}
+            onClick={() => GenPack("AutoPack")}
+          >
+            Auto Pack
+          </Button>
+        </div>
+      </div>
+    </div>
+  </Card>
+</div>
       </Modal>
-      
     </Content>
   );
 }
