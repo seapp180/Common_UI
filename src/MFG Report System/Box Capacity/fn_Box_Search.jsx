@@ -8,10 +8,11 @@ function fn_Box_Search() {
   const [selectddlProduct, setselectddlProduct] = useState("");
   const [LotFrom, setLotFrom] = useState("");
   const [LotTo, setLotTo] = useState("");
+  const [openManual ,setopenManual ]= useState(false);
   let PackType = "" 
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  const [radioselect, setradioselect] = useState(1);
+  const [radioselect, setradioselect] = useState("Manual");
   const ChooseMenu = (e) => {
     console.log('radio checked', e.target.value);
     setradioselect(e.target.value);
@@ -150,7 +151,11 @@ function fn_Box_Search() {
   
   ];
   const GenPack = (TypePack) => {
+    console.log(TypePack,"TypePack")
     PackType = TypePack
+    if(TypePack =="ManaulPack"){
+      setopenManual(true)
+    }
   };
   return {
     columns,
@@ -162,7 +167,8 @@ function fn_Box_Search() {
     packingTable,
     ChooseMenu,
     radioselect,
-    GenPack
+    GenPack,
+    openManual
 
   };
 }

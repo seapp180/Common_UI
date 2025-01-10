@@ -51,6 +51,7 @@
 }
 .BoxnoMaintain{
 width: 65%;
+background-color: #f6f8ee;
 }
 .tablePacking{
   width: 35%;
@@ -82,4 +83,9 @@ width: 65%;
   font-family: 'Varela Round', sans-serif;
   
 }
+.ManualPack {
+ width: 65%;
+}
+.tableLot{
 
+}
