@@ -10,6 +10,7 @@ import axios from "axios";
 import ImgReport from "../assets/report.png";
 import Imgsubmit from "../assets/submit.png";
 import Imgtime from "../assets/time.png";
+import ImgScanner from "../assets/barcode-scanner.png";
 
 //002097 1
 function fn_Header() {
@@ -42,7 +43,7 @@ function fn_Header() {
     }else if (partweb === "MFGReportSystem") {
       setPageHeader(
         <span className="TitleHeader">
-          <Avatar src={Imgtime} shape="square" />
+          <Avatar src={ImgScanner} shape="square" />
           &nbsp;MFG Report System
         </span>
       );
