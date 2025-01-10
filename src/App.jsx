@@ -11,6 +11,7 @@ import RDESMasterUpload from "./Condition System/RDESMasterUpload/RDESMasterUplo
 import Shipmentschedulemaintain from "./Condition System/Shipment schedule maintain/Shipmentschedulemaintain";
 import QA_ORT_WorkingRecord from "./Condition System/QA ORT Working Record/QA_ORT_WorkingRecord";
 import AnalysisUpload from "./FPC System/Analysis Formula Master Upload/AnalysisUpload";
+import BoxCapacity from "./MFG Report System/Box Capacity/Box_Search";
 
 const { Content } = Layout;
 const backendUrl = import.meta.env.VITE_SERVICE_URL;
@@ -48,6 +49,10 @@ const App = () => {
                  <Route
                   path="/CommonSystem/FPCSystem/AnalysisFormulaMaster"
                   element={<AnalysisUpload />}
+                />
+                  <Route
+                  path="/CommonSystem/MFGReportSystem/BoxCapacity"
+                  element={<BoxCapacity />}
                 />
               </Routes>
             </div>
