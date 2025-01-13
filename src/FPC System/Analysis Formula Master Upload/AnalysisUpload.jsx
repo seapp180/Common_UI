@@ -59,7 +59,8 @@ const AnalysisUpload = () => {
     SL_MCPopUp,
     UploadFile,
     columnsUpload,
-    Button_Save
+    Button_Save,
+    Button_Cancel
   } = fn_AnalysisUpload();
 
   return (
@@ -424,7 +425,7 @@ const AnalysisUpload = () => {
           <Button
             icon={<CloseCircleOutlined />}
             style={{ marginLeft: "5px", background: "#DF2E38", color: "#fff" }}
-            onClick={() => handlePopUpCancel()}
+            onClick={() => Button_Cancel()}
           >
             Cancel
           </Button>

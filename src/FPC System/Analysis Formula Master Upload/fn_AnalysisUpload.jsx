@@ -524,6 +524,16 @@ function fn_AnalysisUpload() {
     SetdataFile([]);
   };
 
+  const Button_Cancel = () => {
+    setSL_UnitPopUp(null);
+    setSL_MCPopUp(null);
+    setSL_ProcessPopUp(null);
+    setFileName("");
+    setSelectedFiles([]);
+    document.getElementById("fileInput").value = "";
+    SetdataFile([]);
+  };
+
   const handleFileUpload = (event) => {
     setSelectedFiles([]);
     const files = Array.from(event.target.files);
@@ -1286,6 +1296,7 @@ function fn_AnalysisUpload() {
     UploadFile,
     columnsUpload,
     Button_Save,
+    Button_Cancel
   };
 }
 
