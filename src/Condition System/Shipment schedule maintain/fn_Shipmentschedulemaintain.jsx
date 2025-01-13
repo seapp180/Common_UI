@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import swal from "sweetalert";
+import Swal from "sweetalert2";
 import dayjs from 'dayjs';
 import { useLoading } from "../../component/loading/fn_loading";
 
@@ -116,7 +116,6 @@ function fn_Shipmentschedulemaintain() {
           strbuild: selBuild
         });
         console.log("บันทึกข้อมูลสำเร็จ =", res);
-        swal("Success", "Save completed", "success");
       }
 
       if (txtSecondshipment !== "") {
@@ -127,8 +126,8 @@ function fn_Shipmentschedulemaintain() {
           strbuild: selBuild
         });
         console.log("บันทึกข้อมูลสำเร็จ =", res2);
-        swal("Success", "Save completed", "success");
       }
+      Swal.fire("Success", "Save completed", "success");
       settxtProduct("");
       setselBuild("");
       settxtLine("");
@@ -138,7 +137,7 @@ function fn_Shipmentschedulemaintain() {
       setBuildData([]);
     } catch (error) {
       console.error("เกิดข้อผิดพลาด =", error);
-      swal("Cannot save. Error: ", error.message, "error");
+      Swal.fire("Cannot save. Error: ", error.message, "error");
     }
   };
 
