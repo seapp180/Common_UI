@@ -42,7 +42,6 @@
 }
 .tableSearch
 {
-  border: 1px solid red;
   display: flex;
   justify-content: 'center';
   align-items: 'center';
@@ -55,6 +54,8 @@ background-color: #f6f8ee;
 }
 .tablePacking{
   width: 35%;
+
+  
 }
 .tablePacking .ant-table-thead > tr > th {
   background-color: #71949e;
@@ -65,6 +66,7 @@ background-color: #f6f8ee;
 }
 .tablePacking .ant-table-tbody > tr > td {
     font-family: 'Varela Round', sans-serif;
+    height: 420px; 
 }
 .BoxmainName {
   background-color: #f3dfc8;
@@ -83,9 +85,44 @@ background-color: #f6f8ee;
   font-family: 'Varela Round', sans-serif;
   
 }
+.Receive {
+  background-color: #f3dfc8;
+  border-radius: 25px;
+  color: #ffffff;
+  width: 25%;
+  padding: 5px 20px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  margin-left: 15px;
+  margin: 0px;
+  font-size: 12px;
+  color: black;
+  font-family: 'Varela Round', sans-serif;
+  
+}
 .ManualPack {
  width: 65%;
 }
-.tableLot{
+.tableLot .ant-table-thead > tr > th {
+  background-color: #71949e;
+  color: white;
+  padding: 0;
+  height: 40px;
+
+}
+.tableLot .ant-table-tbody > tr > td {
+  font-family: 'Varela Round', sans-serif;
+  height: 450px;
+}
+.tableRecieve .ant-table-thead > tr > th {
+  background-color: #71949e;
+  color: white;
+  padding: 0;
+  height: 40px;
+}
+.tableRecieve .ant-table-tbody > tr > td {
+  font-family: 'Varela Round', sans-serif;
 
 }

@@ -41,7 +41,9 @@ function Box_Search() {
     ChooseMenu,
     radioselect,
     GenPack,
-    openManual
+    openManual,
+    LotPacking,
+    tableReceive,
   } = fn_Box_Search();
   return (
     <Content>
@@ -265,7 +267,7 @@ function Box_Search() {
           </tr>
         </table>
       </div>
-      <br></br>
+    
 
       <Table
         columns={columns}
@@ -529,121 +531,185 @@ function Box_Search() {
             // dataSource={DataSearch}
             bordered
             pagination={true}
-            scroll={{ x: "max-content", y: 350 }}
+            scroll={{ x: "max-content", y: 1000 }}
             // pagination=
           ></Table>
         </div>
         <br />
-        {console.log(openManual,"openManual")}
-{(openManual &&
-        <Card
+        {openManual && (
+        <div
           style={{
             display: "flex",
-            alignItems: "flex-start",
-            width: "580px",
-            flexWrap: "wrap",
-            textAlign: "center",
-            backgroundColor: "#f6f8ee",
+            justifyContent: "space-between",
+            width: "100%",
           }}
         >
-          <span
-            style={{ textAlign: "right", width: "100px", marginLeft: "50px" }}
-          >
-            Seq :{" "}
-          </span>
-          <Input
-            disabled
-            showSearch
-            style={{
-              width: "65px",
-            }}
-          />
-          <span
-            style={{ textAlign: "right", width: "100px", marginLeft: "100px" }}
-          >
-            Lot No :{" "}
-          </span>
-          <Select
-            showSearch
-            style={{
-              width: "200px",
-              marginLeft: "10px",
-            }}
-          />
-
-          <br />
-          <span style={{ textAlign: "right", width: "100px" }}>
-            Remind Qty :{" "}
-          </span>
-          <Input
-            disabled
-            showSearch
-            style={{
-              width: "130px",
-            }}
-          />
-          <span
-            style={{ textAlign: "right", width: "100px", marginLeft: "10px" }}
-          >
-            Packing Qty :
-          </span>
-          <Input
-            disabled
-            showSearch
-            style={{
-              width: "200px",
-              marginLeft: "10px",
-              marginTop: "10px",
-            }}
-          />
           <div
-            style={{ width: "100%", marginTop: "10px", textAlign: "center" }}
+            style={{ display: "flex", flexDirection: "column", width: "65%" }}
           >
-            <Button
-              icon={<SaveOutlined />}
-              type="primary"
+            <Card
+              // className="BoxnoMaintain"
               style={{
-                background: "#50C878",
-                color: "#fff",
-                marginLeft: "10px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                textAlign: "center",
+                backgroundColor: "#f6f8ee",
+                marginBottom: "10px",
               }}
-              onClick={() => GenPack("ManualPack")}
             >
-              Save
-            </Button>
-            <Button
-              icon={<ReloadOutlined />}
-              type="primary"
-              danger
-              style={{ marginLeft: "10px" }}
-              onClick={() => GenPack("AutoPack")}
+              <h3 className="BoxmainName">Manual</h3>
+              <br/>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  width: "100%",
+                  marginBottom: "10px",
+                }}
+              >
+                <span
+                  style={{
+                    textAlign: "right",
+                    width: "100px",
+                    marginLeft: "50px",
+                  }}
+                >
+                  Seq :
+                </span>
+                <Input
+                  disabled
+                  showSearch
+                  style={{
+                    width: "65px",
+                    marginLeft: "10px",
+                  }}
+                />
+                <span
+                  style={{
+                    textAlign: "right",
+                    width: "100px",
+                    marginLeft: "100px",
+                  }}
+                >
+                  Lot No :
+                </span>
+                <Select
+                  showSearch
+                  style={{
+                    width: "200px",
+                    marginLeft: "10px",
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  width: "100%",
+                  marginBottom: "10px",
+                }}
+              >
+                <span style={{ textAlign: "right", width: "100px" }}>
+                  Remind Qty :
+                </span>
+                <Input
+                  disabled
+                  showSearch
+                  style={{
+                    width: "130px",
+                    marginLeft: "10px",
+                  }}
+                />
+                <span
+                  style={{
+                    textAlign: "right",
+                    width: "100px",
+                    marginLeft: "10px",
+                  }}
+                >
+                  Packing Qty :
+                </span>
+                <Input
+                  disabled
+                  showSearch
+                  style={{
+                    width: "200px",
+                    marginLeft: "10px",
+                    marginTop: "10px",
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  width: "100%",
+                  marginTop: "10px",
+                  textAlign: "center",
+                }}
+              >
+                <Button
+                  icon={<SaveOutlined />}
+                  type="primary"
+                  style={{
+                    background: "#50C878",
+                    color: "#fff",
+                    marginLeft: "10px",
+                  }}
+                  onClick={() => GenPack("ManualPack")}
+                >
+                  Save
+                </Button>
+                <Button
+                  icon={<ReloadOutlined />}
+                  type="primary"
+                  danger
+                  style={{ marginLeft: "10px" }}
+                  onClick={() => GenPack("AutoPack")}
+                >
+                  Reset
+                </Button>
+              </div>
+            </Card>
+            <Card
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                textAlign: "center",
+                backgroundColor: "#f6f8ee",
+              }}
             >
-              Reset
-            </Button>
+              <h3 className="BoxmainName">Lot Packing</h3>
+              <Table
+                columns={LotPacking}
+                style={{ marginTop: "5px", marginLeft: "10px" }}
+                className="tableLot"
+                // dataSource={DataSearch}
+                bordered
+                pagination={true}
+                scroll={{ x: "max-content", y: 350 }}
+                // pagination=
+              ></Table>
+            </Card>
           </div>
-        </Card>)}
-        <br />
-        <Card
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            width: "580px",
-            flexWrap: "wrap",
-            textAlign: "center",
-            backgroundColor: "#f6f8ee",
-          }}
-        >
-         <Table
-            columns={packingTable}
-            style={{ marginTop: "5px", marginLeft: "10px" }}
-            className="tableLot"
-            // dataSource={DataSearch}
-            bordered
-            pagination={true}
-            scroll={{ x: "max-content", y: 350 }}
-            // pagination=
-          ></Table>
-        </Card>
+          <div
+            style={{ width: "35%", display: "flex", flexDirection: "column" }}
+          >
+            <Table
+              columns={LotPacking}
+              style={{ marginTop: "5px", marginLeft: "10px", height: "100%" }}
+              className="tableRecieve"
+              // dataSource={DataSearch}
+              bordered
+              pagination={true}
+              scroll={{ x: "max-content", y: 700 }} // Adjust the height as needed
+              // pagination=
+            ></Table>
+          </div>
+        </div>
+      
+       
+        )}
       </Modal>
     </Content>
   );
