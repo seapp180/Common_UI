@@ -12,6 +12,7 @@ import Shipmentschedulemaintain from "./Condition System/Shipment schedule maint
 import QA_ORT_WorkingRecord from "./Condition System/QA ORT Working Record/QA_ORT_WorkingRecord";
 import AnalysisUpload from "./FPC System/Analysis Formula Master Upload/AnalysisUpload";
 import BoxCapacity from "./MFG Report System/Box Capacity/Box_Search";
+import UserListReport from "./Common/User List Report/UserListReport";
 
 const { Content } = Layout;
 const backendUrl = import.meta.env.VITE_SERVICE_URL;
@@ -52,6 +53,10 @@ const App = () => {
                   <Route
                     path="/CommonSystem/MFGReportSystem/BoxCapacity"
                     element={<BoxCapacity />}
+                  />
+                  <Route
+                    path="/CommonSystem/UserListReport"
+                    element={<UserListReport />}
                   />
                 </Routes>
               </div>

@@ -8,6 +8,7 @@ import { Button } from "antd";
 import { useLoading } from "../../component/loading/fn_loading";
 import { fn_Header } from "../../Header/fn_Header";
 import ImgDelete from "../../assets/delete.png";
+import { el } from "date-fns/locale";
 
 function fn_AnalysisUpload() {
   const [Unit, setUnit] = useState({ Search: [], PopUp: [] });
@@ -37,16 +38,70 @@ function fn_AnalysisUpload() {
     GetUnitPopUP();
   }, []);
 
-  const GetUnitPopUP = () => {
-    axios.post("/api/Analysis_Formular/GetUnitPopup", {}).then((res) => {
+  const GetUnit = async () => {
+    await axios.post("/api/Analysis_Formular/GetUnit", {}).then((res) => {
+      console.log("Unit", res.data);
+      setUnit((prevState) => ({ ...prevState, Search: res.data }));
+      // setUnit(res.data);
+    });
+  };
+
+  const GetProcess = async (unit) => {
+    await axios
+      .post("/api/Analysis_Formular/GetProcess", {
+        PARAMETER_UNIT: unit || "",
+      })
+      .then((res) => {
+        console.log("Process", res.data);
+        setProcess((prevState) => ({ ...prevState, Search: res.data }));
+      });
+  };
+
+  const GetMachince = async (Unit, Process) => {
+    await axios
+      .post("/api/Analysis_Formular/GetMachine", {
+        PARAMETER_PROCESS: Process || "",
+        PARAMETER_UNIT: Unit || "",
+      })
+      .then((res) => {
+        console.log("Machine", res.data);
+        setMachine((prevState) => ({ ...prevState, Search: res.data }));
+      });
+  };
+
+  const GetChem = async (Machince, Bath) => {
+    await axios
+      .post("/api/Analysis_Formular/GetChemical", {
+        PARAMETER_MC: Machince || "",
+        PARAMETER_BATH: Bath || "",
+      })
+      .then((res) => {
+        console.log("Chh", res.data);
+        setCh((prevState) => ({ ...prevState, Search: res.data }));
+      });
+  };
+
+  const GetBath = async (Machine) => {
+    axios
+      .post("/api/Analysis_Formular/GetBath", {
+        PARAMETER_MC: Machine || "",
+      })
+      .then((res) => {
+        console.log("Bath", res.data);
+        setBath((prevState) => ({ ...prevState, Search: res.data }));
+      });
+  };
+
+  const GetUnitPopUP = async () => {
+    await axios.post("/api/Analysis_Formular/GetUnitPopup", {}).then((res) => {
       console.log("UnitPop", res.data);
       setUnit((prevState) => ({ ...prevState, PopUp: res.data }));
     });
   };
 
-  const HandleUnitPopUp = (unit) => {
+  const HandleUnitPopUp = async (unit) => {
     setSL_UnitPopUp(unit);
-    axios
+    await axios
       .post("/api/Analysis_Formular/GetProcessPopup", {
         PARAMETER_UNIT: unit,
       })
@@ -56,9 +111,9 @@ function fn_AnalysisUpload() {
       });
   };
 
-  const HandleProcessPopUp = (process) => {
+  const HandleProcessPopUp = async (process) => {
     setSL_ProcessPopUp(process);
-    axios
+    await axios
       .post("/api/Analysis_Formular/GetMachinePopup", {
         PARAMETER_PROCESS: process,
       })
@@ -76,64 +131,35 @@ function fn_AnalysisUpload() {
     setSL_Ch(ch);
   };
 
-  const GetUnit = () => {
-    axios.post("/api/Analysis_Formular/GetUnit", {}).then((res) => {
-      console.log("Unit", res.data);
-      setUnit((prevState) => ({ ...prevState, Search: res.data }));
-      // setUnit(res.data);
-    });
-  };
-
-  const HandleUnit = (unit) => {
+  const HandleUnit = async (unit) => {
     setSL_Unit(unit);
-    axios
-      .post("/api/Analysis_Formular/GetProcess", {
-        PARAMETER_UNIT: unit,
-      })
-      .then((res) => {
-        console.log("Process", res.data);
-        setProcess((prevState) => ({ ...prevState, Search: res.data }));
-      });
+    GetProcess(unit);
+    GetMachince(unit, SL_Process);
+    GetBath(SL_Machine);
+    GetChem(SL_Machine, SL_Bath);
   };
 
-  const handleProcess = (process) => {
+  const handleProcess = async (process) => {
     setSL_Process(process);
-    axios
-      .post("/api/Analysis_Formular/GetMachine", {
-        PARAMETER_PROCESS: process,
-      })
-      .then((res) => {
-        console.log("Machine", res.data);
-        setMachine((prevState) => ({ ...prevState, Search: res.data }));
-      });
+    GetMachince(SL_Unit, process);
   };
 
   const handleMachine = (machine) => {
     setSL_Machine(machine);
-    axios
-      .post("/api/Analysis_Formular/GetBath", {
-        PARAMETER_MC: machine,
-      })
-      .then((res) => {
-        console.log("Bath", res.data);
-        setBath((prevState) => ({ ...prevState, Search: res.data }));
-      });
+    GetBath(machine);
   };
 
   const HandleBath = (bath) => {
     setSL_Bath(bath);
-    axios
-      .post("/api/Analysis_Formular/GetChemical", {
-        PARAMETER_MC: SL_Machine,
-        PARAMETER_BATH: bath,
-      })
-      .then((res) => {
-        console.log("Chh", res.data);
-        setCh((prevState) => ({ ...prevState, Search: res.data }));
-      });
+    GetChem(SL_Machine, bath);
   };
 
   const Clear = () => {
+    GetUnit();
+    setProcess({ Search: [] });
+    setMachine({ Search: [] });
+    setBath({ Search: [] });
+    setCh({ Search: [] });
     setSL_Bath(null);
     setSL_Ch(null);
     setSL_Machine(null);
@@ -142,8 +168,12 @@ function fn_AnalysisUpload() {
     setDataSearch([]);
   };
 
-  const Search = () => {
+  const Botton_Search = async () => {
     showLoading("กำลังค้นหา กรุณารอสักครู่");
+    await Search();
+  };
+
+  const Search = async () => {
     if (
       SL_Bath != null ||
       SL_Ch != null ||
@@ -151,7 +181,7 @@ function fn_AnalysisUpload() {
       SL_Process != null ||
       SL_Unit != null
     ) {
-      axios
+      await axios
         .post("/api/Analysis_Formular/Search_Analysis", {
           PARAMETER_UNIT: SL_Unit || "",
           PARAMETER_PROCESS: SL_Process || "",
@@ -163,16 +193,15 @@ function fn_AnalysisUpload() {
           setTimeout(() => {
             setDataSearch(res.data);
             // setLoadingSearch(false);
-            hideLoading();
           }, 500);
         });
     } else {
-      hideLoading();
       Swal.fire({
         icon: "error",
         title: "Please Select Unit",
       });
     }
+    hideLoading();
   };
 
   const showPopUp = () => {
@@ -233,8 +262,6 @@ function fn_AnalysisUpload() {
         USL: row[16],
         REMARK: "",
       }));
-      // กรองเฉพาะแถวที่มี PRODUCT และ PROCESS ไม่เป็นค่าว่าง
-      // .filter((row) => row.PRODUCT !== "" || row.PROCESS !== "");
 
       setSelectedFiles(datajson);
       console.log(datajson, "datajson");
@@ -243,125 +270,418 @@ function fn_AnalysisUpload() {
     reader.readAsArrayBuffer(file);
   };
 
+  // const CheckConditions = async () => {
+  //   console.log(SL_MCPopUp, "CheckConditions");
+  //   setDisableSave(false);
+  //   for (let i = 0; i < selectedFiles.length; i++) {
+  //     let dataChem = [];
+  //     let bathValue = "";
+  //     let remark = "";
+  //     let bath = selectedFiles[i].BATH;
+  //     await axios //find Bath Value
+  //       .post("/api/Analysis_Formular/GetBathValue", {
+  //         Bath: selectedFiles[i].BATH,
+  //       })
+  //       .then((res) => {
+  //         console.log(selectedFiles[i].BATH, ": bathValue", res.data);
+  //         bathValue = res.data;
+  //         selectedFiles[i].BATH_ID = res.data;
+  //       });
+
+  //     await axios //get Chem
+  //       .post("/api/Analysis_Formular/GetChemical", {
+  //         PARAMETER_MC: SL_MCPopUp,
+  //         PARAMETER_BATH: bathValue,
+  //       })
+  //       .then((res) => {
+  //         console.log(
+  //           bathValue,
+  //           SL_MCPopUp,
+  //           "dataChem",
+  //           res.data,
+  //           "-",
+  //           res.data.length
+  //         );
+  //         if (res.data.length > 1) {
+  //           dataChem = res.data;
+  //         } else {
+  //           remark = remark
+  //             ? remark + ", ไม่พบ Bath ในMachine นี้"
+  //             : "ไม่พบ Bath ในMachine นี้";
+  //         }
+  //       });
+
+  //     let chem = selectedFiles[i].CHEMICAL;
+  //     let seq = selectedFiles[i].SEQ;
+  //     let formula = selectedFiles[i].FORMULA || "";
+  //     let replenisher = selectedFiles[i].REPLENISHER || "";
+  //     let countFomula = (formula.match(/\b(V1|V2|V3|V4)\b/g) || []).length;
+  //     let formulaRef1 = formula.match(/\bREF_V1\b/g);
+  //     let formulaRef2 = formula.match(/\bREF2_V1\b/g);
+  //     const openParenthesesCount = (formula.match(/\(/g) || []).length; //วงเล็บเปิด
+  //     const closeParenthesesCount = (formula.match(/\)/g) || []).length; //วงเล็บปิด
+  //     const regexFormula =
+  //       /^(\s*[\d]+(\.\d+)?|\s*V[1-4]|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/; //Fomat Formula =V1 V2 V3 V4 REF_V1 REF2_V1 ( ) , * / + - 0-9
+  //     const regexReplenisher =
+  //       /^(\s*[\d]+(\.\d+)?|\s*A|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/;
+  //     let PatternFormula = regexFormula.test(formula);
+  //     let PatternReplenisher = regexReplenisher.test(replenisher);
+  //     let ReplenisherRef1 = replenisher.match(/\bREF_V1\b/g);
+  //     let ReplenisherRef2 = replenisher.match(/\bREF2_V1\b/g);
+  //     const target = selectedFiles[i].TARGET;
+  //     const lcl = selectedFiles[i].LCL;
+  //     const ucl = selectedFiles[i].UCL;
+  //     const lsl = selectedFiles[i].LSL;
+  //     const usl = selectedFiles[i].USL;
+
+  //     //-----------------------------------------------1
+  //     if (bath == "" || chem == "" || seq == "") {
+  //       remark = remark
+  //         ? remark + ", ไม่พบ Bath/Chemical/Seq"
+  //         : "ไม่พบ Bath/Chemical/Seq";
+  //     }
+  //     //-----------------------------------------------3-6
+  //     if (countFomula != 0) {
+  //       selectedFiles[i].INPUT = countFomula;
+  //     }
+  //     //-----------------------------------------------Check SEQ ซ้ำ ใน MC Bath เดียวกัน
+  //     await axios //
+  //       .post("/api/Analysis_Formular/CheckSEQChemBath", {
+  //         BATH: selectedFiles[i].BATH_ID,
+  //         MACHINE: SL_MCPopUp,
+  //         SEQ: seq,
+  //       })
+  //       .then((res) => {
+  //         console.log("CheckSEQChemBath", res.data);
+
+  //         if (res.data.length > 0) {
+  //           remark = remark
+  //             ? remark +
+  //               ", พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database"
+  //             : "พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database";
+  //         } else {
+  //           const isDuplicate = selectedFiles.some(
+  //             (file, index) =>
+  //               seq != "" &&
+  //               i !== index &&
+  //               seq === file.SEQ &&
+  //               bath === file.BATH
+  //           );
+  //           if (isDuplicate) {
+  //             remark = remark
+  //               ? remark + ", พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน"
+  //               : "พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน";
+  //           }
+  //         }
+  //       });
+
+  //     //-----------------------------------------------Check CHEM ซ้ำ ใน MC Bath เดียวกัน
+  //     await axios //
+  //       .post("/api/Analysis_Formular/CheckMcChemBath", {
+  //         BATH: selectedFiles[i].BATH_ID,
+  //         MACHINE: SL_MCPopUp,
+  //         CHEM: selectedFiles[i].CHEMICAL,
+  //       })
+  //       .then((res) => {
+  //         if (res.data.length > 0) {
+  //           // remark = "พบ Chemical ซ้ำใน Machine และ Bath เดียวกัน";
+  //           remark = remark
+  //             ? remark +
+  //               ", พบ Chemical ซ้ำ Machine และ Bath เดียวกันใน Database"
+  //             : "พบ Chemical ซ้ำใน Machine และ Bath เดียวกันใน Database";
+  //           // setDisableSave(true)
+  //         }
+  //       });
+  //     //------------------------------------------------ข้อ7
+  //     if (formulaRef1 != null) {
+  //       if (selectedFiles[i].FORMULA_REFER1 != "") {
+  //         const CheckChem = dataChem.find(
+  //           (item) => item.label === selectedFiles[i].FORMULA_REFER1
+  //         );
+
+  //         if (!CheckChem) {//ไม่มีในdatabase
+  //           const CheckChemFile = selectedFiles.find(
+  //             (item, index) =>
+  //               item.CHEMICAL === selectedFiles[i].FORMULA_REFER1 && index !== i
+  //           );
+  //           if (!CheckChemFile) {//ไม่มีในไฟล์ หรือ ซ้ำตัวเอง
+  //             remark = remark
+  //               ? remark +
+  //                 ", ไม่พบ Chemical Formula Refer1 ใน MC และ Bath เดียวกัน"
+  //               : "ไม่พบ Chemical Formula Refer1 ใน MC และ Bath เดียวกัน";
+  //           }
+
+  //         }
+
+  //       } else {
+  //         remark = remark
+  //           ? remark + ", ไม่พบ Fomula Refer1"
+  //           : "ไม่พบ Fomula Refer1";
+  //       }
+  //     }
+  //     //------------------------------------------------ข้อ8
+  //     if (formulaRef2 != null) {
+  //       if (selectedFiles[i].FORMULA_REFER2 != "") {
+  //         const CheckChem = dataChem.find(
+  //           (item) => item.label === selectedFiles[i].FORMULA_REFER2
+  //         );
+  //         if (!CheckChem) {
+  //           const CheckChemFile = selectedFiles.find(
+  //             (item, index) =>
+  //               item.CHEMICAL === selectedFiles[i].FORMULA_REFER2 && index !== i
+  //           );
+  //           if (!CheckChemFile) {
+  //             remark = remark
+  //             ? remark +
+  //               ", ไม่พบ Chemical Formula Refer2 ใน MC และ Bath เดียวกัน"
+  //             : "ไม่พบ Chemical Formula Refer2 ใน MC และ Bath เดียวกัน";
+  //           }
+
+  //           // remark = remark
+  //           //   ? remark +
+  //           //     ", Chemical Formula Refer2  ไม่อยู่ใน MC และ Bath เดียวกัน"
+  //           //   : "Chemical Formula Refer2  ไม่อยู่ใน MC และ Bath เดียวกัน";
+  //         }
+  //       } else {
+  //         remark = remark
+  //           ? remark + ", ไม่พบ Fomula Refer2"
+  //           : "ไม่พบ Fomula Refer2";
+  //       }
+  //     }
+  //     //------------------------------------------------ข้อ9
+  //     if (
+  //       !/\bV[1-4]\b/.test(formula) &&
+  //       (formulaRef1 != null || formulaRef2 != null)
+  //     ) {
+  //       selectedFiles[i].INPUT = "";
+  //     }
+  //     //------------------------------------------------ข้อ10
+  //     if (openParenthesesCount != closeParenthesesCount) {
+  //       remark = remark
+  //         ? remark + ", วงเล็บเปิด-ปิดไม่ครบถ้วน"
+  //         : "วงเล็บเปิด-ปิดไม่ครบถ้วน";
+  //     }
+  //     //------------------------------------------------ข้อ11
+  //     if (formula != "") {
+  //       if (!PatternFormula) {
+  //         remark = remark
+  //           ? remark + ", Fomat Formula ไม่ถูกต้อง " + formula
+  //           : "Fomat Formula ไม่ถูกต้อง " + formula;
+  //       }
+  //     }
+
+  //     //------------------------------------------------ข้อ12
+  //     if (replenisher != "") {
+  //       if (!PatternReplenisher) {
+  //         remark = remark
+  //           ? remark + ", Fomat Replenisher ไม่ถูกต้อง " + replenisher
+  //           : "Fomat Replenisher ไม่ถูกต้อง " + replenisher;
+  //       }
+  //     }
+
+  //     //------------------------------------------------ข้อ13
+  //     if (ReplenisherRef1 != null) {
+  //       if (selectedFiles[i].REPLENISHER_REFER1 != "") {
+  //         const CheckChem = dataChem.find(
+  //           (item) => item.label === selectedFiles[i].REPLENISHER_REFER1
+  //         );
+  //         if (!CheckChem) {
+  //           const CheckChemFile = selectedFiles.find(
+  //             (item, index) =>
+  //               item.CHEMICAL === selectedFiles[i].REPLENISHER_REFER1 && index !== i
+  //           );
+  //           if (!CheckChemFile) {
+  //             remark = remark
+  //             ? remark +
+  //               ", ไม่พบ Chemical Replenisher Refer1 ใน MC และ Bath เดียวกัน"
+  //             : "ไม่พบ Chemical Replenisher Refer1 ใน MC และ Bath เดียวกัน";
+  //           }
+  //           // remark = remark
+  //           //   ? remark +
+  //           //     ", Chemical Replenisher Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน"
+  //           //   : "Chemical Replenisher Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
+  //         }
+  //       } else {
+  //         remark = remark
+  //           ? remark + ", ไม่พบ Replenisher Refer1"
+  //           : "ไม่พบ Replenisher Refer1";
+  //       }
+  //     }
+  //     //------------------------------------------------ข้อ14
+  //     if (ReplenisherRef2 != null) {
+  //       if (selectedFiles[i].REPLENISHER_REFER2 != "") {
+  //         const CheckChem = dataChem.find(
+  //           (item) => item.label === selectedFiles[i].REPLENISHER_REFER2
+  //         );
+  //         if (!CheckChem) {
+  //           const CheckChemFile = selectedFiles.find(
+  //             (item, index) =>
+  //               item.CHEMICAL === selectedFiles[i].REPLENISHER_REFER2 && index !== i
+  //           );
+  //           if (!CheckChemFile) {
+  //             remark = remark
+  //             ? remark +
+  //               ", ไม่พบ Chemical Replenisher Refer2 ใน MC และ Bath เดียวกัน"
+  //             : "ไม่พบ Chemical Replenisher Refer2 ใน MC และ Bath เดียวกัน";
+  //           }
+  //           // remark = remark
+  //           //   ? remark +
+  //           //     ", Chemical Replenisher Refer2 ไม่อยู่ใน MC และ Bath เดียวกัน"
+  //           //   : "Chemical Replenisher Refer2 ไม่อยู่ใน MC และ Bath เดียวกัน";
+  //         }
+  //       } else {
+  //         remark = remark
+  //           ? remark + ", ไม่พบ Replenisher Refer2"
+  //           : "ไม่พบ Replenisher Refer2";
+  //       }
+  //     }
+  //     //------------------------------------------------ข้อ15
+  //     if (target !== "" && isNaN(target)) {
+  //       remark = remark
+  //         ? remark + ", Target ไม่ใช่ตัวเลข"
+  //         : "Target ไม่ใช่ตัวเลข";
+  //     }
+  //     if (lcl !== "" && isNaN(lcl)) {
+  //       remark = remark ? remark + ", LCL ไม่ใช่ตัวเลข" : "LCL ไม่ใช่ตัวเลข";
+  //     }
+  //     if (ucl !== "" && isNaN(ucl)) {
+  //       remark = remark ? remark + ", UCL ไม่ใช่ตัวเลข" : "UCL ไม่ใช่ตัวเลข";
+  //     }
+  //     if (lsl !== "" && isNaN(lsl)) {
+  //       remark = remark ? remark + ", LSL ไม่ใช่ตัวเลข" : "LSL ไม่ใช่ตัวเลข";
+  //     }
+  //     if (usl !== "" && isNaN(usl)) {
+  //       remark = remark ? remark + ", USL ไม่ใช่ตัวเลข" : "USL ไม่ใช่ตัวเลข";
+  //     }
+  //     //--------------------------end-----------------------
+  //     if (remark != "") {
+  //       setDisableSave(true);
+  //     }
+  //     // else{
+  //     //   setDisableSave(false)
+  //     // }
+  //     selectedFiles[i].REMARK = remark;
+  //   }
+  //   SetdataFile(selectedFiles);
+  // };
+
   const CheckConditions = async () => {
     setDisableSave(false);
-    for (let i = 0; i < selectedFiles.length; i++) {
-      let dataChem = "";
-      let bathValue = "";
-      let bath = selectedFiles[i].BATH;
-      await axios //find Bath Value
-        .post("/api/Analysis_Formular/GetBathValue", {
-          Bath: selectedFiles[i].BATH,
-        })
-        .then((res) => {
-          console.log("bathValue", res.data);
-          bathValue = res.data;
-          selectedFiles[i].BATH_ID = res.data;
-        });
-      await axios //get Chem
-        .post("/api/Analysis_Formular/GetChemical", {
-          PARAMETER_MC: SL_MCPopUp,
-          PARAMETER_BATH: bathValue,
-        })
-        .then((res) => {
-          console.log("dataChem", res.data);
-          dataChem = res.data;
-        });
+    const bathValuePromises = selectedFiles.map((file) =>
+      axios.post("/api/Analysis_Formular/GetBathValue", { Bath: file.BATH })
+    );
 
-      let chem = selectedFiles[i].CHEMICAL;
-      let seq = selectedFiles[i].SEQ;
-      let formula = selectedFiles[i].FORMULA || "";
-      let replenisher = selectedFiles[i].REPLENISHER || "";
+    const bathValues = await Promise.all(bathValuePromises);
 
+    const chemicalPromises = bathValues.map((res, i) =>
+      axios.post("/api/Analysis_Formular/GetChemical", {
+        PARAMETER_MC: SL_MCPopUp,
+        PARAMETER_BATH: res.data,
+      })
+    );
+
+    const chemicalResults = await Promise.all(chemicalPromises);
+
+    const seqChemBathPromises = selectedFiles.map((file, i) =>
+      axios.post("/api/Analysis_Formular/CheckSEQChemBath", {
+        BATH: bathValues[i].data,
+        MACHINE: SL_MCPopUp,
+        SEQ: file.SEQ,
+      })
+    );
+
+    const seqChemBathResults = await Promise.all(seqChemBathPromises);
+
+    const mcChemBathPromises = selectedFiles.map((file, i) =>
+      axios.post("/api/Analysis_Formular/CheckMcChemBath", {
+        BATH: bathValues[i].data,
+        MACHINE: SL_MCPopUp,
+        CHEM: file.CHEMICAL,
+      })
+    );
+
+    const mcChemBathResults = await Promise.all(mcChemBathPromises);
+
+    selectedFiles.forEach((file, i) => {
+      let dataChem = chemicalResults[i].data;
+      let bathValue = bathValues[i].data;
+      let remark = "";
+      file.BATH_ID = bathValue;
+      let chem = file.CHEMICAL;
+      let seq = file.SEQ;
+      let formula = file.FORMULA || "";
+      let replenisher = file.REPLENISHER || "";
       let countFomula = (formula.match(/\b(V1|V2|V3|V4)\b/g) || []).length;
       let formulaRef1 = formula.match(/\bREF_V1\b/g);
       let formulaRef2 = formula.match(/\bREF2_V1\b/g);
-      const openParenthesesCount = (formula.match(/\(/g) || []).length; //วงเล็บเปิด
-      const closeParenthesesCount = (formula.match(/\)/g) || []).length; //วงเล็บปิด
+      const openParenthesesCount = (formula.match(/\(/g) || []).length;
+      const closeParenthesesCount = (formula.match(/\)/g) || []).length;
       const regexFormula =
-        /^(\s*[\d]+(\.\d+)?|\s*V[1-4]|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/; //Fomat Formula =V1 V2 V3 V4 REF_V1 REF2_V1 ( ) , * / + - 0-9
+        /^(\s*[\d]+(\.\d+)?|\s*V[1-4]|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/;
       const regexReplenisher =
         /^(\s*[\d]+(\.\d+)?|\s*A|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/;
       let PatternFormula = regexFormula.test(formula);
       let PatternReplenisher = regexReplenisher.test(replenisher);
       let ReplenisherRef1 = replenisher.match(/\bREF_V1\b/g);
       let ReplenisherRef2 = replenisher.match(/\bREF2_V1\b/g);
-      const target = selectedFiles[i].TARGET;
-      const lcl = selectedFiles[i].LCL;
-      const ucl = selectedFiles[i].UCL;
-      const lsl = selectedFiles[i].LSL;
-      const usl = selectedFiles[i].USL;
-      let remark = "";
+      const target = file.TARGET;
+      const lcl = file.LCL;
+      const ucl = file.UCL;
+      const lsl = file.LSL;
+      const usl = file.USL;
 
-      //-----------------------------------------------1
-      if (bath == "" || chem == "" || seq == "") {
+      if (dataChem.length <= 1) {
+        remark = remark
+          ? remark + ", ไม่พบ Bath ในMachine นี้"
+          : "ไม่พบ Bath ในMachine นี้";
+      }
+      if (file.BATH == "" || chem == "" || seq == "") {
         remark = remark
           ? remark + ", ไม่พบ Bath/Chemical/Seq"
           : "ไม่พบ Bath/Chemical/Seq";
       }
-      //-----------------------------------------------3-6
+
       if (countFomula != 0) {
-        selectedFiles[i].INPUT = countFomula;
+        file.INPUT = countFomula;
       }
-      //-----------------------------------------------Check SEQ ซ้ำ ใน MC Bath เดียวกัน
-      await axios //
-        .post("/api/Analysis_Formular/CheckSEQChemBath", {
-          BATH: selectedFiles[i].BATH_ID,
-          MACHINE: SL_MCPopUp,
-          SEQ: seq,
-        })
-        .then((res) => {
-          console.log("CheckSEQChemBath", res.data);
 
-          if (res.data.length > 0) {
-            remark = remark
-              ? remark +
-                ", พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database"
-              : "พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database";
-          } else {
-            const isDuplicate = selectedFiles.some(
-              (file, index) =>
-                seq != "" &&
-                i !== index &&
-                seq === file.SEQ &&
-                bath === file.BATH
-            );
-            if (isDuplicate) {
-              remark = remark
-                ? remark + ", พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน"
-                : "พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน";
-            }
-          }
-        });
+      if (seqChemBathResults[i].data.length > 0) {
+        remark = remark
+          ? remark + ", พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database"
+          : "พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database";
+      } else {
+        const isDuplicate = selectedFiles.some(
+          (f, index) =>
+            seq != "" && i !== index && seq === f.SEQ && file.BATH === f.BATH
+        );
+        if (isDuplicate) {
+          remark = remark
+            ? remark + ", พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน"
+            : "พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน";
+        }
+      }
 
-      //-----------------------------------------------Check CHEM ซ้ำ ใน MC Bath เดียวกัน
-      await axios //
-        .post("/api/Analysis_Formular/CheckMcChemBath", {
-          BATH: selectedFiles[i].BATH_ID,
-          MACHINE: SL_MCPopUp,
-          CHEM: selectedFiles[i].CHEMICAL,
-        })
-        .then((res) => {
-          if (res.data.length > 0) {
-            // remark = "พบ Chemical ซ้ำใน Machine และ Bath เดียวกัน";
-            remark = remark
-              ? remark +
-                ", พบ Chemical ซ้ำ Machine และ Bath เดียวกันใน Database"
-              : "พบ Chemical ซ้ำใน Machine และ Bath เดียวกันใน Database";
-            // setDisableSave(true)
-          }
-        });
-      //------------------------------------------------ข้อ7
+      if (mcChemBathResults[i].data.length > 0) {
+        remark = remark
+          ? remark + ", พบ Chemical ซ้ำ Machine และ Bath เดียวกันใน Database"
+          : "พบ Chemical ซ้ำใน Machine และ Bath เดียวกันใน Database";
+      }
+
       if (formulaRef1 != null) {
-        if (selectedFiles[i].FORMULA_REFER1 != "") {
+        if (file.FORMULA_REFER1 != "") {
           const CheckChem = dataChem.find(
-            (item) => item.label === selectedFiles[i].FORMULA_REFER1
+            (item) => item.label === file.FORMULA_REFER1
           );
           if (!CheckChem) {
-            remark = remark
-              ? remark +
-                ", Chemical Formula Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน"
-              : "Chemical Formula Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
+            const CheckChemFile = selectedFiles.find(
+              (f, index) => f.CHEMICAL === file.FORMULA_REFER1 && index !== i
+            );
+            if (!CheckChemFile) {
+              remark = remark
+                ? remark +
+                  ", ไม่พบ Chemical Formula Refer1 ใน MC และ Bath เดียวกัน"
+                : "ไม่พบ Chemical Formula Refer1 ใน MC และ Bath เดียวกัน";
+            }
           }
         } else {
           remark = remark
@@ -369,17 +689,22 @@ function fn_AnalysisUpload() {
             : "ไม่พบ Fomula Refer1";
         }
       }
-      //------------------------------------------------ข้อ8
+
       if (formulaRef2 != null) {
-        if (selectedFiles[i].FORMULA_REFER2 != "") {
+        if (file.FORMULA_REFER2 != "") {
           const CheckChem = dataChem.find(
-            (item) => item.label === selectedFiles[i].FORMULA_REFER2
+            (item) => item.label === file.FORMULA_REFER2
           );
           if (!CheckChem) {
-            remark = remark
-              ? remark +
-                ", Chemical Formula Refer2  ไม่อยู่ใน MC และ Bath เดียวกัน"
-              : "Chemical Formula Refer2  ไม่อยู่ใน MC และ Bath เดียวกัน";
+            const CheckChemFile = selectedFiles.find(
+              (f, index) => f.CHEMICAL === file.FORMULA_REFER2 && index !== i
+            );
+            if (!CheckChemFile) {
+              remark = remark
+                ? remark +
+                  ", ไม่พบ Chemical Formula Refer2 ใน MC และ Bath เดียวกัน"
+                : "ไม่พบ Chemical Formula Refer2 ใน MC และ Bath เดียวกัน";
+            }
           }
         } else {
           remark = remark
@@ -387,20 +712,20 @@ function fn_AnalysisUpload() {
             : "ไม่พบ Fomula Refer2";
         }
       }
-      //------------------------------------------------ข้อ9
+
       if (
         !/\bV[1-4]\b/.test(formula) &&
         (formulaRef1 != null || formulaRef2 != null)
       ) {
-        selectedFiles[i].INPUT = "";
+        file.INPUT = "";
       }
-      //------------------------------------------------ข้อ10
+
       if (openParenthesesCount != closeParenthesesCount) {
         remark = remark
           ? remark + ", วงเล็บเปิด-ปิดไม่ครบถ้วน"
           : "วงเล็บเปิด-ปิดไม่ครบถ้วน";
       }
-      //------------------------------------------------ข้อ11
+
       if (formula != "") {
         if (!PatternFormula) {
           remark = remark
@@ -409,7 +734,6 @@ function fn_AnalysisUpload() {
         }
       }
 
-      //------------------------------------------------ข้อ12
       if (replenisher != "") {
         if (!PatternReplenisher) {
           remark = remark
@@ -418,17 +742,22 @@ function fn_AnalysisUpload() {
         }
       }
 
-      //------------------------------------------------ข้อ13
       if (ReplenisherRef1 != null) {
-        if (selectedFiles[i].REPLENISHER_REFER1 != "") {
+        if (file.REPLENISHER_REFER1 != "") {
           const CheckChem = dataChem.find(
-            (item) => item.label === selectedFiles[i].REPLENISHER_REFER1
+            (item) => item.label === file.REPLENISHER_REFER1
           );
           if (!CheckChem) {
-            remark = remark
-              ? remark +
-                ", Chemical Replenisher Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน"
-              : "Chemical Replenisher Refer1 ไม่อยู่ใน MC และ Bath เดียวกัน";
+            const CheckChemFile = selectedFiles.find(
+              (f, index) =>
+                f.CHEMICAL === file.REPLENISHER_REFER1 && index !== i
+            );
+            if (!CheckChemFile) {
+              remark = remark
+                ? remark +
+                  ", ไม่พบ Chemical Replenisher Refer1 ใน MC และ Bath เดียวกัน"
+                : "ไม่พบ Chemical Replenisher Refer1 ใน MC และ Bath เดียวกัน";
+            }
           }
         } else {
           remark = remark
@@ -436,17 +765,23 @@ function fn_AnalysisUpload() {
             : "ไม่พบ Replenisher Refer1";
         }
       }
-      //------------------------------------------------ข้อ14
+
       if (ReplenisherRef2 != null) {
-        if (selectedFiles[i].REPLENISHER_REFER2 != "") {
+        if (file.REPLENISHER_REFER2 != "") {
           const CheckChem = dataChem.find(
-            (item) => item.label === selectedFiles[i].REPLENISHER_REFER2
+            (item) => item.label === file.REPLENISHER_REFER2
           );
           if (!CheckChem) {
-            remark = remark
-              ? remark +
-                ", Chemical Replenisher Refer2 ไม่อยู่ใน MC และ Bath เดียวกัน"
-              : "Chemical Replenisher Refer2 ไม่อยู่ใน MC และ Bath เดียวกัน";
+            const CheckChemFile = selectedFiles.find(
+              (f, index) =>
+                f.CHEMICAL === file.REPLENISHER_REFER2 && index !== i
+            );
+            if (!CheckChemFile) {
+              remark = remark
+                ? remark +
+                  ", ไม่พบ Chemical Replenisher Refer2 ใน MC และ Bath เดียวกัน"
+                : "ไม่พบ Chemical Replenisher Refer2 ใน MC และ Bath เดียวกัน";
+            }
           }
         } else {
           remark = remark
@@ -454,7 +789,7 @@ function fn_AnalysisUpload() {
             : "ไม่พบ Replenisher Refer2";
         }
       }
-      //------------------------------------------------ข้อ15
+
       if (target !== "" && isNaN(target)) {
         remark = remark
           ? remark + ", Target ไม่ใช่ตัวเลข"
@@ -472,15 +807,14 @@ function fn_AnalysisUpload() {
       if (usl !== "" && isNaN(usl)) {
         remark = remark ? remark + ", USL ไม่ใช่ตัวเลข" : "USL ไม่ใช่ตัวเลข";
       }
-      //--------------------------end-----------------------
+
       if (remark != "") {
         setDisableSave(true);
       }
-      // else{
-      //   setDisableSave(false)
-      // }
-      selectedFiles[i].REMARK = remark;
-    }
+
+      file.REMARK = remark;
+    });
+
     SetdataFile(selectedFiles);
   };
 
@@ -551,8 +885,8 @@ function fn_AnalysisUpload() {
     }
   };
 
-  const GetFileFormat = () => {
-    axios
+  const GetFileFormat = async () => {
+    await axios
       .post(
         "/api/Analysis_Formular/GetFileFormat",
         {},
@@ -680,7 +1014,7 @@ function fn_AnalysisUpload() {
 
     const buffer = await workbook.xlsx.writeBuffer();
     const dataBlob = new Blob([buffer], { type: "application/octet-stream" });
-    saveAs(dataBlob, `${NameFile}.xlsx`);
+    saveAs(dataBlob, `${NameFile}`);
   };
 
   const Change_ChemID = async () => {
@@ -706,69 +1040,56 @@ function fn_AnalysisUpload() {
     try {
       for (let i = 0; i < dataFile.length; i++) {
         await axios
-          .post("/api/Analysis_Formular/CheckChemical", {
-            MC_Code: SL_MCPopUp,
-            Chem_Desc: dataFile[i].CHEMICAL,
+          .post("/api/Analysis_Formular/Merge_Chem", {
+            data: dataFile[i],
+            Machine: SL_MCPopUp,
+            loginID: loginID,
           })
           .then(async (res) => {
-            console.log("CheckChemical", res.data);
-            if (res.data.length <= 0) {
-              await axios
-                .post("/api/Analysis_Formular/Ins_Chem", {
-                  data: dataFile[i],
-                  Machine: SL_MCPopUp,
-                  loginID: loginID,
-                })
-                .then(async (res) => {
-                  if (res.data == "") {
-                    console.log("insert Sucess");
-                    await Change_ChemID();
-                  } else {
-                    Swal.fire({
-                      icon: "error",
-                      title: "Can't Save Chemical",
-                      text: res.data,
-                    });
-                  }
-                });
-            } else {
-              console.log("Update");
-              // Update_Chem
-              await axios
-                .post("/api/Analysis_Formular/Update_Chem", {
-                  data: dataFile[i],
-                  Machine: SL_MCPopUp,
-                  loginID: loginID,
-                })
-                .then(async (res) => {
-                  if (res.data == "") {
-                    console.log("Update Sucess");
-                    await Change_ChemID();
-                  } else {
-                    Swal.fire({
-                      icon: "error",
-                      title: "Can't Save Chemical",
-                      text: res.data,
-                    });
-                  }
-                });
+            if (res.data != "") {
+              // console.log("insert Sucess");
+
+              Swal.fire({
+                icon: "error",
+                title: "Can not Save Chemical",
+                text: res.data,
+              });
             }
           });
       }
+      await axios
+        .post("/api/Analysis_Formular/CheckChemDesc", {})
+        .then(async (res) => {
+          if (res.data.length > 0) {
+            for (let i = 0; i < res.data.length; i++) {
+              await axios
+                .post("/api/Analysis_Formular/Change_ChemID", {
+                  data: res.data[i],
+                })
+                .then(async (res) => {
+                  if (res.data != "") {
+                    Swal.fire({
+                      icon: "error",
+                      title: "Can not Save Chemical",
+                      text: res.data,
+                    });
+                    return;
+                  } 
+                });
+            }
+            Swal.fire({
+              icon: "success",
+              title: "Save Success",
+            });
+          }
+        });
       SetdataFile([]);
-      // setUploadOpen(false);
       setFileName("");
       setSelectedFiles([]);
       document.getElementById("fileInput").value = "";
-      Swal.fire({
-        icon: "success",
-        title:"Save Success",
-        // text: err.message,
-      });
     } catch (err) {
       Swal.fire({
         icon: "error",
-        // title:"Save Success",
         text: err.message,
       });
     }
@@ -776,31 +1097,35 @@ function fn_AnalysisUpload() {
   };
 
   const Button_Delete = async (BATH_Desc, MACHINE, CHEM) => {
-    showLoading("กำลังลบ กรุณารอสักครู่");
-    console.log("BATH", BATH_Desc, MACHINE, CHEM);
     let Bath_Id = "";
-    await axios //find Bath Value
-      .post("/api/Analysis_Formular/GetBathValue", {
-        Bath: BATH_Desc,
-      })
-      .then((res) => {
-        console.log("bathValue", res.data);
-        // bathValue = res.data;
-        Bath_Id = res.data;
-      });
-    await axios
-      .post("/api/Analysis_Formular/DeleteChem", {
-        BATH: Bath_Id,
-        MACHINE: MACHINE,
-        CHEM: CHEM,
-      })
-      .then(async (res) => {
-        console.log("DeleteChem", res.data);
-      });
-    Swal.fire({
-      icon: "success",
-      title: "Delete Success",
-      // text: res.data,
+    await Swal.fire({
+      title: "Do you want to Delete?",
+      showCancelButton: true,
+      confirmButtonText: "Delete",
+      confirmButtonColor: "#d33", // Red color for the Delete button
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        showLoading("กำลังลบ กรุณารอสักครู่");
+        await axios //find Bath Value
+          .post("/api/Analysis_Formular/GetBathValue", {
+            Bath: BATH_Desc,
+          })
+          .then((res) => {
+            console.log("bathValue", res.data);
+            // bathValue = res.data;
+            Bath_Id = res.data;
+          });
+        await axios
+          .post("/api/Analysis_Formular/DeleteChem", {
+            BATH: Bath_Id,
+            MACHINE: MACHINE,
+            CHEM: CHEM,
+          })
+          .then(async (res) => {
+            console.log("DeleteChem", res.data);
+          });
+        Swal.fire("Delete Success", "", "success");
+      }
     });
     hideLoading();
     Search();
@@ -836,31 +1161,15 @@ function fn_AnalysisUpload() {
     },
     {
       title: "No.",
-      dataIndex: "No",
+      dataIndex: "NO",
       key: "No.",
       render: (text, record, index) => {
-        text = index + 1;
+        // text = index + 1;
         return text;
       },
       align: "center",
       width: 30,
     },
-    // {
-    //   align: "center",
-    //   render: (text, record, index) => {
-    //     // const isLoading = loadingEdit === index;
-    //     return (
-    //       <Button
-    //       icon={ <EditOutlined />}
-    //         // icon={isLoading ? <LoadingOutlined /> : <EditOutlined />}
-    //         onClick={() => Btn_OpenModal('Edit',record,index)}
-    //         size="large"
-    //       ></Button>
-    //     );
-    //   },
-    //   width: 30,
-    // },
-
     {
       title: "Fac Unit",
       dataIndex: "FAUM_UNIT_DESC",
@@ -897,7 +1206,7 @@ function fn_AnalysisUpload() {
       render: (text, record, index) => {
         return text;
       },
-      align: "center",
+      align: "left",
       width: 250,
     },
     {
@@ -907,8 +1216,8 @@ function fn_AnalysisUpload() {
       render: (text, record, index) => {
         return text;
       },
-      align: "center",
-      width: 120,
+      align: "left",
+      width: 200,
     },
     {
       title: "Seq",
@@ -941,7 +1250,7 @@ function fn_AnalysisUpload() {
             return text;
           },
           align: "left",
-          width: 350,
+          width: 300,
         },
         {
           title: "Refer1",
@@ -950,7 +1259,7 @@ function fn_AnalysisUpload() {
           render: (text, record, index) => {
             return text;
           },
-          align: "center",
+          align: "left",
           width: 50,
         },
         {
@@ -960,7 +1269,7 @@ function fn_AnalysisUpload() {
           render: (text, record, index) => {
             return text;
           },
-          align: "center",
+          align: "left",
           width: 50,
         },
       ],
@@ -976,7 +1285,7 @@ function fn_AnalysisUpload() {
             return text;
           },
           align: "left",
-          width: 350,
+          width: 300,
         },
         {
           title: "Refer1",
@@ -985,7 +1294,7 @@ function fn_AnalysisUpload() {
           render: (text, record, index) => {
             return text;
           },
-          align: "center",
+          align: "left",
           width: 50,
         },
         {
@@ -995,7 +1304,7 @@ function fn_AnalysisUpload() {
           render: (text, record, index) => {
             return text;
           },
-          align: "center",
+          align: "left",
           width: 50,
         },
       ],
@@ -1081,7 +1390,7 @@ function fn_AnalysisUpload() {
       render: (text, record, index) => {
         return text;
       },
-      align: "center",
+      align: "left",
       width: 150,
     },
     {
@@ -1091,7 +1400,7 @@ function fn_AnalysisUpload() {
       render: (text, record, index) => {
         return text;
       },
-      align: "center",
+      align: "left",
       width: 150,
     },
     {
@@ -1134,7 +1443,7 @@ function fn_AnalysisUpload() {
           render: (text, record, index) => {
             return text;
           },
-          align: "center",
+          align: "left",
           width: 60,
         },
         {
@@ -1144,7 +1453,7 @@ function fn_AnalysisUpload() {
           render: (text, record, index) => {
             return text;
           },
-          align: "center",
+          align: "left",
           width: 60,
         },
       ],
@@ -1169,7 +1478,7 @@ function fn_AnalysisUpload() {
           render: (text, record, index) => {
             return text;
           },
-          align: "center",
+          align: "left",
           width: 60,
         },
         {
@@ -1179,7 +1488,7 @@ function fn_AnalysisUpload() {
           render: (text, record, index) => {
             return text;
           },
-          align: "center",
+          align: "left",
           width: 60,
         },
       ],
@@ -1296,7 +1605,8 @@ function fn_AnalysisUpload() {
     UploadFile,
     columnsUpload,
     Button_Save,
-    Button_Cancel
+    Button_Cancel,
+    Botton_Search,
   };
 }
 
