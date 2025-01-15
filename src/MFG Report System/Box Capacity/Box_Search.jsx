@@ -32,7 +32,6 @@ import { fn_Box_Search } from "./fn_Box_Search";
 function Box_Search() {
   const {
     columns,
-    NewPopup,
     NewBoxCapacity,
     handleOk,
     handleCancel,
@@ -43,8 +42,50 @@ function Box_Search() {
     GenPack,
     openManual,
     LotPacking,
-    tableReceive,
+    ddlItem,
+    ddlProduct,
+    LotFrom,
+    LotTo,
+    setLotFrom,
+    setLotTo,
+    PackingDateFrom,
+    PackingDateTo,
+    setPackingDateFrom,
+    setPackingDateTo,
+    BoxNoSeacrh,
+    setBoxNoSeacrh,
+    Search,
+    setddlProduct,
+    handleProduct,
+    DataSearch,
+    Clear,
+    ItemNew,
+    setItemNew,
+    ProductShow,
+    Fac,
+    BoxNo,
+    Boxstatus,
+    Packdate,
+    setPackdate,
+    PackQty,
+    FullBoxQty,
+    setFullBoxQty,
+    TotalSheetQty,
+    setTotalSheetQty,
+    PackBy,
+    setPackBy,
+    Remark,
+    setRemark,
+    Seq,
+    ddlLot,
+    setddlLot,
+    selectddlLot,
+    Pack_qtyLot,
+    handleLotNo,
+    Remind_qty,
+    setselectddlLot
   } = fn_Box_Search();
+
   return (
     <Content>
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -55,52 +96,43 @@ function Box_Search() {
           <tr>
             <td>
               <div style={{ marginLeft: "30px", textAlign: "right" }}>
-                <span style={{ fontSize: "14px" }}>Ship Factory :</span>
+                <span style={{ fontSize: "14px" }}>Item :</span>
               </div>
             </td>
             <td>
               <div>
-                <Select
+                <Input
                   showSearch
-                  // value={SL_Unit}
+                  value={ddlProduct.trim() == "" ? "" : ddlProduct}
+                  onChange={(e) => setddlProduct(e.target.value)}
                   style={{
                     width: "200px",
                     display: "block",
                     marginTop: "5px",
                     marginLeft: "5px",
                   }}
-                  placeholder="Select Ship Factory"
-                  // filterOption={(input, option) =>
-                  //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                  // }
-                  // options={Unit.Search}
-                  // onChange={HandleUnit}
+                  placeholder="Select ITem"
+                  onBlur={() => handleProduct("SearchItem")}
                 />
               </div>
             </td>
             <td>
               <div style={{ marginLeft: "30px", textAlign: "right" }}>
-                <span style={{ fontSize: "14px" }}>Item / Product :</span>
+                <span style={{ fontSize: "14px" }}>Product :</span>
               </div>
             </td>
             <td>
               <div>
-                <Select
+                <Input
                   showSearch
-                  // value={SL_Process}
+                  value={ddlItem}
                   style={{
-                    width: "436px",
+                    width: "200px",
                     display: "block",
                     marginTop: "5px",
                     marginLeft: "5px",
                   }}
-                  placeholder="Select Item / Product"
-                  optionFilterProp="children"
-                  // filterOption={(input, option) =>
-                  //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                  // }
-                  // options={Process.Search}
-                  // onChange={handleProcess}
+                  disabled
                 />
               </div>
             </td>
@@ -115,7 +147,8 @@ function Box_Search() {
               <div>
                 <Input
                   showSearch
-                  // value={SL_Unit}
+                  value={LotFrom}
+                  onChange={(e) => setLotFrom(e.target.value)}
                   style={{
                     width: "200px",
                     display: "block",
@@ -134,8 +167,8 @@ function Box_Search() {
             <td>
               <div>
                 <Input
-                  showSearch
-                  // value={SL_Unit}
+                  value={LotTo}
+                  onChange={(e) => setLotTo(e.target.value)}
                   style={{
                     width: "200px",
                     display: "block",
@@ -158,7 +191,8 @@ function Box_Search() {
                 <Input
                   type="date"
                   showSearch
-                  // value={SL_Unit}
+                  value={PackingDateFrom}
+                  onChange={(e) => setPackingDateFrom(e.target.value)}
                   style={{
                     width: "200px",
                     display: "block",
@@ -179,7 +213,8 @@ function Box_Search() {
                 <Input
                   type="date"
                   showSearch
-                  // value={SL_Unit}
+                  value={PackingDateTo}
+                  onChange={(e) => setPackingDateTo(e.target.value)}
                   style={{
                     width: "200px",
                     marginTop: "5px",
@@ -200,7 +235,7 @@ function Box_Search() {
               <div>
                 <Input
                   showSearch
-                  // value={SL_Unit}
+                  value={BoxNoSeacrh}
                   style={{
                     width: "200px",
                     display: "block",
@@ -208,11 +243,7 @@ function Box_Search() {
                     marginLeft: "5px",
                   }}
                   placeholder="Box No :"
-                  // filterOption={(input, option) =>
-                  //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                  // }
-                  // options={Unit.Search}
-                  // onChange={HandleUnit}
+                  onChange={(e) => setBoxNoSeacrh(e.target.value)}
                 />
               </div>
             </td>
@@ -236,7 +267,7 @@ function Box_Search() {
                     color: "#fff",
                     marginLeft: "10px",
                   }}
-                  // onClick={() => Search()}
+                  onClick={() => Search()}
                 >
                   Search
                 </Button>
@@ -253,11 +284,11 @@ function Box_Search() {
                   New
                 </Button>
                 <Button
-                  icon={<CloseOutlined />}
+                  icon={<ReloadOutlined />}
                   danger
                   type="primary"
                   style={{ marginLeft: "10px" }}
-                  // onClick={() => Clear()}
+                  onClick={() => Clear("SerachBox")}
                 >
                   Reset
                 </Button>
@@ -267,288 +298,506 @@ function Box_Search() {
           </tr>
         </table>
       </div>
-    
 
       <Table
         columns={columns}
         style={{ marginTop: "5px" }}
         className="tableSerachBox"
-        // dataSource={DataSearch}
+        dataSource={DataSearch}
         bordered
         pagination={true}
         scroll={{ x: "max-content", y: 350 }}
         // pagination=
       ></Table>
       <Modal
-        width={"80%"}
+        width={"85%"}
         title=""
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
         maskClosable={false}
       >
-        <div style={{ display: "flex", alignItems: "flex-start" }}>
-          <Card className="BoxnoMaintain">
-            <h3 className="BoxmainName">Box Maintain</h3>
-            <Radio.Group
-              onChange={ChooseMenu}
-              value={radioselect}
-              style={{ padding: "10px" }}
-            >
-              <Radio style={{ marginLeft: "30px" }} value={"Manual"}>
-                Pack by Box
-              </Radio>
-              <Radio style={{ marginLeft: "30px" }} value={"Auto"}>
-                Auto Generate Pack
-              </Radio>
-            </Radio.Group>
-            <table>
-              <tr>
-                <td style={{ textAlign: "right" }}>Item / Product :</td>
-                <td>
-                  <Select
-                    showSearch
-                    // value={SL_Unit}
-                    style={{
-                      width: "300px",
-                      display: "block",
-                      marginTop: "5px",
-                      marginLeft: "5px",
-                    }}
-                    placeholder="Select Input / Product"
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td style={{ textAlign: "right" }}>Ship Factory :</td>
-                <td>
-                  <Input
-                    disabled
-                    showSearch
-                    // value={SL_Unit}
-                    style={{
-                      width: "200px",
-                      display: "block",
-                      marginTop: "5px",
-                      marginLeft: "5px",
-                    }}
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td style={{ textAlign: "right" }}>Box No. :</td>
-                <td>
-                  <Input
-                    disabled
-                    showSearch
-                    // value={SL_Unit}
-                    style={{
-                      width: "200px",
-                      display: "block",
-                      marginTop: "5px",
-                      marginLeft: "5px",
-                    }}
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-                <td style={{ textAlign: "right" }}>Box Status :</td>
-                <td>
-                  <Input
-                    showSearch
-                    // value={SL_Unit}
-                    disabled
-                    style={{
-                      // width: "200px",
-                      display: "block",
-                      marginTop: "5px",
-                      marginLeft: "5px",
-                    }}
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td style={{ textAlign: "right" }}>Packing Date :</td>
-                <td>
-                  <Input
-                    type="date"
-                    showSearch
-                    // value={SL_Unit}
-                    style={{
-                      width: "200px",
-                      display: "block",
-                      marginTop: "5px",
-                      marginLeft: "5px",
-                    }}
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-                <td style={{ textAlign: "right" }}>Packing Qty :</td>
-                <td>
-                  <Input
-                    showSearch
-                    // value={SL_Unit}
-                    disabled
-                    style={{
-                      // width: "200px",
-                      display: "block",
-                      marginTop: "5px",
-                      marginLeft: "5px",
-                    }}
-                    placeholder=""
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td style={{ textAlign: "right" }}>Full Box :</td>
-                <td>
-                  <Input
-                    showSearch
-                    // value={SL_Unit}
-                    style={{
-                      width: "200px",
-                      display: "block",
-                      marginTop: "5px",
-                      marginLeft: "5px",
-                    }}
-                    placeholder="Full Box"
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td style={{ textAlign: "right" }}>Packing By :</td>
-                <td>
-                  <Input
-                    showSearch
-                    // value={SL_Unit}
-                    style={{
-                      width: "200px",
-                      display: "block",
-                      marginTop: "5px",
-                      marginLeft: "5px",
-                    }}
-                    placeholder="Packing By"
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td style={{ textAlign: "right" }}>Remark :</td>
-                <td colSpan={3}>
-                  <Input
-                    fullWidth
-                    showSearch
-                    // value={SL_Unit}
-                    style={{
-                      display: "block",
-                      marginTop: "5px",
-                      marginLeft: "5px",
-                    }}
-                    placeholder="Remark"
-                    // filterOption={(input, option) =>
-                    //   (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                    // }
-                    // options={Unit.Search}
-                    // onChange={HandleUnit}
-                  />
-                </td>
-              </tr>
-              <br />
-              <tr>
-                <td>
-                  <div style={{ marginLeft: "30px", textAlign: "right" }}>
-                    <span style={{ fontSize: "14px" }}></span>
-                  </div>
-                </td>
-                <td>
-                  <div>
-                    <Button
-                      icon={<MedicineBoxOutlined />}
-                      type="primary"
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ flex: 2, marginRight: "10px" }}>
+            <Card className="BoxnoMaintain">
+              <h3 className="BoxmainName">Box Maintain</h3>
+              <Radio.Group
+                onChange={ChooseMenu}
+                value={radioselect}
+                style={{ padding: "10px" }}
+              >
+                <Radio style={{ marginLeft: "30px" }} value={"Manual"}>
+                  Pack by Box
+                </Radio>
+                <Radio style={{ marginLeft: "30px" }} value={"Auto"}>
+                  Auto Generate Pack
+                </Radio>
+              </Radio.Group>
+              <table>
+                <tr>
+                  <td style={{ textAlign: "right" }}>Item :</td>
+                  <td>
+                    <Input
+                      value={ItemNew.trim() == "" ? "" : ItemNew}
+                      onChange={(e) => setItemNew(e.target.value)}
                       style={{
-                        background: "#3498db",
-                        color: "#fff",
-                        marginLeft: "10px",
+                        width: "200px",
+                        display: "block",
+                        marginTop: "5px",
+                        marginLeft: "5px",
                       }}
-                      onClick={() => GenPack("ManaulPack")}
-                    >
-                      Manual
-                    </Button>
-                    <Button
-                      icon={<MedicineBoxOutlined />}
-                      type="primary"
-                      style={{ marginLeft: "10px", backgroundColor: "#f4d03f" }}
-                      onClick={() => GenPack("AutoPack")}
-                    >
-                      Auto Pack
-                    </Button>
-                  </div>
-                </td>
-                <td></td>
-              </tr>
-            </table>
-          </Card>
-          <Table
-            columns={packingTable}
-            style={{ marginTop: "5px", marginLeft: "10px" }}
-            className="tablePacking"
-            // dataSource={DataSearch}
-            bordered
-            pagination={true}
-            scroll={{ x: "max-content", y: 1000 }}
-            // pagination=
-          ></Table>
-        </div>
-        <br />
-        {openManual && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <div
-            style={{ display: "flex", flexDirection: "column", width: "65%" }}
-          >
+                      placeholder="Input Item"
+                      onBlur={() => handleProduct("ItemNew")}
+                    />
+                  </td>
+                  {console.log(ProductShow, "ProductShow",ItemNew)}
+                  <td style={{ textAlign: "right" }}>Product :</td>
+                  <td>
+                    <Input
+                      value={ProductShow}
+                      disabled
+                      style={{
+                        display: "block",
+                        marginTop: "5px",
+                        marginLeft: "5px",
+                      }}
+                    />
+                  </td>
+                </tr>
+                {radioselect == "Manual" && (
+                  <tr>
+                    <td style={{ textAlign: "right" }}>Ship Factory :</td>
+                    <td>
+                      <Input
+                        disabled
+                        value={Fac.text}
+                        style={{
+                          width: "200px",
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                      />
+                    </td>
+                  </tr>
+                )}
+                {radioselect == "Manual" && (
+                  <tr>
+                    <td style={{ textAlign: "right" }}>Box No. :</td>
+                    <td>
+                      <Input
+                        disabled
+                        value={BoxNo}
+                        style={{
+                          width: "200px",
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                      />
+                    </td>
+                    <td style={{ textAlign: "right" }}>Box Status :</td>
+                    <td>
+                      <Input
+                        value={Boxstatus}
+                        disabled
+                        style={{
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                      />
+                    </td>
+                  </tr>
+                )}
+                {radioselect == "Auto" && (
+                  <tr>
+                    <td style={{ textAlign: "right" }}>Factory :</td>
+                    <td>
+                      <Input
+                        disabled
+                        showSearch
+                        style={{
+                          width: "200px",
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                      />
+                    </td>
+                    <td style={{ textAlign: "right" }}>Request Total:</td>
+                    <td>
+                      <Input
+                        showSearch
+                        disabled
+                        style={{
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                      />
+                    </td>
+                  </tr>
+                )}
+                {radioselect == "Manual" && (
+                  <tr>
+                    <td style={{ textAlign: "right" }}>Packing Date :</td>
+                    <td>
+                      <Input
+                        value={Packdate}
+                        onChange={(e) => setPackdate(e.target.value)}
+                        type="date"
+                        style={{
+                          width: "200px",
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                      />
+                    </td>
+                    <td style={{ textAlign: "right" }}>Packing Qty :</td>
+                    <td>
+                      <Input
+                        value={PackQty}
+                        disabled
+                        style={{
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                        placeholder=""
+                      />
+                    </td>
+                  </tr>
+                )}
+                {radioselect == "Auto" && (
+                  <tr>
+                    <td style={{ textAlign: "right" }}>Packing Date :</td>
+                    <td>
+                      <Input
+                        type="date"
+                        showSearch
+                        style={{
+                          width: "200px",
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                      />
+                    </td>
+                    <td style={{ textAlign: "right" }}>Full Box Qty :</td>
+                    <td>
+                      <Input
+                        showSearch
+                        disabled
+                        style={{
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                        placeholder=""
+                      />
+                    </td>
+                  </tr>
+                )}
+                {radioselect == "Manual" && (
+                  <tr>
+                    <td style={{ textAlign: "right" }}>Full Box Qty :</td>
+                    <td>
+                      <Input
+                        value={FullBoxQty}
+                        onChange={(e) => setFullBoxQty(e.target.value)}
+                        style={{
+                          width: "200px",
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                        placeholder="Input Full Box Qty"
+                      />
+                    </td>
+                    <td style={{ textAlign: "right" }}>Total Sheet Qty :</td>
+                    <td>
+                      <Input
+                        value={TotalSheetQty}
+                        onChange={(e) => setTotalSheetQty(e.target.value)}
+                        style={{
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                        placeholder="Input Total Sheet Qty"
+                      />
+                    </td>
+                  </tr>
+                )}
+                {radioselect == "Auto" && (
+                  <tr>
+                    <td style={{ textAlign: "right" }}>Sheet Qty :</td>
+                    <td>
+                      <Input
+                        showSearch
+                        style={{
+                          width: "200px",
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                        placeholder="Input Sheet Qty"
+                      />
+                    </td>
+                  </tr>
+                )}
+                <tr>
+                  <td style={{ textAlign: "right" }}>Packing By :</td>
+                  <td>
+                    <Input
+                      value={PackBy}
+                      onChange={(e) => setPackBy(e.target.value)}
+                      style={{
+                        width: "200px",
+                        display: "block",
+                        marginTop: "5px",
+                        marginLeft: "5px",
+                      }}
+                      placeholder="Input Packing By"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ textAlign: "right" }}>Remark :</td>
+                  <td colSpan={3}>
+                    <Input
+                      fullWidth
+                      value={Remark}
+                      onChange={(e) => setRemark(e.target.value)}
+                      style={{
+                        display: "block",
+                        marginTop: "5px",
+                        marginLeft: "5px",
+                      }}
+                      placeholder="Input Remark"
+                    />
+                  </td>
+                </tr>
+                <br />
+                <tr>
+                  <td>
+                    <div style={{ marginLeft: "30px", textAlign: "right" }}>
+                      <span style={{ fontSize: "14px" }}></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div>
+                      {radioselect == "Manual" && (
+                        <>
+                          <Button
+                            icon={<MedicineBoxOutlined />}
+                            type="primary"
+                            style={{
+                              background: "#3498db",
+                              color: "#fff",
+                              marginLeft: "10px",
+                            }}
+                            onClick={() => GenPack("ManaulPack")}
+                          >
+                            Manual
+                          </Button>
+                          <Button
+                            icon={<MedicineBoxOutlined />}
+                            type="primary"
+                            style={{
+                              marginLeft: "10px",
+                              backgroundColor: "#f4d03f",
+                            }}
+                            onClick={() => GenPack("AutoPack")}
+                          >
+                            Auto Pack
+                          </Button>
+                        </>
+                      )}
+                      {radioselect == "Auto" && (
+                        <>
+                          <Button
+                            icon={<MedicineBoxOutlined />}
+                            type="primary"
+                            style={{
+                              marginLeft: "10px",
+                              backgroundColor: "#f4d03f",
+                            }}
+                            onClick={() => GenPack("AutoPack")}
+                          >
+                            Auto Generate
+                          </Button>{" "}
+                        </>
+                      )}
+                      <Button
+                        icon={<ReloadOutlined />}
+                        type="primary"
+                        danger
+                        style={{ marginLeft: "10px" }}
+                        onClick={() => Clear("ResetMaintain")}
+                      >
+                        Reset
+                      </Button>
+                    </div>
+                  </td>
+                  <td></td>
+                </tr>
+              </table>
+            </Card>
+
+            {/* {openManual && ( */}
+              <Card
+                // className="BoxnoMaintain"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  textAlign: "center",
+                  backgroundColor: "#f6f8ee",
+                  marginBottom: "10px",
+                  marginTop: "10px",
+                }}
+              >
+                <h3 className="BoxmainName">Manual</h3>
+                <br />
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    width: "100%",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <span
+                    style={{
+                      textAlign: "right",
+                      width: "51px",
+                      marginLeft: "50px",
+                    }}
+                  >
+                    Seq :
+                  </span>
+                  <Input
+                    disabled
+                    value={Seq}
+                    style={{
+                      width: "65px",
+                      marginLeft: "10px",
+                    }}
+                  />
+                  <span
+                    style={{
+                      textAlign: "right",
+                      width: "100px",
+                      marginLeft: "74px",
+                    }}
+                  >
+                    Lot No :
+                  </span>
+                  {/* <Select
+                    
+                    style={{
+                      width: "200px",
+                      marginLeft: "10px",
+                    }}
+                  /> */}
+                    <Select
+            showSearch
+            value={selectddlLot}
+            onChange={(e) => setselectddlLot(e)}
+            style={{
+               width: "200px",
+               marginLeft: "10px"
+            }}
+            placeholder="Select Ch"
+            optionFilterProp="children"
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            options={ddlLot}
+          />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    width: "100%",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <span
+                    style={{
+                      textAlign: "right",
+                      width: "100px",
+                      marginTop: "10px",
+                    }}
+                  >
+                    Remind Qty :
+                  </span>
+                  <Input
+                    disabled
+                    value={Remind_qty}
+                    style={{
+                      width: "130px",
+                      marginLeft: "10px",
+                      marginTop: "10px",
+                    }}
+                  />
+                  <span
+                    style={{
+                      textAlign: "right",
+                      width: "100px",
+                      marginLeft: "10px",
+                      marginTop: "10px",
+                    }}
+                  >
+                    Packing Qty :
+                  </span>
+                  <Input
+                    disabled
+                    value={Pack_qtyLot}
+                    style={{
+                      width: "200px",
+                      marginLeft: "10px",
+                      marginTop: "10px",
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    width: "100%",
+                    marginTop: "10px",
+                    textAlign: "center",
+                  }}
+                >
+                  <Button
+                    icon={<SaveOutlined />}
+                    type="primary"
+                    style={{
+                      background: "#50C878",
+                      color: "#fff",
+                      marginLeft: "10px",
+                    }}
+                    onClick={() => GenPack("ManualPack")}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    icon={<ReloadOutlined />}
+                    type="primary"
+                    danger
+                    style={{ marginLeft: "10px" }}
+                    onClick={() => GenPack("AutoPack")}
+                  >
+                    Reset
+                  </Button>
+                </div>
+              </Card>
+            {/* )} */}
+
             <Card
-              // className="BoxnoMaintain"
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -556,127 +805,7 @@ function Box_Search() {
                 textAlign: "center",
                 backgroundColor: "#f6f8ee",
                 marginBottom: "10px",
-              }}
-            >
-              <h3 className="BoxmainName">Manual</h3>
-              <br/>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  width: "100%",
-                  marginBottom: "10px",
-                }}
-              >
-                <span
-                  style={{
-                    textAlign: "right",
-                    width: "100px",
-                    marginLeft: "50px",
-                  }}
-                >
-                  Seq :
-                </span>
-                <Input
-                  disabled
-                  showSearch
-                  style={{
-                    width: "65px",
-                    marginLeft: "10px",
-                  }}
-                />
-                <span
-                  style={{
-                    textAlign: "right",
-                    width: "100px",
-                    marginLeft: "100px",
-                  }}
-                >
-                  Lot No :
-                </span>
-                <Select
-                  showSearch
-                  style={{
-                    width: "200px",
-                    marginLeft: "10px",
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  width: "100%",
-                  marginBottom: "10px",
-                }}
-              >
-                <span style={{ textAlign: "right", width: "100px" }}>
-                  Remind Qty :
-                </span>
-                <Input
-                  disabled
-                  showSearch
-                  style={{
-                    width: "130px",
-                    marginLeft: "10px",
-                  }}
-                />
-                <span
-                  style={{
-                    textAlign: "right",
-                    width: "100px",
-                    marginLeft: "10px",
-                  }}
-                >
-                  Packing Qty :
-                </span>
-                <Input
-                  disabled
-                  showSearch
-                  style={{
-                    width: "200px",
-                    marginLeft: "10px",
-                    marginTop: "10px",
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  width: "100%",
-                  marginTop: "10px",
-                  textAlign: "center",
-                }}
-              >
-                <Button
-                  icon={<SaveOutlined />}
-                  type="primary"
-                  style={{
-                    background: "#50C878",
-                    color: "#fff",
-                    marginLeft: "10px",
-                  }}
-                  onClick={() => GenPack("ManualPack")}
-                >
-                  Save
-                </Button>
-                <Button
-                  icon={<ReloadOutlined />}
-                  type="primary"
-                  danger
-                  style={{ marginLeft: "10px" }}
-                  onClick={() => GenPack("AutoPack")}
-                >
-                  Reset
-                </Button>
-              </div>
-            </Card>
-            <Card
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                textAlign: "center",
-                backgroundColor: "#f6f8ee",
+                marginTop: "10px",
               }}
             >
               <h3 className="BoxmainName">Lot Packing</h3>
@@ -692,24 +821,41 @@ function Box_Search() {
               ></Table>
             </Card>
           </div>
-          <div
-            style={{ width: "35%", display: "flex", flexDirection: "column" }}
-          >
+          <div style={{ flex: 1, marginLeft: "10px" }}>
             <Table
-              columns={LotPacking}
-              style={{ marginTop: "5px", marginLeft: "10px", height: "100%" }}
-              className="tableRecieve"
-              // dataSource={DataSearch}
+              columns={packingTable}
+              className="tablePacking"
               bordered
               pagination={true}
-              scroll={{ x: "max-content", y: 700 }} // Adjust the height as needed
-              // pagination=
+              scroll={{ x: "max-content", y: 1000 }}
             ></Table>
+            {/* <br/> */}
+            <Card
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                textAlign: "center",
+                backgroundColor: "#f6f8ee",
+                marginTop: "10px",
+              }}
+            >
+              <h3 className="BoxmainName" style={{ width: "70px" }}>
+                Lot Packing
+              </h3>
+              <Table
+                columns={LotPacking}
+                style={{ marginTop: "5px", height: "100%" }}
+                className="tableRecieve"
+                // dataSource={DataSearch}
+                bordered
+                pagination={true}
+                scroll={{ x: "max-content", y: 700 }} // Adjust the height as needed
+                // pagination=
+              ></Table>
+            </Card>
           </div>
         </div>
-      
-       
-        )}
       </Modal>
     </Content>
   );
