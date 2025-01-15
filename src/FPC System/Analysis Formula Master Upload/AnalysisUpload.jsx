@@ -60,7 +60,8 @@ const AnalysisUpload = () => {
     UploadFile,
     columnsUpload,
     Button_Save,
-    Button_Cancel
+    Button_Cancel,
+    Botton_Search
   } = fn_AnalysisUpload();
 
   return (
@@ -158,7 +159,7 @@ const AnalysisUpload = () => {
         </div>
 
         <div style={{ marginLeft: "30px" }}>
-          <span style={{ fontSize: "14px" }}>Ch</span>
+          <span style={{ fontSize: "14px" }}>Chemical</span>
           <Select
             showSearch
             value={SL_Ch}
@@ -183,7 +184,9 @@ const AnalysisUpload = () => {
             type="primary"
             icon={<SearchOutlined />}
             style={{ background: "#5AA8F5", color: "#fff", marginTop: "5px" }}
-            onClick={() => Search()}
+            onClick={() => 
+              
+              Botton_Search()}
           >
             Search{" "}
           </Button>{" "}
@@ -391,11 +394,11 @@ const AnalysisUpload = () => {
             Upload
           </Button>
         </div>
-        <br />
+       
         <div className="divTable">
           <Table
             columns={columnsUpload}
-            style={{ width: "99%" }}
+            style={{ width: "100%" }}
             className="tableSerachAnalysis"
             dataSource={dataFile}
             pagination={false}

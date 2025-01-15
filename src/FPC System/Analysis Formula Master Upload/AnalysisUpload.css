@@ -6,11 +6,13 @@
   }
   .tableSerachAnalysis .ant-table-tbody > tr > td {
       font-family: 'Varela Round', sans-serif;
+     
   }
 
   .divTable {
     display: flex;
     justify-content: center;
+    margin-top: 10px;
   }
 
   .bt_ChooseFile{
