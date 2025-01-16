@@ -13,6 +13,8 @@ function fn_Header() {
   const partweb = url.split("/")[4];
   const loginID = params.get("loginID");
   const systemID = params.get("systemID");
+  // const System = url.split("/")[3];
+  console.log(partweb,'System');
 
   useEffect(() => {
     TitleHeader();
@@ -65,7 +67,8 @@ function fn_Header() {
   return {
     PageHeader,
     Gohome,
-    loginID
+    loginID,
+    partweb
   };
 }
 

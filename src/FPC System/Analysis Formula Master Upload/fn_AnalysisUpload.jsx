@@ -8,7 +8,7 @@ import { Button } from "antd";
 import { useLoading } from "../../component/loading/fn_loading";
 import { fn_Header } from "../../Header/fn_Header";
 import ImgDelete from "../../assets/delete.png";
-import { el } from "date-fns/locale";
+
 
 function fn_AnalysisUpload() {
   const [Unit, setUnit] = useState({ Search: [], PopUp: [] });
@@ -171,6 +171,7 @@ function fn_AnalysisUpload() {
   const Botton_Search = async () => {
     showLoading("กำลังค้นหา กรุณารอสักครู่");
     await Search();
+    hideLoading();
   };
 
   const Search = async () => {
@@ -201,7 +202,7 @@ function fn_AnalysisUpload() {
         title: "Please Select Unit",
       });
     }
-    hideLoading();
+   
   };
 
   const showPopUp = () => {
@@ -214,7 +215,6 @@ function fn_AnalysisUpload() {
     setFileName("");
     setSelectedFiles([]);
     document.getElementById("fileInput").value = "";
-    //กลับมาเปิดด้วย
     setSL_UnitPopUp(null);
     setSL_MCPopUp(null);
     setSL_ProcessPopUp(null);
@@ -566,256 +566,266 @@ function fn_AnalysisUpload() {
   // };
 
   const CheckConditions = async () => {
-    setDisableSave(false);
-    const bathValuePromises = selectedFiles.map((file) =>
-      axios.post("/api/Analysis_Formular/GetBathValue", { Bath: file.BATH })
-    );
-
-    const bathValues = await Promise.all(bathValuePromises);
-
-    const chemicalPromises = bathValues.map((res, i) =>
-      axios.post("/api/Analysis_Formular/GetChemical", {
-        PARAMETER_MC: SL_MCPopUp,
-        PARAMETER_BATH: res.data,
-      })
-    );
-
-    const chemicalResults = await Promise.all(chemicalPromises);
-
-    const seqChemBathPromises = selectedFiles.map((file, i) =>
-      axios.post("/api/Analysis_Formular/CheckSEQChemBath", {
-        BATH: bathValues[i].data,
-        MACHINE: SL_MCPopUp,
-        SEQ: file.SEQ,
-      })
-    );
-
-    const seqChemBathResults = await Promise.all(seqChemBathPromises);
-
-    const mcChemBathPromises = selectedFiles.map((file, i) =>
-      axios.post("/api/Analysis_Formular/CheckMcChemBath", {
-        BATH: bathValues[i].data,
-        MACHINE: SL_MCPopUp,
-        CHEM: file.CHEMICAL,
-      })
-    );
-
-    const mcChemBathResults = await Promise.all(mcChemBathPromises);
-
-    selectedFiles.forEach((file, i) => {
-      let dataChem = chemicalResults[i].data;
-      let bathValue = bathValues[i].data;
-      let remark = "";
-      file.BATH_ID = bathValue;
-      let chem = file.CHEMICAL;
-      let seq = file.SEQ;
-      let formula = file.FORMULA || "";
-      let replenisher = file.REPLENISHER || "";
-      let countFomula = (formula.match(/\b(V1|V2|V3|V4)\b/g) || []).length;
-      let formulaRef1 = formula.match(/\bREF_V1\b/g);
-      let formulaRef2 = formula.match(/\bREF2_V1\b/g);
-      const openParenthesesCount = (formula.match(/\(/g) || []).length;
-      const closeParenthesesCount = (formula.match(/\)/g) || []).length;
-      const regexFormula =
-        /^(\s*[\d]+(\.\d+)?|\s*V[1-4]|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/;
-      const regexReplenisher =
-        /^(\s*[\d]+(\.\d+)?|\s*A|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/;
-      let PatternFormula = regexFormula.test(formula);
-      let PatternReplenisher = regexReplenisher.test(replenisher);
-      let ReplenisherRef1 = replenisher.match(/\bREF_V1\b/g);
-      let ReplenisherRef2 = replenisher.match(/\bREF2_V1\b/g);
-      const target = file.TARGET;
-      const lcl = file.LCL;
-      const ucl = file.UCL;
-      const lsl = file.LSL;
-      const usl = file.USL;
-
-      if (dataChem.length <= 1) {
-        remark = remark
-          ? remark + ", ไม่พบ Bath ในMachine นี้"
-          : "ไม่พบ Bath ในMachine นี้";
-      }
-      if (file.BATH == "" || chem == "" || seq == "") {
-        remark = remark
-          ? remark + ", ไม่พบ Bath/Chemical/Seq"
-          : "ไม่พบ Bath/Chemical/Seq";
-      }
-
-      if (countFomula != 0) {
-        file.INPUT = countFomula;
-      }
-
-      if (seqChemBathResults[i].data.length > 0) {
-        remark = remark
-          ? remark + ", พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database"
-          : "พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database";
-      } else {
-        const isDuplicate = selectedFiles.some(
-          (f, index) =>
-            seq != "" && i !== index && seq === f.SEQ && file.BATH === f.BATH
-        );
-        if (isDuplicate) {
+    try{
+      setDisableSave(false);
+      const bathValuePromises = selectedFiles.map((file) =>
+        axios.post("/api/Analysis_Formular/GetBathValue", { Bath: file.BATH })
+      );
+  
+      const bathValues = await Promise.all(bathValuePromises);
+  
+      const chemicalPromises = bathValues.map((res, i) =>
+        axios.post("/api/Analysis_Formular/GetChemical", {
+          PARAMETER_MC: SL_MCPopUp,
+          PARAMETER_BATH: res.data,
+        })
+      );
+  
+      const chemicalResults = await Promise.all(chemicalPromises);
+  
+      const seqChemBathPromises = selectedFiles.map((file, i) =>
+        axios.post("/api/Analysis_Formular/CheckSEQChemBath", {
+          BATH: bathValues[i].data,
+          MACHINE: SL_MCPopUp,
+          SEQ: file.SEQ,
+        })
+      );
+  
+      const seqChemBathResults = await Promise.all(seqChemBathPromises);
+  
+      const mcChemBathPromises = selectedFiles.map((file, i) =>
+        axios.post("/api/Analysis_Formular/CheckMcChemBath", {
+          BATH: bathValues[i].data,
+          MACHINE: SL_MCPopUp,
+          CHEM: file.CHEMICAL,
+        })
+      );
+  
+      const mcChemBathResults = await Promise.all(mcChemBathPromises);
+  
+      selectedFiles.forEach((file, i) => {
+        let dataChem = chemicalResults[i].data;
+        let bathValue = bathValues[i].data;
+        let remark = "";
+        file.BATH_ID = bathValue;
+        let chem = file.CHEMICAL;
+        let seq = file.SEQ;
+        let formula = file.FORMULA || "";
+        let replenisher = file.REPLENISHER || "";
+        let countFomula = (formula.match(/\b(V1|V2|V3|V4)\b/g) || []).length;
+        let formulaRef1 = formula.match(/\bREF_V1\b/g);
+        let formulaRef2 = formula.match(/\bREF2_V1\b/g);
+        const openParenthesesCount = (formula.match(/\(/g) || []).length;
+        const closeParenthesesCount = (formula.match(/\)/g) || []).length;
+        const regexFormula =
+          /^(\s*[\d]+(\.\d+)?|\s*V[1-4]|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/;
+        const regexReplenisher =
+          /^(\s*[\d]+(\.\d+)?|\s*A|\s*REF_V1|\s*REF2_V1|\s*[\+\-\*\/\(\)]+)+\s*$/;
+        let PatternFormula = regexFormula.test(formula);
+        let PatternReplenisher = regexReplenisher.test(replenisher);
+        let ReplenisherRef1 = replenisher.match(/\bREF_V1\b/g);
+        let ReplenisherRef2 = replenisher.match(/\bREF2_V1\b/g);
+        const target = file.TARGET;
+        const lcl = file.LCL;
+        const ucl = file.UCL;
+        const lsl = file.LSL;
+        const usl = file.USL;
+  
+        if (dataChem.length <= 1) {
           remark = remark
-            ? remark + ", พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน"
-            : "พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน";
+            ? remark + ", ไม่พบ Bath ในMachine นี้"
+            : "ไม่พบ Bath ในMachine นี้";
         }
-      }
-
-      if (mcChemBathResults[i].data.length > 0) {
-        remark = remark
-          ? remark + ", พบ Chemical ซ้ำ Machine และ Bath เดียวกันใน Database"
-          : "พบ Chemical ซ้ำใน Machine และ Bath เดียวกันใน Database";
-      }
-
-      if (formulaRef1 != null) {
-        if (file.FORMULA_REFER1 != "") {
-          const CheckChem = dataChem.find(
-            (item) => item.label === file.FORMULA_REFER1
-          );
-          if (!CheckChem) {
-            const CheckChemFile = selectedFiles.find(
-              (f, index) => f.CHEMICAL === file.FORMULA_REFER1 && index !== i
-            );
-            if (!CheckChemFile) {
-              remark = remark
-                ? remark +
-                  ", ไม่พบ Chemical Formula Refer1 ใน MC และ Bath เดียวกัน"
-                : "ไม่พบ Chemical Formula Refer1 ใน MC และ Bath เดียวกัน";
-            }
-          }
+        if (file.BATH == "" || chem == "" || seq == "") {
+          remark = remark
+            ? remark + ", ไม่พบ Bath/Chemical/Seq"
+            : "ไม่พบ Bath/Chemical/Seq";
+        }
+  
+        if (countFomula != 0) {
+          file.INPUT = countFomula;
+        }
+  
+        if (seqChemBathResults[i].data.length > 0) {
+          remark = remark
+            ? remark + ", พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database"
+            : "พบ SEQ ที่ซ้ำกับ Machine และ Bath เดียวกันใน Database";
         } else {
-          remark = remark
-            ? remark + ", ไม่พบ Fomula Refer1"
-            : "ไม่พบ Fomula Refer1";
-        }
-      }
-
-      if (formulaRef2 != null) {
-        if (file.FORMULA_REFER2 != "") {
-          const CheckChem = dataChem.find(
-            (item) => item.label === file.FORMULA_REFER2
+          const isDuplicate = selectedFiles.some(
+            (f, index) =>
+              seq != "" && i !== index && seq === f.SEQ && file.BATH === f.BATH
           );
-          if (!CheckChem) {
-            const CheckChemFile = selectedFiles.find(
-              (f, index) => f.CHEMICAL === file.FORMULA_REFER2 && index !== i
-            );
-            if (!CheckChemFile) {
-              remark = remark
-                ? remark +
-                  ", ไม่พบ Chemical Formula Refer2 ใน MC และ Bath เดียวกัน"
-                : "ไม่พบ Chemical Formula Refer2 ใน MC และ Bath เดียวกัน";
-            }
+          if (isDuplicate) {
+            remark = remark
+              ? remark + ", พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน"
+              : "พบ SEQ ที่ซ้ำกับ Machine และ Bath ในไฟล์เดียวกัน";
           }
-        } else {
-          remark = remark
-            ? remark + ", ไม่พบ Fomula Refer2"
-            : "ไม่พบ Fomula Refer2";
         }
-      }
-
-      if (
-        !/\bV[1-4]\b/.test(formula) &&
-        (formulaRef1 != null || formulaRef2 != null)
-      ) {
-        file.INPUT = "";
-      }
-
-      if (openParenthesesCount != closeParenthesesCount) {
-        remark = remark
-          ? remark + ", วงเล็บเปิด-ปิดไม่ครบถ้วน"
-          : "วงเล็บเปิด-ปิดไม่ครบถ้วน";
-      }
-
-      if (formula != "") {
-        if (!PatternFormula) {
-          remark = remark
-            ? remark + ", Fomat Formula ไม่ถูกต้อง " + formula
-            : "Fomat Formula ไม่ถูกต้อง " + formula;
-        }
-      }
-
-      if (replenisher != "") {
-        if (!PatternReplenisher) {
-          remark = remark
-            ? remark + ", Fomat Replenisher ไม่ถูกต้อง " + replenisher
-            : "Fomat Replenisher ไม่ถูกต้อง " + replenisher;
-        }
-      }
-
-      if (ReplenisherRef1 != null) {
-        if (file.REPLENISHER_REFER1 != "") {
-          const CheckChem = dataChem.find(
-            (item) => item.label === file.REPLENISHER_REFER1
-          );
-          if (!CheckChem) {
-            const CheckChemFile = selectedFiles.find(
-              (f, index) =>
-                f.CHEMICAL === file.REPLENISHER_REFER1 && index !== i
+  
+        // if (mcChemBathResults[i].data.length > 0) {
+        //   remark = remark
+        //     ? remark + ", พบ Chemical ซ้ำ Machine และ Bath เดียวกันใน Database"
+        //     : "พบ Chemical ซ้ำใน Machine และ Bath เดียวกันใน Database";
+        // }
+  
+        if (formulaRef1 != null) {
+          if (file.FORMULA_REFER1 != "") {
+            const CheckChem = dataChem.find(
+              (item) => item.label === file.FORMULA_REFER1
             );
-            if (!CheckChemFile) {
-              remark = remark
-                ? remark +
-                  ", ไม่พบ Chemical Replenisher Refer1 ใน MC และ Bath เดียวกัน"
-                : "ไม่พบ Chemical Replenisher Refer1 ใน MC และ Bath เดียวกัน";
+            if (!CheckChem) {
+              const CheckChemFile = selectedFiles.find(
+                (f, index) => f.CHEMICAL === file.FORMULA_REFER1 && index !== i
+              );
+              if (!CheckChemFile) {
+                remark = remark
+                  ? remark +
+                    ", ไม่พบ Chemical Formula Refer1 ใน MC และ Bath เดียวกัน"
+                  : "ไม่พบ Chemical Formula Refer1 ใน MC และ Bath เดียวกัน";
+              }
             }
+          } else {
+            remark = remark
+              ? remark + ", ไม่พบ Fomula Refer1"
+              : "ไม่พบ Fomula Refer1";
           }
-        } else {
-          remark = remark
-            ? remark + ", ไม่พบ Replenisher Refer1"
-            : "ไม่พบ Replenisher Refer1";
         }
-      }
-
-      if (ReplenisherRef2 != null) {
-        if (file.REPLENISHER_REFER2 != "") {
-          const CheckChem = dataChem.find(
-            (item) => item.label === file.REPLENISHER_REFER2
-          );
-          if (!CheckChem) {
-            const CheckChemFile = selectedFiles.find(
-              (f, index) =>
-                f.CHEMICAL === file.REPLENISHER_REFER2 && index !== i
+  
+        if (formulaRef2 != null) {
+          if (file.FORMULA_REFER2 != "") {
+            const CheckChem = dataChem.find(
+              (item) => item.label === file.FORMULA_REFER2
             );
-            if (!CheckChemFile) {
-              remark = remark
-                ? remark +
-                  ", ไม่พบ Chemical Replenisher Refer2 ใน MC และ Bath เดียวกัน"
-                : "ไม่พบ Chemical Replenisher Refer2 ใน MC และ Bath เดียวกัน";
+            if (!CheckChem) {
+              const CheckChemFile = selectedFiles.find(
+                (f, index) => f.CHEMICAL === file.FORMULA_REFER2 && index !== i
+              );
+              if (!CheckChemFile) {
+                remark = remark
+                  ? remark +
+                    ", ไม่พบ Chemical Formula Refer2 ใน MC และ Bath เดียวกัน"
+                  : "ไม่พบ Chemical Formula Refer2 ใน MC และ Bath เดียวกัน";
+              }
             }
+          } else {
+            remark = remark
+              ? remark + ", ไม่พบ Fomula Refer2"
+              : "ไม่พบ Fomula Refer2";
           }
-        } else {
-          remark = remark
-            ? remark + ", ไม่พบ Replenisher Refer2"
-            : "ไม่พบ Replenisher Refer2";
         }
-      }
-
-      if (target !== "" && isNaN(target)) {
-        remark = remark
-          ? remark + ", Target ไม่ใช่ตัวเลข"
-          : "Target ไม่ใช่ตัวเลข";
-      }
-      if (lcl !== "" && isNaN(lcl)) {
-        remark = remark ? remark + ", LCL ไม่ใช่ตัวเลข" : "LCL ไม่ใช่ตัวเลข";
-      }
-      if (ucl !== "" && isNaN(ucl)) {
-        remark = remark ? remark + ", UCL ไม่ใช่ตัวเลข" : "UCL ไม่ใช่ตัวเลข";
-      }
-      if (lsl !== "" && isNaN(lsl)) {
-        remark = remark ? remark + ", LSL ไม่ใช่ตัวเลข" : "LSL ไม่ใช่ตัวเลข";
-      }
-      if (usl !== "" && isNaN(usl)) {
-        remark = remark ? remark + ", USL ไม่ใช่ตัวเลข" : "USL ไม่ใช่ตัวเลข";
-      }
-
-      if (remark != "") {
-        setDisableSave(true);
-      }
-
-      file.REMARK = remark;
-    });
-
-    SetdataFile(selectedFiles);
+  
+        if (
+          !/\bV[1-4]\b/.test(formula) &&
+          (formulaRef1 != null || formulaRef2 != null)
+        ) {
+          file.INPUT = "";
+        }
+  
+        if (openParenthesesCount != closeParenthesesCount) {
+          remark = remark
+            ? remark + ", วงเล็บเปิด-ปิดไม่ครบถ้วน"
+            : "วงเล็บเปิด-ปิดไม่ครบถ้วน";
+        }
+  
+        if (formula != "") {
+          if (!PatternFormula) {
+            remark = remark
+              ? remark + ", Fomat Formula ไม่ถูกต้อง " + formula
+              : "Fomat Formula ไม่ถูกต้อง " + formula;
+          }
+        }
+  
+        if (replenisher != "") {
+          if (!PatternReplenisher) {
+            remark = remark
+              ? remark + ", Fomat Replenisher ไม่ถูกต้อง " + replenisher
+              : "Fomat Replenisher ไม่ถูกต้อง " + replenisher;
+          }
+        }
+  
+        if (ReplenisherRef1 != null) {
+          if (file.REPLENISHER_REFER1 != "") {
+            const CheckChem = dataChem.find(
+              (item) => item.label === file.REPLENISHER_REFER1
+            );
+            if (!CheckChem) {
+              const CheckChemFile = selectedFiles.find(
+                (f, index) =>
+                  f.CHEMICAL === file.REPLENISHER_REFER1 && index !== i
+              );
+              if (!CheckChemFile) {
+                remark = remark
+                  ? remark +
+                    ", ไม่พบ Chemical Replenisher Refer1 ใน MC และ Bath เดียวกัน"
+                  : "ไม่พบ Chemical Replenisher Refer1 ใน MC และ Bath เดียวกัน";
+              }
+            }
+          } else {
+            remark = remark
+              ? remark + ", ไม่พบ Replenisher Refer1"
+              : "ไม่พบ Replenisher Refer1";
+          }
+        }
+  
+        if (ReplenisherRef2 != null) {
+          if (file.REPLENISHER_REFER2 != "") {
+            const CheckChem = dataChem.find(
+              (item) => item.label === file.REPLENISHER_REFER2
+            );
+            if (!CheckChem) {
+              const CheckChemFile = selectedFiles.find(
+                (f, index) =>
+                  f.CHEMICAL === file.REPLENISHER_REFER2 && index !== i
+              );
+              if (!CheckChemFile) {
+                remark = remark
+                  ? remark +
+                    ", ไม่พบ Chemical Replenisher Refer2 ใน MC และ Bath เดียวกัน"
+                  : "ไม่พบ Chemical Replenisher Refer2 ใน MC และ Bath เดียวกัน";
+              }
+            }
+          } else {
+            remark = remark
+              ? remark + ", ไม่พบ Replenisher Refer2"
+              : "ไม่พบ Replenisher Refer2";
+          }
+        }
+  
+        if (target !== "" && isNaN(target)) {
+          remark = remark
+            ? remark + ", Target ไม่ใช่ตัวเลข"
+            : "Target ไม่ใช่ตัวเลข";
+        }
+        if (lcl !== "" && isNaN(lcl)) {
+          remark = remark ? remark + ", LCL ไม่ใช่ตัวเลข" : "LCL ไม่ใช่ตัวเลข";
+        }
+        if (ucl !== "" && isNaN(ucl)) {
+          remark = remark ? remark + ", UCL ไม่ใช่ตัวเลข" : "UCL ไม่ใช่ตัวเลข";
+        }
+        if (lsl !== "" && isNaN(lsl)) {
+          remark = remark ? remark + ", LSL ไม่ใช่ตัวเลข" : "LSL ไม่ใช่ตัวเลข";
+        }
+        if (usl !== "" && isNaN(usl)) {
+          remark = remark ? remark + ", USL ไม่ใช่ตัวเลข" : "USL ไม่ใช่ตัวเลข";
+        }
+  
+        if (remark != "") {
+          setDisableSave(true);
+        }
+  
+        file.REMARK = remark;
+      });
+  
+      SetdataFile(selectedFiles);
+    }
+    catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        text: error,
+      });
+    }
+  
   };
 
   const UploadFile = async () => {
@@ -1017,24 +1027,6 @@ function fn_AnalysisUpload() {
     saveAs(dataBlob, `${NameFile}`);
   };
 
-  const Change_ChemID = async () => {
-    await axios
-      .post("/api/Analysis_Formular/CheckChemDesc", {})
-      .then(async (res) => {
-        if (res.data.length > 0) {
-          for (let i = 0; i < res.data.length; i++) {
-            await axios
-              .post("/api/Analysis_Formular/Change_ChemID", {
-                data: res.data[i],
-              })
-              .then(async (res) => {
-                // console.log('Chang Success',res.data);
-              });
-          }
-        }
-      });
-  };
-
   const Button_Save = async () => {
     showLoading("กำลังบันทึก กรุณารอสักครู่");
     try {
@@ -1047,8 +1039,6 @@ function fn_AnalysisUpload() {
           })
           .then(async (res) => {
             if (res.data != "") {
-              // console.log("insert Sucess");
-
               Swal.fire({
                 icon: "error",
                 title: "Can not Save Chemical",

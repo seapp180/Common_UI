@@ -39,3 +39,16 @@ background: #705C53;
     color: #fff;
     font-family: Varela Round, sans-serif ;
 }
+
+.Header-zPO{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    /* background: #705C53;     */
+    }
