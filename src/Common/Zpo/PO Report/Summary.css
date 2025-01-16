@@ -1,0 +1,5 @@
+.tableSummary .ant-table-thead > tr > th {
+    background-color: #31363F;
+    color: white;
+    /* text-align: center;  */
+  }

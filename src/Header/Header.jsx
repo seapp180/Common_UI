@@ -5,9 +5,9 @@ import { fn_Header } from "./fn_Header";
 import "../StyleCommon.css";
 const { Header } = Layout;
 const CustomHeader = () => {
-  const { PageHeader, Gohome } = fn_Header();
+  const { PageHeader, Gohome,partweb } = fn_Header();
   return (
-    <Header className="Header">
+    <Header className={partweb === 'PoSummary' || partweb === 'zPO' ? 'Header-zPO' : 'Header'}>
       <div style={{ display: "flex", alignItems: "center", marginLeft: "0px" }}>
         <div className="demo-logo" />
         {PageHeader}

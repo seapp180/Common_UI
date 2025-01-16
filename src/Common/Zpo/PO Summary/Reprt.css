@@ -1,0 +1,23 @@
+.red-border-column {
+    border-right: 1px solid #C7C8CC !important;
+    /* border-bottom: 1px solid #C7C8CC !important; */
+  }
+
+  
+  .red-border-column .ant-table-thead> tr > th {
+    border: none !important;
+  }
+
+  .custom-bordered-table .ant-table-thead > tr > th {
+    background-color: #76ABAE;
+    color: white;
+    /* text-align: center;  */
+  }
+  
+
+  .tableSearchZpo .ant-table-thead > tr > th {
+    background-color: #595260;
+    color: white;
+    /* text-align: center;  */
+  }
+  

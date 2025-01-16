@@ -13,6 +13,8 @@ import QA_ORT_WorkingRecord from "./Condition System/QA ORT Working Record/QA_OR
 import AnalysisUpload from "./FPC System/Analysis Formula Master Upload/AnalysisUpload";
 import BoxCapacity from "./MFG Report System/Box Capacity/Box_Search";
 import UserListReport from "./Common/User List Report/UserListReport";
+import ZPoReport from "./Common/Zpo/PO Summary/zPO_Report";
+import PoSummary from "./Common/Zpo/PO Report/PoSummary";
 
 const { Content } = Layout;
 const backendUrl = import.meta.env.VITE_SERVICE_URL;
@@ -57,6 +59,14 @@ const App = () => {
                   <Route
                     path="/CommonSystem/UserListReport"
                     element={<UserListReport />}
+                  />
+                  <Route
+                    path="/CommonSystem/zPO"
+                    element={<ZPoReport />}
+                  />
+                  <Route
+                    path="/CommonSystem/PoSummary"
+                    element={<PoSummary />}
                   />
                 </Routes>
               </div>
