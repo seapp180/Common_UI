@@ -97,7 +97,7 @@ function fn_Summary() {
         return (
           <a
             onClick={() => {
-              window.open(`http://10.17.100.183:8081/CommonSystem/zPO?pono=${encodeURIComponent(text)}`, '_blank');
+              window.open(`/CommonSystem/zPO?pono=${encodeURIComponent(text)}`, '_blank');
               // rel="noopener noreferrer"
             }}
           >

@@ -6,6 +6,8 @@ import Imgsubmit from "../assets/submit.png";
 import Imgtime from "../assets/time.png";
 import ImgScanner from "../assets/barcode-scanner.png";
 import Imgreport from "../assets/3d-report.png";
+import ImgDash from '../assets/dashboard.png'
+// import ImgReport from '../assets/report.png'
 
 function fn_Header() {
   const [PageHeader, setPageHeader] = useState("");
@@ -14,8 +16,8 @@ function fn_Header() {
   const partweb = url.split("/")[4];
   const loginID = params.get("loginID");
   const systemID = params.get("systemID");
-  // const System = url.split("/")[3];
-  console.log(partweb,'System');
+  const System = url.split("?")[0].split("/")[4];
+  console.log(System,'System');
 
   useEffect(() => {
     TitleHeader();
@@ -43,14 +45,28 @@ function fn_Header() {
           &nbsp;MFG Report System
         </span>
       );
-    } else if (partweb === "UserListReport") {
+    } else if (System === "UserListReport") {
       setPageHeader(
         <span className="TitleHeader">
           <Avatar src={Imgreport} shape="square" />
           &nbsp;User List Report
         </span>
       );
-    } else {
+    }  else if (System.toUpperCase() === "POSUMMARY") {
+      setPageHeader(
+        <span className="TitleHeader">
+          <Avatar src={ImgDash} shape="square" />
+          &nbsp;APPLE INC. PO Summary (zeEDI)
+        </span>
+      );
+    }else if (System.toUpperCase() === 'ZPO') {
+      setPageHeader(
+        <span  className="TitleHeader">
+          <Avatar src={Imgreport} shape="square" />
+          &nbsp;zPO Summary Report
+        </span>
+      );
+    }  else {
       setPageHeader(
         <span className="TitleHeader">
           <Avatar src={ImgReport} shape="square" />
@@ -76,7 +92,7 @@ function fn_Header() {
     PageHeader,
     Gohome,
     loginID,
-    partweb
+    System
   };
 }
 
