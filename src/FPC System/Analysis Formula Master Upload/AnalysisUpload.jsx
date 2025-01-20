@@ -1,9 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Layout, Button, Table, Select, Modal, Spin, Tag, Avatar,Input  } from "antd";
-import axios from "axios";
+import React from "react";
+import { Layout, Button, Table, Select, Modal } from "antd";
 import {
   SearchOutlined,
-  LoadingOutlined,
   CloudUploadOutlined,
   FileOutlined,
   FileExcelOutlined,
@@ -11,7 +9,6 @@ import {
   SaveOutlined,
   UploadOutlined,
   CloseCircleOutlined,
-  PlusCircleOutlined
 } from "@ant-design/icons";
 import { fn_AnalysisUpload } from "./fn_AnalysisUpload";
 import "./AnalysisUpload.css";
