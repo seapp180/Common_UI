@@ -58,7 +58,7 @@ const AnalysisUpload = () => {
     columnsUpload,
     Button_Save,
     Button_Cancel,
-    Botton_Search
+    Botton_Search,
   } = fn_AnalysisUpload();
 
   return (
@@ -181,9 +181,7 @@ const AnalysisUpload = () => {
             type="primary"
             icon={<SearchOutlined />}
             style={{ background: "#5AA8F5", color: "#fff", marginTop: "5px" }}
-            onClick={() => 
-              
-              Botton_Search()}
+            onClick={() => Botton_Search()}
           >
             Search{" "}
           </Button>{" "}
@@ -196,8 +194,8 @@ const AnalysisUpload = () => {
             onClick={() => Clear()}
           >
             Clear{" "}
-          </Button>{" "} &nbsp;&nbsp;
-      
+          </Button>{" "}
+          &nbsp;&nbsp;
           <Button
             icon={<UploadOutlined />}
             onClick={() => showPopUp()}
@@ -210,14 +208,8 @@ const AnalysisUpload = () => {
       </div>
       <br></br>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
-    
         <Button
-          icon={
-            <img
-              src={ImgExcel}
-              style={{ width: 20, height: 20 }}
-            />
-          }
+          icon={<img src={ImgExcel} style={{ width: 20, height: 20 }} />}
           onClick={() => BtnExport()}
         >
           Export Excel
@@ -232,7 +224,6 @@ const AnalysisUpload = () => {
         bordered
         pagination={true}
         scroll={{ x: "max-content", y: 350 }}
-      
       ></Table>
       <Modal
         open={UploadOpen}
@@ -244,7 +235,7 @@ const AnalysisUpload = () => {
         <div style={{ display: "flex", alignItems: "flex-start" }}>
           <div style={{}}>
             <span style={{ fontSize: "14px" }}>Unit</span>
-         
+
             <Select
               showSearch
               value={SL_UnitPopUp}
@@ -391,7 +382,7 @@ const AnalysisUpload = () => {
             Upload
           </Button>
         </div>
-       
+
         <div className="divTable">
           <Table
             columns={columnsUpload}
@@ -402,7 +393,7 @@ const AnalysisUpload = () => {
             scroll={{ x: "max-content", y: 310 }}
             size="small"
             bordered
-            rowClassName={(record) => (record.REMARK !== '' ? 'row-red' : '')}
+            rowClassName={(record) => (record.REMARK !== "" ? "row-red" : "")}
           ></Table>
         </div>
         <br />
@@ -414,8 +405,7 @@ const AnalysisUpload = () => {
           }}
         >
           <Button
-           
-            icon={ <SaveOutlined />}
+            icon={<SaveOutlined />}
             disabled={DisableSave}
             style={{ marginLeft: "5px", background: "#399918", color: "#fff" }}
             onClick={() => Button_Save()}
@@ -431,7 +421,6 @@ const AnalysisUpload = () => {
           </Button>
         </div>
       </Modal>
-     
     </Content>
   );
 };

@@ -17,7 +17,10 @@ import ZPoReport from "./Common/Zpo/PO Summary/zPO_Report";
 import PoSummary from "./Common/Zpo/PO Report/PoSummary";
 
 const { Content } = Layout;
-const backendUrl = import.meta.env.VITE_SERVICE_URL;
+// const backendUrl = import.meta.env.VITE_SERVICE_URL;
+// axios.defaults.baseURL = backendUrl;
+
+const backendUrl = `http://${window.location.hostname}:4005`;
 axios.defaults.baseURL = backendUrl;
 
 const App = () => {

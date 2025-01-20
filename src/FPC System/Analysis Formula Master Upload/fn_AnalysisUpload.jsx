@@ -16,11 +16,11 @@ function fn_AnalysisUpload() {
   const [Machine, setMachine] = useState({ Search: [], PopUp: [] });
   const [Bath, setBath] = useState({ Search: [], PopUp: [] });
   const [Ch, setCh] = useState({ Search: [], PopUp: [] });
-  const [SL_Ch, setSL_Ch] = useState(null);
-  const [SL_Bath, setSL_Bath] = useState(null);
-  const [SL_Machine, setSL_Machine] = useState(null);
-  const [SL_Process, setSL_Process] = useState(null);
-  const [SL_Unit, setSL_Unit] = useState(null);
+  const [SL_Ch, setSL_Ch] = useState('');
+  const [SL_Bath, setSL_Bath] = useState('');
+  const [SL_Machine, setSL_Machine] = useState('');
+  const [SL_Process, setSL_Process] = useState('');
+  const [SL_Unit, setSL_Unit] = useState('');
   const [DataSearch, setDataSearch] = useState([]);
   const [UploadOpen, setUploadOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -37,11 +37,16 @@ function fn_AnalysisUpload() {
   useEffect(() => {
     GetUnit();
     GetUnitPopUP();
+    // setSL_Unit(unit);
+    GetProcess(SL_Unit);
+    GetMachince(SL_Unit, SL_Process);
+    GetBath(SL_Machine);
+    GetChem(SL_Machine, SL_Bath);
+    
   }, []);
 
   const GetUnit = async () => {
     await axios.post("/api/Analysis_Formular/GetUnit", {}).then((res) => {
-      console.log("Unit", res.data);
       setUnit((prevState) => ({ ...prevState, Search: res.data }));
       // setUnit(res.data);
     });
@@ -53,7 +58,7 @@ function fn_AnalysisUpload() {
         PARAMETER_UNIT: unit || "",
       })
       .then((res) => {
-        console.log("Process", res.data);
+
         setProcess((prevState) => ({ ...prevState, Search: res.data }));
       });
   };
@@ -65,7 +70,6 @@ function fn_AnalysisUpload() {
         PARAMETER_UNIT: Unit || "",
       })
       .then((res) => {
-        console.log("Machine", res.data);
         setMachine((prevState) => ({ ...prevState, Search: res.data }));
       });
   };
@@ -77,7 +81,6 @@ function fn_AnalysisUpload() {
         PARAMETER_BATH: Bath || "",
       })
       .then((res) => {
-        console.log("Chh", res.data);
         setCh((prevState) => ({ ...prevState, Search: res.data }));
       });
   };
@@ -88,14 +91,12 @@ function fn_AnalysisUpload() {
         PARAMETER_MC: Machine || "",
       })
       .then((res) => {
-        console.log("Bath", res.data);
         setBath((prevState) => ({ ...prevState, Search: res.data }));
       });
   };
 
   const GetUnitPopUP = async () => {
     await axios.post("/api/Analysis_Formular/GetUnitPopup", {}).then((res) => {
-      console.log("UnitPop", res.data);
       setUnit((prevState) => ({ ...prevState, PopUp: res.data }));
     });
   };
@@ -107,7 +108,6 @@ function fn_AnalysisUpload() {
         PARAMETER_UNIT: unit,
       })
       .then((res) => {
-        console.log("ProcessPop", res.data);
         setProcess((prevState) => ({ ...prevState, PopUp: res.data }));
       });
   };
@@ -119,7 +119,6 @@ function fn_AnalysisUpload() {
         PARAMETER_PROCESS: process,
       })
       .then((res) => {
-        console.log("McPop", res.data);
         setMachine((prevState) => ({ ...prevState, PopUp: res.data }));
       });
   };
@@ -161,11 +160,11 @@ function fn_AnalysisUpload() {
     setMachine({ Search: [] });
     setBath({ Search: [] });
     setCh({ Search: [] });
-    setSL_Bath(null);
-    setSL_Ch(null);
-    setSL_Machine(null);
-    setSL_Process(null);
-    setSL_Unit(null);
+    setSL_Bath('');
+    setSL_Ch('');
+    setSL_Machine('');
+    setSL_Process('');
+    setSL_Unit('');
     setDataSearch([]);
   };
 
@@ -490,22 +489,21 @@ function fn_AnalysisUpload() {
               : "ไม่พบ Replenisher Refer2";
           }
         }
-
-        if (target !== "" && isNaN(target)) {
+        if (target!=undefined&&target !== "" && isNaN(target)) {
           remark = remark
             ? remark + ", Target ไม่ใช่ตัวเลข"
             : "Target ไม่ใช่ตัวเลข";
         }
-        if (lcl !== "" && isNaN(lcl)) {
+        if (lcl!=undefined&&lcl !== "" && isNaN(lcl)) {
           remark = remark ? remark + ", LCL ไม่ใช่ตัวเลข" : "LCL ไม่ใช่ตัวเลข";
         }
-        if (ucl !== "" && isNaN(ucl)) {
+        if (ucl!=undefined&&ucl !== "" && isNaN(ucl)) {
           remark = remark ? remark + ", UCL ไม่ใช่ตัวเลข" : "UCL ไม่ใช่ตัวเลข";
         }
-        if (lsl !== "" && isNaN(lsl)) {
+        if (lsl!=undefined&&lsl !== "" && isNaN(lsl)) {
           remark = remark ? remark + ", LSL ไม่ใช่ตัวเลข" : "LSL ไม่ใช่ตัวเลข";
         }
-        if (usl !== "" && isNaN(usl)) {
+        if (usl!=undefined&&usl !== "" && isNaN(usl)) {
           remark = remark ? remark + ", USL ไม่ใช่ตัวเลข" : "USL ไม่ใช่ตัวเลข";
         }
 
@@ -518,7 +516,6 @@ function fn_AnalysisUpload() {
 
       SetdataFile(selectedFiles);
     } catch (error) {
-      console.log(error);
       Swal.fire({
         icon: "error",
         text: error,
@@ -785,14 +782,13 @@ function fn_AnalysisUpload() {
   };
 
   const Button_Delete = async (Chem_ID) => {
-    console.log("Chem_ID", Chem_ID);
+
     setLoadingButtons((prev) => ({ ...prev, [Chem_ID]: true }));
     await axios //find Bath Value
       .post("/api/Analysis_Formular/Check_UseChem", {
         Chem_ID: Chem_ID,
       })
       .then(async (res) => {
-        console.log("Check_UseChem", Chem_ID, res.data[0][0]);
         // if (res.data[0][0] > 0) {
         await Swal.fire({
           title: "Do you want to Delete?",
@@ -813,7 +809,7 @@ function fn_AnalysisUpload() {
                 login_ID: loginID,
               })
               .then(async (res) => {
-                console.log("DeleteChem", res.data);
+
                 if (res.data != "") {
                   Swal.fire({
                     icon: "error",

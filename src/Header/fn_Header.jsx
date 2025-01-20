@@ -17,7 +17,6 @@ function fn_Header() {
   const loginID = params.get("loginID");
   const systemID = params.get("systemID");
   const System = url.split("?")[0].split("/")[4];
-  console.log(System,'System');
 
   useEffect(() => {
     TitleHeader();
