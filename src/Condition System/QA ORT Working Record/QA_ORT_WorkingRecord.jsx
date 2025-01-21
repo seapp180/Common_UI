@@ -1805,7 +1805,7 @@ function QA_ORT_WorkingRecord() {
               pagination={{
                 pageSize: 200,
                 position: ["bottomCenter"],
-                showSizeChanger: true,
+                // showSizeChanger: true,
                 showTotal: (total, range) =>
                   `${range[0]}-${range[1]} of ${total} items`,
                 showSizeChanger: false,
@@ -2456,7 +2456,7 @@ function QA_ORT_WorkingRecord() {
               pagination={{
                 pageSize: 200,
                 position: ["bottomCenter"],
-                showSizeChanger: true,
+                // showSizeChanger: true,
                 showTotal: (total, range) =>
                   `${range[0]}-${range[1]} of ${total} items`,
                 showSizeChanger: false,

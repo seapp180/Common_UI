@@ -154,18 +154,19 @@ function fn_AnalysisUpload() {
     GetChem(SL_Machine, bath);
   };
 
-  const Clear = () => {
+  const Clear =async () => {
     GetUnit();
-    setProcess({ Search: [] });
-    setMachine({ Search: [] });
-    setBath({ Search: [] });
-    setCh({ Search: [] });
-    setSL_Bath('');
+     setSL_Bath('');
     setSL_Ch('');
     setSL_Machine('');
     setSL_Process('');
     setSL_Unit('');
     setDataSearch([]);
+   await GetProcess('');
+   await GetMachince('', '');
+   await GetBath('');
+   await  GetChem('', ''); 
+
   };
 
   const Botton_Search = async () => {
