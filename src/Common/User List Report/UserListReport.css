@@ -1,5 +1,17 @@
-.divbutton{
+.divbutton {
     display: flex;
     align-items: center;
     margin-top: 20px;
+}
+
+.tableCheckMFG .ant-table-thead>tr>th {
+    background-color: #71949e;
+    color: white;
+    padding: 0;
+    height: 45px;
+}
+
+.tableCheckMFG .ant-table-tbody>tr>td {
+    font-family: 'Varela Round', sans-serif;
+    padding: 10px;
 }
