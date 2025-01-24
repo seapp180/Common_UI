@@ -3,10 +3,14 @@
   color: white;
   padding: 0;
   height: 40px;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 .tableSerachBox .ant-table-tbody > tr > td {
   font-family: "Varela Round", sans-serif;
   font-size: 14px;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 
 .divTable {
@@ -51,6 +55,7 @@
 }
 .tablePacking {
   width: 100%;
+  
 }
 .tablePacking .ant-table-thead > tr > th {
   background-color: #71949e;
@@ -60,7 +65,7 @@
 }
 .tablePacking .ant-table-tbody > tr > td {
   font-family: "Varela Round", sans-serif;
-  height: 665px;
+  
 }
 .BoxmainName {
   background-color: #f3dfc8;
@@ -100,12 +105,13 @@
 .tableLot .ant-table-thead > tr > th {
   background-color: #71949e;
   color: white;
-  padding: 0;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
   height: 40px;
 }
 .tableLot .ant-table-tbody > tr > td {
   font-family: "Varela Round", sans-serif;
-  height: 450px;
+
 }
 .tableRecieve .ant-table-thead > tr > th {
   background-color: #71949e;
@@ -115,4 +121,9 @@
 }
 .tableRecieve .ant-table-tbody > tr > td {
   font-family: "Varela Round", sans-serif;
+}
+.scrollable-column {
+  max-width: 100%; /* Match the width set in the column definition */
+  overflow-x: auto;
+  white-space: nowrap;
 }

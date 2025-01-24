@@ -5,26 +5,17 @@ import {
   Table,
   Select,
   Modal,
-  Spin,
-  Tag,
-  Avatar,
   Input,
   Card,
   Radio,
 } from "antd";
 import {
   SearchOutlined,
-  LoadingOutlined,
-  CloudUploadOutlined,
-  FileOutlined,
-  FileExcelOutlined,
-  CloseOutlined,
   SaveOutlined,
-  UploadOutlined,
-  CloseCircleOutlined,
   PlusOutlined,
   MedicineBoxOutlined,
   ReloadOutlined,
+  DeleteOutlined
 } from "@ant-design/icons";
 const { Content } = Layout;
 import "./BoxCapacity.css";
@@ -40,7 +31,6 @@ function Box_Search() {
     ChooseMenu,
     radioselect,
     GenPack,
-    openManual,
     LotPacking,
     ddlItem,
     ddlProduct,
@@ -78,12 +68,19 @@ function Box_Search() {
     setRemark,
     Seq,
     ddlLot,
-    setddlLot,
     selectddlLot,
     Pack_qtyLot,
     handleLotNo,
-    Remind_qty,
-    setselectddlLot
+    Remain_qty,
+    DataPacking,
+    SaveLotPacking,
+    setPack_qtyLot,
+    DataLotPacking,
+    DataReceive,
+    tableReceive,
+    handleDelete,
+    openManual,
+    PageInsert
   } = fn_Box_Search();
 
   return (
@@ -124,7 +121,7 @@ function Box_Search() {
             <td>
               <div>
                 <Input
-                  showSearch
+                  
                   value={ddlItem}
                   style={{
                     width: "200px",
@@ -146,7 +143,7 @@ function Box_Search() {
             <td>
               <div>
                 <Input
-                  showSearch
+                  
                   value={LotFrom}
                   onChange={(e) => setLotFrom(e.target.value)}
                   style={{
@@ -267,7 +264,10 @@ function Box_Search() {
                     color: "#fff",
                     marginLeft: "10px",
                   }}
-                  onClick={() => Search()}
+                  onClick={() => {
+                    Search();
+                    // handleProduct("SearchItem");
+                  }}
                 >
                   Search
                 </Button>
@@ -279,7 +279,7 @@ function Box_Search() {
                     color: "#fff",
                     marginLeft: "10px",
                   }}
-                  onClick={() => NewBoxCapacity()}
+                  onClick={() => NewBoxCapacity("NewBox")}
                 >
                   New
                 </Button>
@@ -287,7 +287,7 @@ function Box_Search() {
                   icon={<ReloadOutlined />}
                   danger
                   type="primary"
-                  style={{ marginLeft: "10px" }}
+                  style={{ marginLeft: "10px" ,backgroundColor:'	#A9A9A9'}}
                   onClick={() => Clear("SerachBox")}
                 >
                   Reset
@@ -306,9 +306,10 @@ function Box_Search() {
         dataSource={DataSearch}
         bordered
         pagination={true}
-        scroll={{ x: "max-content", y: 350 }}
+        scroll={{ y: 500 }} 
         // pagination=
       ></Table>
+      
       <Modal
         width={"85%"}
         title=""
@@ -317,6 +318,7 @@ function Box_Search() {
         onCancel={handleCancel}
         maskClosable={false}
       >
+        
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ flex: 2, marginRight: "10px" }}>
             <Card className="BoxnoMaintain">
@@ -350,7 +352,7 @@ function Box_Search() {
                       onBlur={() => handleProduct("ItemNew")}
                     />
                   </td>
-                  {console.log(ProductShow, "ProductShow",ItemNew)}
+                  {console.log(ProductShow, "ProductShow", ItemNew)}
                   <td style={{ textAlign: "right" }}>Product :</td>
                   <td>
                     <Input
@@ -459,6 +461,7 @@ function Box_Search() {
                     <td>
                       <Input
                         value={PackQty}
+                        on
                         disabled
                         style={{
                           display: "block",
@@ -505,6 +508,11 @@ function Box_Search() {
                     <td style={{ textAlign: "right" }}>Full Box Qty :</td>
                     <td>
                       <Input
+                      onKeyPress={(event) => {
+                        if (!/[0-9]/.test(event.key)) {
+                          event.preventDefault();
+                        }
+                      }}
                         value={FullBoxQty}
                         onChange={(e) => setFullBoxQty(e.target.value)}
                         style={{
@@ -520,6 +528,11 @@ function Box_Search() {
                     <td>
                       <Input
                         value={TotalSheetQty}
+                        onKeyPress={(event) => {
+                          if (!/[0-9]/.test(event.key)) {
+                            event.preventDefault();
+                          }
+                        }}
                         onChange={(e) => setTotalSheetQty(e.target.value)}
                         style={{
                           display: "block",
@@ -628,174 +641,186 @@ function Box_Search() {
                             onClick={() => GenPack("AutoPack")}
                           >
                             Auto Generate
-                          </Button>{" "}
+                          </Button>
                         </>
                       )}
                       <Button
                         icon={<ReloadOutlined />}
                         type="primary"
                         danger
-                        style={{ marginLeft: "10px" }}
+                        style={{ marginLeft: "10px",backgroundColor:'	#A9A9A9' }}
                         onClick={() => Clear("ResetMaintain")}
                       >
                         Reset
                       </Button>
+
+                   
                     </div>
+                    
                   </td>
-                  <td></td>
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+  <Button
+    icon={<DeleteOutlined />}
+    type="primary"
+    danger
+    style={{ marginLeft: "5px",marginTop:'1px' }}
+    onClick={handleDelete}
+  >
+    Delete
+  </Button>
+</div>
                 </tr>
               </table>
             </Card>
 
-            {/* {openManual && ( */}
-              <Card
-                // className="BoxnoMaintain"
+            {(openManual || PageInsert =='UPADTE') && (
+            
+            <Card
+              // className="BoxnoMaintain"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                textAlign: "center",
+                backgroundColor: "#f6f8ee",
+                marginBottom: "10px",
+                marginTop: "10px",
+              }}
+            >
+              <h3 className="BoxmainName">Manual</h3>
+              <br />
+              <div
                 style={{
                   display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  textAlign: "center",
-                  backgroundColor: "#f6f8ee",
+                  flexWrap: "wrap",
+                  width: "100%",
                   marginBottom: "10px",
-                  marginTop: "10px",
                 }}
               >
-                <h3 className="BoxmainName">Manual</h3>
-                <br />
-                <div
+                <span
                   style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    width: "100%",
-                    marginBottom: "10px",
+                    textAlign: "right",
+                    width: "51px",
+                    marginLeft: "50px",
                   }}
                 >
-                  <span
-                    style={{
-                      textAlign: "right",
-                      width: "51px",
-                      marginLeft: "50px",
-                    }}
-                  >
-                    Seq :
-                  </span>
-                  <Input
-                    disabled
-                    value={Seq}
-                    style={{
-                      width: "65px",
-                      marginLeft: "10px",
-                    }}
-                  />
-                  <span
-                    style={{
-                      textAlign: "right",
-                      width: "100px",
-                      marginLeft: "74px",
-                    }}
-                  >
-                    Lot No :
-                  </span>
-                  {/* <Select
-                    
-                    style={{
-                      width: "200px",
-                      marginLeft: "10px",
-                    }}
-                  /> */}
-                    <Select
-            showSearch
-            value={selectddlLot}
-            onChange={(e) => setselectddlLot(e)}
-            style={{
-               width: "200px",
-               marginLeft: "10px"
-            }}
-            placeholder="Select Ch"
-            optionFilterProp="children"
-            filterOption={(input, option) =>
-              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-            }
-            options={ddlLot}
-          />
-                </div>
-                <div
+                  Seq :
+                </span>
+                <Input
+                  disabled
+                  value={Seq}
                   style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    width: "100%",
-                    marginBottom: "10px",
+                    width: "65px",
+                    marginLeft: "10px",
+                  }}
+                />
+                <span
+                  style={{
+                    textAlign: "right",
+                    width: "100px",
+                    marginLeft: "74px",
                   }}
                 >
-                  <span
-                    style={{
-                      textAlign: "right",
-                      width: "100px",
-                      marginTop: "10px",
-                    }}
-                  >
-                    Remind Qty :
-                  </span>
-                  <Input
-                    disabled
-                    value={Remind_qty}
-                    style={{
-                      width: "130px",
-                      marginLeft: "10px",
-                      marginTop: "10px",
-                    }}
-                  />
-                  <span
-                    style={{
-                      textAlign: "right",
-                      width: "100px",
-                      marginLeft: "10px",
-                      marginTop: "10px",
-                    }}
-                  >
-                    Packing Qty :
-                  </span>
-                  <Input
-                    disabled
-                    value={Pack_qtyLot}
-                    style={{
-                      width: "200px",
-                      marginLeft: "10px",
-                      marginTop: "10px",
-                    }}
-                  />
-                </div>
-                <div
+                  Lot No :
+                </span>
+                <Select
+                  showSearch
+                  value={selectddlLot}
+                  // onChange={(e) => setselectddlLot(e)}
+                  onChange={(index, e) => handleLotNo(e)}
                   style={{
-                    width: "100%",
+                    width: "200px",
+                    marginLeft: "10px",
+                    textAlign: "left",
+                  }}
+                  placeholder="Select Lot No"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={ddlLot}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  width: "100%",
+                  marginBottom: "10px",
+                }}
+              >
+                <span
+                  style={{
+                    textAlign: "right",
+                    width: "100px",
                     marginTop: "10px",
-                    textAlign: "center",
                   }}
                 >
-                  <Button
-                    icon={<SaveOutlined />}
-                    type="primary"
-                    style={{
-                      background: "#50C878",
-                      color: "#fff",
-                      marginLeft: "10px",
-                    }}
-                    onClick={() => GenPack("ManualPack")}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    icon={<ReloadOutlined />}
-                    type="primary"
-                    danger
-                    style={{ marginLeft: "10px" }}
-                    onClick={() => GenPack("AutoPack")}
-                  >
-                    Reset
-                  </Button>
-                </div>
-              </Card>
-            {/* )} */}
+                  Remain Qty :
+                </span>
+                <Input
+                  disabled
+                  value={Remain_qty}
+                  style={{
+                    width: "130px",
+                    marginLeft: "10px",
+                    marginTop: "5px",
+                  }}
+                />
+                <span
+                  style={{
+                    textAlign: "right",
+                    width: "100px",
+                    marginLeft: "10px",
+                    marginTop: "10px",
+                  }}
+                >
+                  Packing Qty :
+                </span>
+                <Input
+                  value={Pack_qtyLot}
+                  onChange={(e) => setPack_qtyLot(e.target.value)}
+                  style={{
+                    width: "200px",
+                    marginLeft: "10px",
+                    marginTop: "5px",
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  width: "100%",
+                  marginTop: "10px",
+                  textAlign: "center",
+                }}
+              >
+                <Button
+                  icon={<SaveOutlined />}
+                  type="primary"
+                  style={{
+                    background: "#50C878",
+                    color: "#fff",
+                    marginLeft: "10px",
+                  }}
+                  onClick={() => SaveLotPacking("SaveManual")}
+                >
+                  Save
+                </Button>
+                <Button
+                  icon={<ReloadOutlined />}
+                  type="primary"
+                  danger
+                  style={{ marginLeft: "10px",backgroundColor:'	#A9A9A9' }}
+                  onClick={() => Clear("ResetManual")}
+                >
+                  Reset
+                </Button>
+              </div>
+            </Card>
+           
+            )}
 
             <Card
               style={{
@@ -813,18 +838,21 @@ function Box_Search() {
                 columns={LotPacking}
                 style={{ marginTop: "5px", marginLeft: "10px" }}
                 className="tableLot"
-                // dataSource={DataSearch}
+                dataSource={DataLotPacking}
                 bordered
                 pagination={true}
                 scroll={{ x: "max-content", y: 350 }}
                 // pagination=
               ></Table>
             </Card>
+          
           </div>
           <div style={{ flex: 1, marginLeft: "10px" }}>
             <Table
               columns={packingTable}
+              dataSource={DataPacking}
               className="tablePacking"
+              style={{height:  openManual ? "700px" : "465px"}}
               bordered
               pagination={true}
               scroll={{ x: "max-content", y: 1000 }}
@@ -840,14 +868,14 @@ function Box_Search() {
                 marginTop: "10px",
               }}
             >
-              <h3 className="BoxmainName" style={{ width: "70px" }}>
-                Lot Packing
+              <h3 className="BoxmainName" style={{ width: "200px" }}>
+                Waiting For Receive
               </h3>
               <Table
-                columns={LotPacking}
+                columns={tableReceive}
                 style={{ marginTop: "5px", height: "100%" }}
                 className="tableRecieve"
-                // dataSource={DataSearch}
+                dataSource={DataReceive}
                 bordered
                 pagination={true}
                 scroll={{ x: "max-content", y: 700 }} // Adjust the height as needed
@@ -855,6 +883,7 @@ function Box_Search() {
               ></Table>
             </Card>
           </div>
+          
         </div>
       </Modal>
     </Content>
