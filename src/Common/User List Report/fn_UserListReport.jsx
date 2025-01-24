@@ -292,7 +292,9 @@ function fn_UserListReport() {
     // ฟอร์แมตวันที่ก่อนเพิ่มลงในข้อมูล
     const formattedData = data.map((row) => ({
       ...row,
-      TERMINATE_DATE: row.TERMINATE_DATE ? formatDate(row.TERMINATE_DATE) : "", // ใช้ formatDate กับ TERMINATE_DATE
+      TERMINATE_DATE: row.TERMINATE_DATE ? formatDate(row.TERMINATE_DATE) : "",
+      UPDATE_DATE: row.UPDATE_DATE ? formatDate(row.UPDATE_DATE) : "",
+      LAST_LOGON_DATE: row.LAST_LOGON_DATE ? formatDate(row.LAST_LOGON_DATE) : "",
     }));
 
     // ถ้าไม่มีข้อมูลก็สร้างแถวว่าง
@@ -307,7 +309,7 @@ function fn_UserListReport() {
       const newRow = sheet.addRow(row);
       newRow.eachCell({ includeEmpty: true }, (cell) => {
         // includeEmpty เพื่อให้ทุก cell รวมถึงที่ว่างมีเส้นขอบ
-        cell.alignment = { horizontal: "center" };
+        cell.alignment = { horizontal: "left" };
 
         // เพิ่มเส้นขอบให้ทุก cell
         cell.border = {
@@ -399,7 +401,7 @@ function fn_UserListReport() {
     if (pnlResign && factoryRef.current) {
       setTimeout(() => {
         factoryRef.current.focus();
-      }, 0); 
+      }, 0);
       scrollToTop();
     }
   }, [pnlResign]);
@@ -488,7 +490,7 @@ function fn_UserListReport() {
 
     const seconds = secondsWithFraction.split(".")[0];
 
-    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    return `${day}/${month}/${year}`;
   };
 
   const columnsSearch = [
@@ -506,7 +508,11 @@ function fn_UserListReport() {
       dataIndex: "WORK_LOCATION",
       key: "WORK_LOCATION",
       render: (text, record, index) => {
-        return text;
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
       },
       align: "center",
       width: 130,
@@ -516,7 +522,11 @@ function fn_UserListReport() {
       dataIndex: "EMPCODE",
       key: "EMPCODE",
       render: (text, record, index) => {
-        return text;
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
       },
       align: "center",
     },
@@ -525,7 +535,11 @@ function fn_UserListReport() {
       dataIndex: "ENG_NAME",
       key: "ENG_NAME",
       render: (text, record, index) => {
-        return text;
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
       },
       align: "center",
     },
@@ -534,7 +548,11 @@ function fn_UserListReport() {
       dataIndex: "THAI_NAME",
       key: "THAI_NAME",
       render: (text, record, index) => {
-        return text;
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
       },
       align: "center",
     },
@@ -543,16 +561,26 @@ function fn_UserListReport() {
       dataIndex: "TERMINATE_DATE",
       key: "TERMINATE_DATE",
       render: (text, record, index) => {
-        return formatDate(text);
+
+        return (
+          <div style={{ textAlign: "left" }}>
+            {formatDate(text)}
+          </div>
+        );
       },
       align: "center",
+      width: 130,
     },
     {
       title: "POS_GRADE",
       dataIndex: "POS_GRADE",
       key: "POS_GRADE",
       render: (text, record, index) => {
-        return text;
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
       },
       align: "center",
       width: 90,
@@ -562,26 +590,39 @@ function fn_UserListReport() {
       dataIndex: "POSITION",
       key: "POSITION",
       render: (text, record, index) => {
-        return text;
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
       },
       align: "center",
+      width: 290,
     },
     {
       title: "COST_CENTER",
       dataIndex: "COST_CENTER",
       key: "COST_CENTER",
       render: (text, record, index) => {
-        return text;
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
       },
       align: "center",
-      width: 110,
+      width: 140,
     },
     {
       title: "PROCESS",
       dataIndex: "PROCESS",
       key: "PROCESS",
       render: (text, record, index) => {
-        return text;
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
       },
       align: "center",
       width: 220,
@@ -591,7 +632,11 @@ function fn_UserListReport() {
       dataIndex: "V_SECTION",
       key: "V_SECTION",
       render: (text, record, index) => {
-        return text;
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
       },
       align: "center",
     },
@@ -600,7 +645,11 @@ function fn_UserListReport() {
       dataIndex: "DIVISION",
       key: "DIVISION",
       render: (text, record, index) => {
-        return text;
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
       },
       align: "center",
     },
@@ -609,7 +658,11 @@ function fn_UserListReport() {
       dataIndex: "WORKTYPE",
       key: "WORKTYPE",
       render: (text, record, index) => {
-        return text;
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
       },
       align: "center",
     },
