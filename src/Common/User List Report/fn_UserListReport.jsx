@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import ExcelJS from "exceljs";
 import Swal from "sweetalert2";
@@ -27,6 +27,7 @@ function fn_UserListReport() {
 
   //MFG/Prp User List
   // const [ListMFGProData, setListMFGProData] = useState([]);
+  const factoryRef = useRef(null);
 
   const { showLoading, hideLoading } = useLoading();
 
@@ -267,7 +268,12 @@ function fn_UserListReport() {
       });
     }
   };
-
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 260,
+      behavior: 'smooth'
+    });
+  };
   const exportExcelFile = (data, namefile) => {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("My Sheet");
@@ -378,7 +384,7 @@ function fn_UserListReport() {
       });
     if (ListMFGProData.length > 0) {
       nameFile = `MFG/Pro User List.xlsx`;
-      exportExcelFile(CheckMFGProData, nameFile);
+      exportExcelFile(ListMFGProData, nameFile);
     } else {
       Swal.fire({
         icon: "error",
@@ -388,6 +394,15 @@ function fn_UserListReport() {
   };
 
   //Search Resign Person
+
+  useEffect(() => {
+    if (pnlResign && factoryRef.current) {
+      setTimeout(() => {
+        factoryRef.current.focus();
+      }, 0); 
+      scrollToTop();
+    }
+  }, [pnlResign]);
 
   const ReSidePersonClick = () => {
     setpnlResign(true);
@@ -630,7 +645,8 @@ function fn_UserListReport() {
   return {
     selFactory, setselFactory, FactoryData, CheckMFGProClick, columnsCheck, CheckMFGProData, btnExportClick, pnlCheck, StyleonMouseEnter, StyleonMouseLeave,
     MFGProuserlistClick, selMonthFrom, handleMonthChange, btnSearchClick, columnsSearch, SearchData, handleMonthToChange, selMonthTo, handleDateFromChange, selDatefrom,
-    handleDateToChange, selDateTo, txtEmpID, settxtEmpID, txtName, settxtName, txtSurname, settxtSurname, TbSearch, btnResetClick, btnExport_Click, pnlResign, ReSidePersonClick
+    handleDateToChange, selDateTo, txtEmpID, settxtEmpID, txtName, settxtName, txtSurname, settxtSurname, TbSearch, btnResetClick, btnExport_Click, pnlResign, ReSidePersonClick,
+    factoryRef
   }
 };
 
