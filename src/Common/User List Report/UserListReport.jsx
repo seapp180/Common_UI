@@ -291,7 +291,7 @@ function UserListReport() {
             )}
 
             {pnlResign && (
-                <div style={{ height:'1000px' }}>
+                <div style={{ height:'800px' }}>
                     <Card
                         style={{
                             marginTop: "40px",
