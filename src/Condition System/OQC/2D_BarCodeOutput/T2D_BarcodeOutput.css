@@ -1,0 +1,42 @@
+.T2DBarcodeTitlePage_h2 {
+    background-color: #CA965C;
+    border-radius: 25px;
+    color: #ffffff;
+    padding: 10px 20px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    margin-left: 15px;
+    
+}
+.T2DBarcodeTodayOutput{
+    background-color: #17b136;
+    border-radius: 25px;
+    color: #ffffff;
+    padding: 10px 20px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    margin-left: 15px;
+}
+.T2DBarcodeShiftOutput{
+    background-color: #889E73;
+    border-radius: 25px;
+    color: #ffffff;
+    padding: 10px 20px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    margin-left: 15px;
+}
+.T2DBarcodeOutputButton{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-left: 200px;
+    width: 900px;
+}

@@ -15,6 +15,7 @@ import BoxCapacity from "./MFG Report System/Box Capacity/Box_Search";
 import UserListReport from "./Common/User List Report/UserListReport";
 import ZPoReport from "./Common/Zpo/PO Summary/zPO_Report";
 import PoSummary from "./Common/Zpo/PO Report/PoSummary";
+import T2D_BarcodeOutput from "./Condition System/OQC/2D_BarCodeOutput/T2D_BarcodeOutput";
 
 const { Content } = Layout;
 // const backendUrl = import.meta.env.VITE_SERVICE_URL;
@@ -70,6 +71,10 @@ const App = () => {
                   <Route
                     path="/CommonSystem/PoSummary"
                     element={<PoSummary />}
+                  />
+                  <Route
+                    path="/CommonSystem/ConditionSystem/OQC/2D_BarcodeOutput"
+                    element={<T2D_BarcodeOutput />}
                   />
                 </Routes>
               </div>
