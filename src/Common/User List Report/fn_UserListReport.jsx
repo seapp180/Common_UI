@@ -625,7 +625,7 @@ function fn_UserListReport() {
         );
       },
       align: "center",
-      width: 220,
+      //width: 220,
     },
     {
       title: "V_SECTION",
