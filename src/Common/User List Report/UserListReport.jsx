@@ -43,7 +43,8 @@ function UserListReport() {
     const {
         selFactory, setselFactory, FactoryData, CheckMFGProClick, columnsCheck, CheckMFGProData, btnExportClick, pnlCheck, StyleonMouseEnter, StyleonMouseLeave,
         MFGProuserlistClick, selMonthFrom, handleMonthChange, btnSearchClick, columnsSearch, SearchData, handleMonthToChange, selMonthTo, handleDateFromChange, selDatefrom,
-        handleDateToChange, selDateTo, txtEmpID, settxtEmpID, txtName, settxtName, txtSurname, settxtSurname, TbSearch, btnResetClick, btnExport_Click, pnlResign, ReSidePersonClick } = fn_UserListReport();
+        handleDateToChange, selDateTo, txtEmpID, settxtEmpID, txtName, settxtName, txtSurname, settxtSurname, TbSearch, btnResetClick, btnExport_Click, pnlResign, ReSidePersonClick,
+        factoryRef } = fn_UserListReport();
 
     const monthFormat = 'MM/YYYY';
     const dateFormat = 'DD/MM/YYYY';
@@ -196,13 +197,14 @@ function UserListReport() {
                         transition: "transform 0.3s ease-in-out",
                         color: "#ffffff",
                     }}
+                    onClick={() => ReSidePersonClick()}
                     onMouseEnter={(e) => {
                         StyleonMouseEnter(e)
                     }}
                     onMouseLeave={(e) => {
                         StyleonMouseLeave(e)
                     }}
-                    onClick={() => ReSidePersonClick()}
+                    
                 >
                     <table style={{ width: "100%" }}>
                         <tbody>
@@ -289,11 +291,12 @@ function UserListReport() {
             )}
 
             {pnlResign && (
-                <div>
+                <div style={{ height:'800px' }}>
                     <Card
                         style={{
                             marginTop: "40px",
                             padding: "5px",
+                            // height: "300px",
                         }}
                     >
                         <div style={{ display: "flex", alignItems: "flex-start" }}>
@@ -308,6 +311,7 @@ function UserListReport() {
                                         <td>
                                             <div>
                                                 <Select
+                                                    id="Factory"
                                                     style={{
                                                         width: "200px",
                                                         marginLeft: "5px",
@@ -315,13 +319,14 @@ function UserListReport() {
                                                     }}
                                                     showSearch
                                                     placeholder="Select Factory"
-                                                    value={selFactory || "" || undefined}  
-                                                    onChange={(value) => setselFactory(value )}
+                                                    value={selFactory || "" || undefined}
+                                                    onChange={(value) => setselFactory(value)}
                                                     optionFilterProp="children"
                                                     filterOption={(input, option) =>
                                                         (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
                                                     }
                                                     options={FactoryData}
+                                                    ref={factoryRef}
                                                 >
                                                     {/* <Select.Option value="" disabled>Select Factory</Select.Option>
                                                     {FactoryData.map((data, index) => (
