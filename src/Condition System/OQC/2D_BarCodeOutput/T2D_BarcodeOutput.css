@@ -40,3 +40,15 @@
     margin-left: 200px;
     width: 900px;
 }
+.T2DBarCodeOutputSaveBtn{
+    background-color: #1A5D1A !important;
+    color: #fff !important;
+    height: 30px;
+    width: 90px;
+}
+.T2DBarCodeOutputCancelBtn{
+    background-color: #E0282E !important;
+    color: #fff !important;
+    height: 30px;
+}
+

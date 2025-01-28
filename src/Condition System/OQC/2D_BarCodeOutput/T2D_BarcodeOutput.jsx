@@ -10,19 +10,7 @@ import {
   UploadOutlined,
   CloseCircleOutlined,
 } from "@ant-design/icons";
-import {
-  Layout,
-  Button,
-  Table,
-  Select,
-  Modal,
-  Spin,
-  Tag,
-  Avatar,
-  Input,
-  Card,
-  Radio,
-} from "antd";
+import { Layout, Button, Select, Input, Tooltip } from "antd";
 const { Content } = Layout;
 import ImgExcel from "../../../assets/excel.png";
 import "./T2D_BarcodeOutput.css";
@@ -54,6 +42,10 @@ function T2D_BarcodeOutput() {
     handleChangePOS,
     handleChangeOperator,
     handleChangeSampleSize,
+    handleCancel,
+    handleSave,
+    lblError,
+    setLblError,
   } = fn_T2D_BarcodeOutput();
   return (
     <Content>
@@ -91,12 +83,6 @@ function T2D_BarcodeOutput() {
                       handleChangePOS();
                     }
                   }}
-                  // onBlur={(e) => {
-                  //   console.log(e.target.value, "e.target.value");
-                  //   if (e.target.value.trim() !== "") {
-                  //     handleChangePOS();
-                  //   }
-                  // }}
                   id="txtFPOS"
                   style={{
                     width: "590px",
@@ -105,7 +91,6 @@ function T2D_BarcodeOutput() {
                     marginLeft: "5px",
                   }}
                   placeholder="Select ITem"
-                  // onBlur={() => handleProduct("SearchItem")}
                 />
               </div>
             </td>
@@ -122,7 +107,6 @@ function T2D_BarcodeOutput() {
                 <span style={{ fontSize: "14px" }}>Product :</span>
               </div>
             </td>
-            {/* {console.log(txtProduct, "txtProduct", txtLotNo, "txtLotNo")} */}
             <td style={{ width: "300px" }}>
               <div>
                 <Input
@@ -208,7 +192,15 @@ function T2D_BarcodeOutput() {
                   value={txtState}
                   onChange={(value) => {
                     setTxtState(value);
-                    document.getElementById("txtFLotSize").focus();
+                    if (value !== "----Select----") {
+                      setLblError({
+                        ErrorMsg: "",
+                        ErrorStatus: false,
+                        ErrorColor: "",
+                        ErrorBackground: "",
+                      });
+                      document.getElementById("txtFLotSize").focus();
+                    }
                   }}
                   options={[
                     { value: "----Select----", label: "----Select----" },
@@ -246,8 +238,19 @@ function T2D_BarcodeOutput() {
                   value={txtLotSize}
                   type="number"
                   onChange={(e) => setTxtLotSize(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+                  // onKeyDown={(e) => {
+                  //   if (e.key === "Enter") {
+                  //     document.getElementById("txtFReject").focus();
+                  //   }
+                  // }}
+                  onBlur={(e) => {
+                    if (e.target.value !== "") {
+                      setLblError({
+                        ErrorMsg: "",
+                        ErrorStatus: false,
+                        ErrorColor: "",
+                        ErrorBackground: "",
+                      });
                       document.getElementById("txtFReject").focus();
                     }
                   }}
@@ -277,10 +280,13 @@ function T2D_BarcodeOutput() {
                   type="number"
                   value={txtReject}
                   onChange={(e) => setTxtReject(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      document.getElementById("txtFSampleSize").focus();
-                    }
+                  // onKeyDown={(e) => {
+                  //   if (e.key === "Enter") {
+                  //     document.getElementById("txtFSampleSize").focus();
+                  //   }
+                  // }}
+                  onBlur={() => {
+                    document.getElementById("txtFSampleSize").focus();
                   }}
                   id="txtFReject"
                   style={{
@@ -326,6 +332,7 @@ function T2D_BarcodeOutput() {
                     { value: "----Select----", label: "----Select----" },
                     { value: "5", label: "5" },
                     { value: "32", label: "32" },
+                    { value: "1", label: "1" },
                   ]}
                 />
               </div>
@@ -349,7 +356,15 @@ function T2D_BarcodeOutput() {
                   value={txtBarcodetype}
                   onChange={(value) => {
                     setTxtBarcodetype(value);
-                    document.getElementById("txtFAperture").focus();
+                    if (value !== "----Select----") {
+                      setLblError({
+                        ErrorMsg: "",
+                        ErrorStatus: false,
+                        ErrorColor: "",
+                        ErrorBackground: "",
+                      });
+                      document.getElementById("txtFAperture").focus();
+                    }
                   }}
                   options={[
                     { value: "----Select----", label: "----Select----" },
@@ -389,8 +404,15 @@ function T2D_BarcodeOutput() {
                   value={txtAperture}
                   onChange={(value) => {
                     setTxtAperture(value);
-
-                    document.getElementById("txtFRemark").focus();
+                    if (value !== "----Select----") {
+                      setLblError({
+                        ErrorMsg: "",
+                        ErrorStatus: false,
+                        ErrorColor: "",
+                        ErrorBackground: "",
+                      });
+                      document.getElementById("txtFRemark").focus();
+                    }
                   }}
                   options={[
                     { value: "----Select----", label: "----Select----" },
@@ -398,6 +420,19 @@ function T2D_BarcodeOutput() {
                     { value: "4", label: "4" },
                   ]}
                 />
+              </div>
+            </td>
+            <td colSpan={2}>
+              <div>
+                <Tooltip title='Traceability Data' >
+                  <a
+                    href={`http://10.17.66.190/smt/rpt_LotTraceView.aspx?lot=${txtLotNo}`}
+                    target="_blank"
+                    style={{ textDecoration: "none" }}
+                  >
+                    Traceability Data
+                  </a>
+                </Tooltip>
               </div>
             </td>
           </tr>
@@ -414,8 +449,6 @@ function T2D_BarcodeOutput() {
                   id="txtFRemark"
                   value={txtRemark}
                   onChange={(e) => setTxtRemark(e.target.value)}
-                  // value={ddlProduct.trim() == "" ? "" : ddlProduct}
-                  // onChange={(e) => setddlProduct(e.target.value)}
                   style={{
                     width: "590px",
                     display: "block",
@@ -423,50 +456,65 @@ function T2D_BarcodeOutput() {
                     marginLeft: "5px",
                   }}
                   placeholder="Remark"
-                  // onBlur={() => handleProduct("SearchItem")}
                 />
               </div>
             </td>
           </tr>
           <tr>
             <td colSpan={4}>
-              <div style={{
+              <div
+                style={{
                   marginLeft: "250px",
                   borderRadius: "15px",
                   display: "inline-flex",
                   alignItems: "center",
                   width: "600px",
-                  marginTop: "20px",
                   height: "50px",
-                  color: "white",
-                  justifyContent: "center",
-                }}>
-                <Button>Save</Button>
-                &nbsp;
-                <Button>Cancel</Button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td colSpan={4} style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  marginLeft: "180px",
-                  borderRadius: "15px",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  width: "600px",
-                  marginTop: "20px",
-                  height: "50px",
-                  background: "black",
                   color: "white",
                   justifyContent: "center",
                 }}
               >
-                test
+                <Button
+                  onClick={handleSave}
+                  className="T2DBarCodeOutputSaveBtn"
+                >
+                  <SaveOutlined /> Save
+                </Button>
+                &nbsp;
+                <Button
+                  onClick={handleCancel}
+                  className="T2DBarCodeOutputCancelBtn"
+                >
+                  <CloseOutlined />
+                  Cancel
+                </Button>
               </div>
             </td>
           </tr>
+          {console.log("lblError", lblError)}
+          {lblError.ErrorStatus && (
+            <tr>
+              <td colSpan={4} style={{ textAlign: "center" }}>
+                <div
+                  style={{
+                    marginLeft: "180px",
+                    borderRadius: "15px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    width: "600px",
+                    height: "50px",
+                    fontWeight: "bold",
+                    fontSize: "20px",
+                    background: lblError.ErrorBackground,
+                    color: lblError.ErrorColor,
+                    justifyContent: "center",
+                  }}
+                >
+                  {lblError.ErrorMsg}
+                </div>
+              </td>
+            </tr>
+          )}
         </table>
       </div>
     </Content>

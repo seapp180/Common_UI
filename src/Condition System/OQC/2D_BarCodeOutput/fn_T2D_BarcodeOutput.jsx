@@ -15,6 +15,12 @@ function fn_T2D_BarcodeOutput() {
   const [txtBarcodetype, setTxtBarcodetype] = useState('----Select----'); //Combobox
   const [txtAperture, setTxtAperture] = useState("----Select----");
   const [txtRemark, setTxtRemark] = useState("");
+  const [ lblError , setLblError ] = useState({
+    ErrorMsg:'',
+    ErrorStatus:false,
+    ErrorColor:'',
+    ErrorBackground:''
+  });
 
   //SetFocus
   function setFocus(txtField) {
@@ -23,8 +29,14 @@ function fn_T2D_BarcodeOutput() {
   //TextChange
   const handleChangePOS = async () => {
     if (txtPOS === "") {
-      alert("Please fill in POS");
+      setLblError({
+        ErrorMsg:'Please Scan POS !!',
+        ErrorStatus:true,
+        ErrorColor:'white',
+        ErrorBackground:'red'
+      })
     } else {
+      showLoading("กำลังค้นหา กรุณารอสักครู่");
       if (txtPOS.split(";").length > 1) {
         const lotno = txtPOS.split(";")[0];
         const prdno = await getData("getPOSdata", { lotno: lotno });
@@ -36,23 +48,38 @@ function fn_T2D_BarcodeOutput() {
             setTxtPOS("");
             setTxtLotNo("");
             setTxtProduct("");
-            alert("This lot have duplicate serial , Please check !!");
+            setLblError({
+              ErrorMsg:'This lot have duplicate serial , Please check !!',
+              ErrorStatus:true,
+              ErrorColor:'white',
+              ErrorBackground:'red'
+            })
             setFocus("txtFPOS");
             return;
           } else if (checkRawdata.length <= 0) {
             setTxtPOS("");
             setTxtLotNo("");
             setTxtProduct("");
-            alert("This lot no. not found raw data , Please check !!");
+            setLblError({
+              ErrorMsg:'This lot no. not found raw data , Please check !!',
+              ErrorStatus:true,
+              ErrorColor:'white',
+              ErrorBackground:'red'
+            })
             setFocus("txtFPOS");
             return;
           }
           const checkResultNg = await getData("getCheckResultNg", {lotno: lotno,});
-          if (parseInt(checkResultNg.ng_count) > 0) {
+          if (parseInt(checkResultNg.ng_count) > 0) { 
             setTxtPOS("");
             setTxtLotNo("");
             setTxtProduct("");
-            alert("This lot have result NG of raw data , Please check !!");
+            setLblError({
+              ErrorMsg:'This lot have result NG of raw data , Please check !!',
+              ErrorStatus:true,
+              ErrorColor:'white',
+              ErrorBackground:'red'
+            })
             setFocus("txtFPOS");
             return;
           }
@@ -62,58 +89,112 @@ function fn_T2D_BarcodeOutput() {
               setTxtPOS("");
               setTxtLotNo("");
               setTxtProduct("");
-              alert("This lot no. has already output!!");
+              setLblError({
+                ErrorMsg:'This lot no. has already output!!',
+                ErrorStatus:true,
+                ErrorColor:'white',
+                ErrorBackground:'red'
+              })
               setFocus("txtFPOS");
               return;
             }
           }
+          setLblError({
+            ErrorMsg:'',
+            ErrorStatus:false,
+            ErrorColor:'',
+            ErrorBackground:''
+          })
           setFocus("txtFOperatorCode")
         } else {
-          alert("Data not found");
+          setLblError({
+            ErrorMsg:'Data not found !!',
+            ErrorStatus:true,
+            ErrorColor:'white',
+            ErrorBackground:'red'
+          })
         }
       } else {
-        alert("Wrong POS , Please check !!");
+        setLblError({
+          ErrorMsg:'Wrong POS , Please check !!',
+          ErrorStatus:true,
+          ErrorColor:'white',
+          ErrorBackground:'red'
+        })
         setTxtPOS("");
         setTxtProduct("");
         setTxtLotNo("");
       }
+      hideLoading();
     }
   };
   const handleChangeOperator = async () => {
     if (txtOperatorCode === "") {
-      alert("Please fill in Operator Code");
+      setLblError({
+        ErrorMsg:'Please fill in Operator Code !!',
+        ErrorStatus:true,
+        ErrorColor:'white',
+        ErrorBackground:'red'
+      })
     } else {
       showLoading("กำลังค้นหา กรุณารอสักครู่");
       const checkUserStatus = await getData("getCheckUserStatus", {user: txtOperatorCode});
       if (checkUserStatus != ''){
         if(checkUserStatus.message == "Not Found Data") {
-          alert('Wrong operator code , Please check !!'); 
+          setLblError({
+            ErrorMsg:'Wrong operator code , Please check !!',
+            ErrorStatus:true,
+            ErrorColor:'white',
+            ErrorBackground:'red'
+          })
           setTxtOperatorCode("");
           setFocus("txtFOperatorCode");
           hideLoading();
           return;
         }
         if(checkUserStatus.status !== 'Active'){
-          alert("This employee has resigned. , Please check !!");
+          setLblError({
+            ErrorMsg:'This employee has resigned. , Please check !!',
+            ErrorStatus:true,
+            ErrorColor:'white',
+            ErrorBackground:'red'
+          })
           setTxtOperatorCode("");
           setFocus("txtFOperatorCode");
           hideLoading();
           return;
         }
         hideLoading();
+        setLblError({
+          ErrorMsg:'',
+          ErrorStatus:false,
+          ErrorColor:'',
+          ErrorBackground:''
+        })
         setFocus("txtFState");
       }
     }
   }
   const handleChangeSampleSize = async (value) => {
     if (value !== "----Select----") {
+      setLblError({
+        ErrorMsg: "",
+        ErrorStatus: false,
+        ErrorColor: "",
+        ErrorBackground: "",
+      });
       console.log(txtLotNo);
       const checkSampleSize = await getData("getCheckSampleSize", { lotno: txtLotNo });
       console.log(checkSampleSize.qty);
   
       if (checkSampleSize) {
         if (parseInt(checkSampleSize.qty) !== parseInt(value)) {
-          alert("Value of sampling size is not equal qty of raw data.!!");
+          setLblError({
+            ErrorMsg:'Value of sampling size is not equal qty of raw data.!!',
+            ErrorStatus:true,
+            ErrorColor:'white',
+            ErrorBackground:'red'
+          })
           setTxtSampleSize("----Select----");
           setFocus("txtFSampleSize");
         }else{
@@ -121,7 +202,145 @@ function fn_T2D_BarcodeOutput() {
         }
       }
     }else{
-      alert("Please select Sampling Size");
+      setLblError({
+        ErrorMsg:'Please select Sampling Size !!',
+        ErrorStatus:true,
+        ErrorColor:'white',
+        ErrorBackground:'red'
+      })
+    }
+  };
+  const handleCancel = () => {
+    setTxtPOS("");
+    setTxtProduct("");
+    setTxtLotNo("");
+    setTxtOperatorCode("");
+    setTxtState("----Select----");
+    setTxtLotSize("");
+    setTxtReject("");
+    setTxtSampleSize("----Select----");
+    setTxtBarcodetype("----Select----");
+    setTxtAperture("----Select----");
+    setTxtRemark("");
+    setLblError({
+      ErrorMsg:'',
+      ErrorStatus:false,
+      ErrorColor:'',
+      ErrorBackground:''
+    })
+    setFocus("txtFPOS");
+  };
+  const handleSave = async () => {
+    if(txtLotNo === ""){
+      setTxtPOS("");
+      setTxtProduct("");
+      setTxtLotNo("");
+      setLblError({
+        ErrorMsg:'Please scan POS !!',
+        ErrorStatus:true,
+        ErrorColor:'white',
+        ErrorBackground:'red'
+      })
+      setFocus("txtFPOS");
+      return;
+    }
+    if(txtOperatorCode === ""){
+      setTxtOperatorCode("");
+      setLblError({
+        ErrorMsg:'Please scan Operator code !!',
+        ErrorStatus:true,
+        ErrorColor:'white',
+        ErrorBackground:'red'
+      })
+      setFocus("txtFOperatorCode");
+      return;
+    }
+    if(txtState === "----Select----"){
+      setTxtState("----Select----");
+      setLblError({
+        ErrorMsg:'Please select Stage !!',
+        ErrorStatus:true,
+        ErrorColor:'white',
+        ErrorBackground:'red'
+      })
+      setFocus("txtFState");
+      return;
+    }
+    if(txtLotSize === ""){
+      setTxtLotSize("");
+      setLblError({
+        ErrorMsg:'Please input Lot size !!',
+        ErrorStatus:true,
+        ErrorColor:'white',
+        ErrorBackground:'red'
+      })
+      setFocus("txtFLotSize");
+      return;
+    }
+    if(txtSampleSize === "----Select----"){
+      setTxtSampleSize("----Select----");
+      setLblError({
+        ErrorMsg:'Please select Sampling Size !!',
+        ErrorStatus:true,
+        ErrorColor:'white',
+        ErrorBackground:'red'
+      })
+      setFocus("txtFSampleSize");
+      return;
+    }
+    if(txtBarcodetype === "----Select----"){
+      setTxtBarcodetype("----Select----");
+      setLblError({
+        ErrorMsg:'Please select Barcode type !!',
+        ErrorStatus:true,
+        ErrorColor:'white',
+        ErrorBackground:'red'
+      })
+      setFocus("txtFBarcodetype");
+      return;
+    }
+    if(txtAperture === "----Select----"){
+      setTxtAperture("----Select----");
+      setLblError({
+        ErrorMsg:'Please select Aperture !!',
+        ErrorStatus:true,
+        ErrorColor:'white',
+        ErrorBackground:'red'
+      })
+      setFocus("txtFAperture");
+      return;
+    }
+    if(txtLotNo != ''){
+      confirm("Do you want to save data ?");
+      if (confirm) {
+        const insertOqcBarcodeOutputData = await getData("InsertOqcBarcodeOutputData", {
+          lotno: txtLotNo,
+          operator: txtOperatorCode,
+          state: txtState,
+          lotsize: txtLotSize,
+          reject: txtReject,
+          samplesize: txtSampleSize,
+          barcodetype: txtBarcodetype,
+          aperture: txtAperture,
+          remark: txtRemark
+        });
+        if (insertOqcBarcodeOutputData.message == "Success") {
+          setLblError({
+            ErrorMsg:'Save successed',
+            ErrorStatus:true,
+            ErrorColor:'white',
+            ErrorBackground:'green'
+          })
+          handleCancel();
+        }else{
+          setLblError({
+            ErrorMsg:insertOqcBarcodeOutputData.message,
+            ErrorStatus:true,
+            ErrorColor:'white',
+            ErrorBackground:'red'
+          })
+        }
+      }
     }
   };
   async function getData(type, params) {
@@ -150,9 +369,29 @@ function fn_T2D_BarcodeOutput() {
       } else if (type == "getCheckSampleSize"){
         const response = await axios.get(`/api/Oqc_barcode/GetcheckSameQtywithLot?strLotNo=${params.lotno}`);
         data = response.data;
+      } else if (type == 'InsertOqcBarcodeOutputData'){
+        const response = await axios.post(`/api/Oqc_barcode/InsertOqcoutputData`, {
+          dataList:{
+            strLotNo: params.lotno,
+            strOp: params.operator,
+            strState: params.state,
+            strLotSize: params.lotsize,
+            strReject: params.reject,
+            strSampingSize: params.samplesize,
+            strBarcodeType: params.barcodetype,
+            strAperture: params.aperture,
+            strRemark: params.remark
+          }
+        });
+        data = response.data;
       }
     } catch (error) {
-      alert(error);
+      setLblError({
+        ErrorMsg:error,
+        ErrorStatus:true,
+        ErrorColor:'white',
+        ErrorBackground:'red'
+      })
     }
     return data;
   }
@@ -181,7 +420,11 @@ function fn_T2D_BarcodeOutput() {
     setTxtRemark,
     handleChangePOS,
     handleChangeOperator,
-    handleChangeSampleSize
+    handleChangeSampleSize,
+    handleCancel,
+    handleSave,
+    lblError,
+    setLblError
   };
 }
 
