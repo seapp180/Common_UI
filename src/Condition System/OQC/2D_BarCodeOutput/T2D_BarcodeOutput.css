@@ -1,54 +1,53 @@
 .T2DBarcodeTitlePage_h2 {
-    background-color: #CA965C;
-    border-radius: 25px;
-    color: #ffffff;
-    padding: 10px 20px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-    margin-left: 15px;
-    
+  background-color: #ca965c;
+  border-radius: 25px;
+  color: #ffffff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-left: 15px;
 }
-.T2DBarcodeTodayOutput{
-    background-color: #17b136;
-    border-radius: 25px;
-    color: #ffffff;
-    padding: 10px 20px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-    margin-left: 15px;
+.T2DBarcodeTodayOutput {
+  background-color: #17b136;
+  border-radius: 25px;
+  color: #ffffff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-left: 15px;
 }
-.T2DBarcodeShiftOutput{
-    background-color: #889E73;
-    border-radius: 25px;
-    color: #ffffff;
-    padding: 10px 20px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-    margin-left: 15px;
+.T2DBarcodeShiftOutput {
+  background-color: #889e73;
+  border-radius: 25px;
+  color: #ffffff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-left: 15px;
 }
-.T2DBarcodeOutputButton{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin-left: 200px;
-    width: 900px;
+.T2DBarcodeOutputButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-left: 200px;
+  width: 900px;
 }
-.T2DBarCodeOutputSaveBtn{
-    background-color: #1A5D1A !important;
-    color: #fff !important;
-    height: 30px;
-    width: 90px;
+.T2DBarCodeOutputSaveBtn {
+  background-color: #1a5d1a !important;
+  color: #fff !important;
+  height: 30px;
+  width: 90px;
 }
-.T2DBarCodeOutputCancelBtn{
-    background-color: #E0282E !important;
-    color: #fff !important;
-    height: 30px;
+.T2DBarCodeOutputCancelBtn {
+  background-color: #e0282e !important;
+  color: #fff !important;
+  height: 30px;
 }
 

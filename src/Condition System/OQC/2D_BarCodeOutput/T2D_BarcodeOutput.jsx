@@ -1,18 +1,6 @@
-import axios from "axios";
-import {
-  SearchOutlined,
-  LoadingOutlined,
-  CloudUploadOutlined,
-  FileOutlined,
-  FileExcelOutlined,
-  CloseOutlined,
-  SaveOutlined,
-  UploadOutlined,
-  CloseCircleOutlined,
-} from "@ant-design/icons";
+import { CloseOutlined, SaveOutlined } from "@ant-design/icons";
 import { Layout, Button, Select, Input, Tooltip } from "antd";
 const { Content } = Layout;
-import ImgExcel from "../../../assets/excel.png";
 import "./T2D_BarcodeOutput.css";
 import { fn_T2D_BarcodeOutput } from "./fn_T2D_BarcodeOutput";
 function T2D_BarcodeOutput() {
@@ -62,7 +50,6 @@ function T2D_BarcodeOutput() {
           alignItems: "center",
           marginTop: "20px",
           width: "900px",
-          // background: "white",
         }}
       >
         <table>
@@ -424,10 +411,11 @@ function T2D_BarcodeOutput() {
             </td>
             <td colSpan={2}>
               <div>
-                <Tooltip title='Traceability Data' >
+                <Tooltip title="Traceability Data">
                   <a
                     href={`http://10.17.66.190/smt/rpt_LotTraceView.aspx?lot=${txtLotNo}`}
                     target="_blank"
+                    disabled={txtLotNo === "" ? true : false}
                     style={{ textDecoration: "none" }}
                   >
                     Traceability Data
@@ -491,7 +479,6 @@ function T2D_BarcodeOutput() {
               </div>
             </td>
           </tr>
-          {console.log("lblError", lblError)}
           {lblError.ErrorStatus && (
             <tr>
               <td colSpan={4} style={{ textAlign: "center" }}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useLoading } from "../../../component/loading/fn_loading";
 function fn_T2D_BarcodeOutput() {
@@ -21,7 +21,9 @@ function fn_T2D_BarcodeOutput() {
     ErrorColor:'',
     ErrorBackground:''
   });
-
+  useEffect(() => {
+    if(txtPOS == "") setFocus("txtFPOS");
+  }, [txtPOS]);
   //SetFocus
   function setFocus(txtField) {
     document.getElementById(txtField).focus();
@@ -54,6 +56,7 @@ function fn_T2D_BarcodeOutput() {
               ErrorColor:'white',
               ErrorBackground:'red'
             })
+            hideLoading();
             setFocus("txtFPOS");
             return;
           } else if (checkRawdata.length <= 0) {
@@ -66,6 +69,7 @@ function fn_T2D_BarcodeOutput() {
               ErrorColor:'white',
               ErrorBackground:'red'
             })
+            hideLoading();
             setFocus("txtFPOS");
             return;
           }
@@ -80,6 +84,7 @@ function fn_T2D_BarcodeOutput() {
               ErrorColor:'white',
               ErrorBackground:'red'
             })
+            hideLoading();
             setFocus("txtFPOS");
             return;
           }
@@ -95,6 +100,7 @@ function fn_T2D_BarcodeOutput() {
                 ErrorColor:'white',
                 ErrorBackground:'red'
               })
+              hideLoading();
               setFocus("txtFPOS");
               return;
             }
@@ -105,6 +111,7 @@ function fn_T2D_BarcodeOutput() {
             ErrorColor:'',
             ErrorBackground:''
           })
+          hideLoading();
           setFocus("txtFOperatorCode")
         } else {
           setLblError({
@@ -113,8 +120,10 @@ function fn_T2D_BarcodeOutput() {
             ErrorColor:'white',
             ErrorBackground:'red'
           })
+          hideLoading();
         }
       } else {
+        hideLoading();
         setLblError({
           ErrorMsg:'Wrong POS , Please check !!',
           ErrorStatus:true,
@@ -183,10 +192,7 @@ function fn_T2D_BarcodeOutput() {
         ErrorColor: "",
         ErrorBackground: "",
       });
-      console.log(txtLotNo);
-      const checkSampleSize = await getData("getCheckSampleSize", { lotno: txtLotNo });
-      console.log(checkSampleSize.qty);
-  
+      const checkSampleSize = await getData("getCheckSampleSize", { lotno: txtLotNo });  
       if (checkSampleSize) {
         if (parseInt(checkSampleSize.qty) !== parseInt(value)) {
           setLblError({
@@ -210,6 +216,21 @@ function fn_T2D_BarcodeOutput() {
       })
     }
   };
+  function saveSuccessed(){
+    setTxtPOS("");
+    setTxtProduct("");
+    setTxtLotNo("");
+    setTxtOperatorCode("");
+    setTxtState("----Select----");
+    setTxtLotSize("");
+    setTxtReject("");
+    setTxtSampleSize("----Select----");
+    setTxtBarcodetype("----Select----");
+    setTxtAperture("----Select----");
+    setTxtRemark("");
+    setFocus("txtFPOS");
+
+  }
   const handleCancel = () => {
     setTxtPOS("");
     setTxtProduct("");
@@ -331,7 +352,7 @@ function fn_T2D_BarcodeOutput() {
             ErrorColor:'white',
             ErrorBackground:'green'
           })
-          handleCancel();
+          saveSuccessed();
         }else{
           setLblError({
             ErrorMsg:insertOqcBarcodeOutputData.message,
