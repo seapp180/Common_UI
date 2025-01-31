@@ -3,6 +3,8 @@ import { Layout, Button, Input, Table, Modal } from "antd";
 const { Content } = Layout;
 import { fn_T2D_BarcodeReport } from "./fn_T2D_BarcodeReport";
 import "./T2D_BarcodeReport.css";
+import ImgExcel from "../../../assets/excel.png";
+import { CloseOutlined, SearchOutlined } from "@ant-design/icons";
 function T2D_BarcodeReport() {
   const {
     txtproduct,
@@ -22,7 +24,7 @@ function T2D_BarcodeReport() {
     isModalOpen,
     handleCancelModal,
     columns,
-    handleexportINModal
+    handleexportINModal,
   } = fn_T2D_BarcodeReport();
   return (
     <Content>
@@ -79,13 +81,19 @@ function T2D_BarcodeReport() {
           marginTop: "10px",
         }}
       >
-        <Button style={{ marginLeft: "300px" }} onClick={handleSearch}>
+        <Button
+          style={{ marginLeft: "300px" }}
+          onClick={handleSearch}
+          type="primary"
+          icon={<SearchOutlined />}
+        >
           Search
         </Button>
         &nbsp;&nbsp;
-        <Button onClick={handleCancel}>Cancel</Button>
+        <Button onClick={handleCancel} icon={<CloseOutlined /> }className="BtCancelReport">Cancel</Button>
         <Button
           style={{ marginLeft: "auto", marginRight: "10px" }}
+          icon={<img src={ImgExcel} alt="icon" style={{ width: '20px', height: '20px' }} />}
           onClick={handleExport}
         >
           Export
@@ -108,13 +116,15 @@ function T2D_BarcodeReport() {
         onCancel={handleCancelModal}
         footer={[]}
       >
-        <div style={{ display: "flex", justifyContent: "flex-end",width:'95%' }}>
-          <Button onClick={handleexportINModal}>Export Excel</Button>
+        <div
+          style={{ display: "flex", justifyContent: "flex-end", width: "95%" }}
+        >
+          <Button onClick={handleexportINModal}  icon={<img src={ImgExcel} alt="icon" style={{ width: '20px', height: '20px' }} />}>Export</Button>
         </div>
         <Table
           columns={columns}
           dataSource={popUpdata}
-          style={{ margin: "auto", width: "90%",marginTop:'10px' }}
+          style={{ margin: "auto", width: "90%", marginTop: "10px" }}
           pagination={false}
           bordered
           size="small"

@@ -218,7 +218,9 @@ function fn_T2D_BarCodeConfirm() {
     {
       title: "Remark",
       align: "center",
-      render: () => "A=97%,B=3%,C=0%,D=0%,F=0%",
+      dataIndex: "remark",
+      key: "remark",
+      // render: () => "A=97%,B=3%,C=0%,D=0%,F=0%",
     },
   ];
 
