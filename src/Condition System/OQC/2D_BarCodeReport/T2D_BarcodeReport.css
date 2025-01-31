@@ -38,3 +38,8 @@
 .TextAlignRigth {
   text-align: Right !important;
 }
+.BtCancelReport {
+  background-color: #E0282E !important;
+  color: #fff !important;
+  height: 33px;
+}
