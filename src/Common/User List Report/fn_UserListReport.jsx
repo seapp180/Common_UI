@@ -124,6 +124,20 @@ function fn_UserListReport() {
       },
     },
     {
+      title: "MFG USER LOGIN",
+      dataIndex: "USER_QAD_LOGIN",
+      key: "MFG USER LOGIN",
+      align: "center",
+      width: "140px",
+      render: (text, record, index) => {
+        return (
+          <div style={{ textAlign: "left" }}>
+            {text}
+          </div>
+        );
+      },
+    },
+    {
       title: "JOIN DATE",
       dataIndex: "EMP_JOIN_DATE",
       key: "JOIN DATE",
@@ -206,20 +220,6 @@ function fn_UserListReport() {
       dataIndex: "EMP_FACTORY",
       key: "FACTORY",
       align: "center",
-      render: (text, record, index) => {
-        return (
-          <div style={{ textAlign: "left" }}>
-            {text}
-          </div>
-        );
-      },
-    },
-    {
-      title: "MFG USER LOGIN",
-      dataIndex: "USER_QAD_LOGIN",
-      key: "MFG USER LOGIN",
-      align: "center",
-      width: "140px",
       render: (text, record, index) => {
         return (
           <div style={{ textAlign: "left" }}>
