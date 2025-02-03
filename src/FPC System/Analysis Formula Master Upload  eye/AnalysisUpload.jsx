@@ -306,7 +306,7 @@ const AnalysisUpload = () => {
         <div style={{ display: "flex", alignItems: "flex-start" }}>
           <div style={{}}>
             <span style={{ fontSize: "14px" }}>Unit</span>
-           { console.log(Unit,'popopopop')}
+           
             <Select
               showSearch
               value={SL_UnitPopUp}

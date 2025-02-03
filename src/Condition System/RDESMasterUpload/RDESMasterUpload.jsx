@@ -4,14 +4,13 @@ import axios from "axios";
 import {
   SearchOutlined,
   LoadingOutlined,
-
   CloudUploadOutlined,
   FileOutlined,
   FileExcelOutlined,
   CloseOutlined,
-  SaveOutlined ,
+  SaveOutlined,
   UploadOutlined,
-  CloseCircleOutlined 
+  CloseCircleOutlined,
 } from "@ant-design/icons";
 import { fn_RDESMasterUpload } from "./fn_RDESMasterUpload";
 import "./RDESMasterUpload.css";
@@ -20,10 +19,29 @@ import ImgExcel from "../../assets/excel.png";
 
 const Page2 = () => {
   const {
-    SL_Product,handleChange,columns,Product,DataSearch,GetFileFormat,Bt_Search,
-    showPopUp,handlePopUpOk,handlePopUpCancel,UploadOpen,handleFileUpload,FileName
-    ,handleDrop,ClearFile,UploadFile,dataFile,columnsUpload,Save
-    ,DisableSave,loadingSearch,loadingSave,BtnExport
+    SL_Product,
+    handleChange,
+    columns,
+    Product,
+    DataSearch,
+    GetFileFormat,
+    Bt_Search,
+    showPopUp,
+    handlePopUpOk,
+    handlePopUpCancel,
+    UploadOpen,
+    handleFileUpload,
+    FileName,
+    handleDrop,
+    ClearFile,
+    UploadFile,
+    dataFile,
+    columnsUpload,
+    Save,
+    DisableSave,
+    loadingSearch,
+    loadingSave,
+    BtnExport,
   } = fn_RDESMasterUpload();
 
   return (
@@ -31,8 +49,7 @@ const Page2 = () => {
       <div style={{ display: "flex", alignItems: "center" }}>
         <h2 className="TitlePage_h2">RDES master upload</h2>
       </div>
-      
-     
+
       <div style={{ marginLeft: "30px", marginBottom: "5px" }}>
         <span style={{ fontSize: "18px" }}>Product</span>{" "}
       </div>
@@ -52,7 +69,7 @@ const Page2 = () => {
         />{" "}
         &nbsp;&nbsp; &nbsp;&nbsp;
         <Button
-        icon={loadingSearch ? <LoadingOutlined /> : <SearchOutlined />}
+          icon={loadingSearch ? <LoadingOutlined /> : <SearchOutlined />}
           style={{ background: "#5AA8F5", color: "#fff" }}
           size="large"
           onClick={() => Bt_Search()}
@@ -71,8 +88,13 @@ const Page2 = () => {
       </div>
       <br />
 
-     
-      <div style={{ display: "flex", justifyContent: "flex-end" ,marginBottom:'5px'}}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: "5px",
+        }}
+      >
         <Button
           icon={
             <img
@@ -81,20 +103,19 @@ const Page2 = () => {
               style={{ width: 20, height: 20 }}
             />
           }
-            onClick={() => BtnExport()}
+          onClick={() => BtnExport()}
         >
           Export Excel
         </Button>
       </div>
-      
+
       <div className="divTable">
         <Table
           columns={columns}
-          
           className="tableSummary"
           dataSource={DataSearch}
           pagination={false}
-          scroll={{ x: 'max-content',y:310 }}
+          scroll={{ x: "max-content", y: 310 }}
         ></Table>
       </div>
       <Modal
@@ -103,16 +124,17 @@ const Page2 = () => {
         onCancel={handlePopUpCancel}
         width={"90%"}
       >
-        <div style={{ display: "flex", alignItems: "flex-start" }}
-         onDragOver={(e) => e.preventDefault()}
-         onDrop={handleDrop}
+        <div
+          style={{ display: "flex", alignItems: "flex-start" }}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}
         >
           <input
-               type="file"
-               multiple
-               onChange={handleFileUpload}
-               style={{ display: "none" }}
-               id="fileInput"
+            type="file"
+            multiple
+            onChange={handleFileUpload}
+            style={{ display: "none" }}
+            id="fileInput"
           />
           <label htmlFor="fileInput" className="bt_ChooseFile">
             <CloudUploadOutlined
@@ -123,7 +145,12 @@ const Page2 = () => {
             <br />
             or
             <br />
-            <Button size="small"  onClick={() =>document.getElementById('fileInput').click()}>Browse files</Button>
+            <Button
+              size="small"
+              onClick={() => document.getElementById("fileInput").click()}
+            >
+              Browse files
+            </Button>
             <br />
             <span style={{ fontSize: "12px", color: "red" }}>
               **.xlsx or .xls only
@@ -134,7 +161,6 @@ const Page2 = () => {
             icon={<FileOutlined />}
             style={{ marginTop: "auto" }}
             onClick={() => GetFileFormat()}
-
           >
             Fomat File
           </Button>
@@ -143,12 +169,12 @@ const Page2 = () => {
           style={{ display: "flex", alignItems: "center", marginTop: "10px" }}
         >
           <div
-          className="File_name"
+            className="File_name"
             style={{
-              display: FileName === '' ? 'none' : 'flex',
+              display: FileName === "" ? "none" : "flex",
             }}
           >
-           <FileExcelOutlined style={{ marginRight: "5px", color: "green" }} />
+            <FileExcelOutlined style={{ marginRight: "5px", color: "green" }} />
             <span style={{ fontSize: "14px" }}>{FileName}</span>
             <div
               style={{
@@ -157,7 +183,10 @@ const Page2 = () => {
                 alignItems: "center",
               }}
             >
-              <CloseOutlined style={{ marginLeft: "5px", color: "red" }}  onClick={() => ClearFile()} />
+              <CloseOutlined
+                style={{ marginLeft: "5px", color: "red" }}
+                onClick={() => ClearFile()}
+              />
             </div>
           </div>
           <Button
@@ -167,7 +196,7 @@ const Page2 = () => {
               marginTop: "0",
               background: "#5AA8F5",
               color: "#fff",
-              display: FileName === '' ? 'none' : 'flex',
+              display: FileName === "" ? "none" : "flex",
             }}
             onClick={() => UploadFile()}
           >
@@ -182,21 +211,20 @@ const Page2 = () => {
             className="tableSummary"
             dataSource={dataFile}
             pagination={false}
-            scroll={{ x: 'max-content',y:310 }}
+            scroll={{ x: "max-content", y: 310 }}
             size="small"
           ></Table>
         </div>
         <br />
         <div
           style={{
-            display: dataFile.length <=0 ? 'none' : 'flex',
+            display: dataFile.length <= 0 ? "none" : "flex",
             justifyContent: "center",
             marginTop: "10px",
           }}
         >
           <Button
-          
-          icon={loadingSave ? <LoadingOutlined /> : <SaveOutlined />}
+            icon={loadingSave ? <LoadingOutlined /> : <SaveOutlined />}
             disabled={DisableSave}
             style={{ marginLeft: "5px", background: "#399918", color: "#fff" }}
             onClick={() => Save()}
