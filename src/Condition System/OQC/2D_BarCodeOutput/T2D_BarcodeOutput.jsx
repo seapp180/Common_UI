@@ -318,8 +318,7 @@ function T2D_BarcodeOutput() {
                   options={[
                     { value: "----Select----", label: "----Select----" },
                     { value: "5", label: "5" },
-                    { value: "32", label: "32" },
-                    { value: "1", label: "1" },
+                    { value: "32", label: "32" }
                   ]}
                 />
               </div>
