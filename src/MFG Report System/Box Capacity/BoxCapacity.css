@@ -53,6 +53,17 @@
   width: 100%;
   background-color: #f6f8ee;
 }
+
+.CardManual {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: center;
+  background-color: #f6f8ee;
+  margin-top: 5px;
+  padding: 0;
+}
+
 .tablePacking {
   width: 100%;
   
@@ -62,17 +73,20 @@
   color: white;
   padding: 0;
   height: 40px;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 .tablePacking .ant-table-tbody > tr > td {
   font-family: "Varela Round", sans-serif;
-  
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 .BoxmainName {
   background-color: #f3dfc8;
   border-radius: 25px;
   color: #ffffff;
   width: 20%;
-  padding: 5px 20px;
+  padding: 5px 5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -111,6 +125,8 @@
 }
 .tableLot .ant-table-tbody > tr > td {
   font-family: "Varela Round", sans-serif;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 
 }
 .tableRecieve .ant-table-thead > tr > th {
@@ -118,12 +134,20 @@
   color: white;
   padding: 0;
   height: 40px;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
 .tableRecieve .ant-table-tbody > tr > td {
   font-family: "Varela Round", sans-serif;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
-.scrollable-column {
-  max-width: 100%; /* Match the width set in the column definition */
+/* .scrollable-column {
+  max-width: 100%; 
   overflow-x: auto;
   white-space: nowrap;
+} */
+.no-padding tr, .no-padding td {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }
