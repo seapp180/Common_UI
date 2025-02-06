@@ -1,0 +1,35 @@
+.T2DBarcodeConfirmTitlePage_h2 {
+    background-color: #CA965C;
+    border-radius: 25px;
+    color: #ffffff;
+    padding: 10px 20px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    margin-left: 15px;
+    
+}
+.T2DBarcodeConfirmContent{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    width: 90%;
+    margin-left: 20px;
+    background-color: black;
+}
+.TextAlignCenter{
+    text-align: center;
+}
+.TextAlignLeft{
+    text-align: left;
+}
+.TextAlignRigth{
+    text-align: Right !important;
+}
+.tableSummaryConfirm .ant-table-thead > tr > th {
+    background-color: #31363f;
+    color: white;
+  }
+  

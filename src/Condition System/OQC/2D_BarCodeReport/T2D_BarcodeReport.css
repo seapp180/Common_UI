@@ -1,0 +1,45 @@
+.T2DBarcodeReportTitlePage_h2 {
+  background-color: #ca965c;
+  border-radius: 25px;
+  color: #ffffff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-left: 15px;
+}
+.lblTextField {
+  width: 90px;
+  font-size: 14px;
+  text-align: right;
+}
+.InputTextField {
+  width: 200px;
+  margin-left: 20px;
+}
+.divTextField {
+  display: flex;
+  margin-bottom: 5px;
+  margin-top: 10px;
+  align-items: center;
+  margin-left: 30px;
+}
+.tableSummaryReport .ant-table-thead > tr > th {
+  background-color: #31363f;
+  color: white;
+}
+.TextAlignCenter {
+  text-align: center;
+}
+.TextAlignLeft {
+  text-align: left;
+}
+.TextAlignRigth {
+  text-align: Right !important;
+}
+.BtCancelReport {
+  background-color: #E0282E !important;
+  color: #fff !important;
+  height: 33px;
+}

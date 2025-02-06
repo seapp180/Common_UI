@@ -7,7 +7,7 @@ const { Header } = Layout;
 const CustomHeader = () => {
   const { PageHeader, Gohome,System } = fn_Header();
   return (
-    <Header className={System === 'PoSummary' || System === 'zPO' ? 'Header-zPO' : 'Header'}>
+    <Header className={System.toUpperCase()=== 'POSUMMARY' || System.toUpperCase() === 'ZPO' ? 'Header-zPO' : 'Header'}>
       <div style={{ display: "flex", alignItems: "center", marginLeft: "0px" }}>
         <div className="demo-logo" />
         {PageHeader}

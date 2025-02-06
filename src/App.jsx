@@ -15,6 +15,9 @@ import BoxCapacity from "./MFG Report System/Box Capacity/Box_Search";
 import UserListReport from "./Common/User List Report/UserListReport";
 import ZPoReport from "./Common/Zpo/PO Summary/zPO_Report";
 import PoSummary from "./Common/Zpo/PO Report/PoSummary";
+import T2D_BarcodeOutput from "./Condition System/OQC/2D_BarCodeOutput/T2D_BarcodeOutput";
+import T2D_BarCodeConfirm from "./Condition System/OQC/2D_BarCodeConfirm/T2D_BarCodeConfirm";
+import T2D_BarcodeReport from "./Condition System/OQC/2D_BarCodeReport/T2D_BarcodeReport";
 
 const { Content } = Layout;
 // const backendUrl = import.meta.env.VITE_SERVICE_URL;
@@ -39,6 +42,21 @@ const App = () => {
                 }}
               >
                 <Routes>
+                  {/* --------------------COMMON SYSTEM--------------------*/}
+                  <Route 
+                    path="/CommonSystem/zPO" 
+                    element={<ZPoReport />} 
+                  />
+                  <Route
+                    path="/CommonSystem/UserListReport"
+                    element={<UserListReport />}
+                  />
+                  <Route
+                    path="/CommonSystem/PoSummary"
+                    element={<PoSummary />}
+                  />
+                 
+                  {/*--------------------CONDITION SYSTEM--------------------*/}
                   <Route
                     path="/CommonSystem/ConditionSystem/RDESMasterUpload"
                     element={<RDESMasterUpload />}
@@ -50,27 +68,32 @@ const App = () => {
                   <Route
                     path="/CommonSystem/ConditionSystem/QA_ORT_WorkingRecord"
                     element={<QA_ORT_WorkingRecord />}
+                  />{" "}
+                  <Route
+                    path="/CommonSystem/ConditionSystem/OQC/2D_BarcodeOutput"
+                    element={<T2D_BarcodeOutput />}
                   />
+                  <Route
+                    path="/CommonSystem/ConditionSystem/OQC/2D_BarcodeConfirm"
+                    element={<T2D_BarCodeConfirm />}
+                  />
+                  <Route
+                    path="/CommonSystem/ConditionSystem/OQC/2D_BarcodeReport"
+                    element={<T2D_BarcodeReport />}
+                  />
+                 
+                  {/* --------------------FPC SYSTEM-------------------- */}
                   <Route
                     path="/CommonSystem/FPCSystem/AnalysisFormulaMaster"
                     element={<AnalysisUpload />}
                   />
+                  
+                  {/* --------------------MFG REPORT SYSTEM-------------------- */}
                   <Route
                     path="/CommonSystem/MFGReportSystem/BoxCapacity"
                     element={<BoxCapacity />}
                   />
-                  <Route
-                    path="/CommonSystem/UserListReport"
-                    element={<UserListReport />}
-                  />
-                  <Route
-                    path="/CommonSystem/zPO"
-                    element={<ZPoReport />}
-                  />
-                  <Route
-                    path="/CommonSystem/PoSummary"
-                    element={<PoSummary />}
-                  />
+                  {/* --------------------------------------------------------- */}
                 </Routes>
               </div>
             </Content>

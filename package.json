@@ -16,6 +16,7 @@
     "@mui/material": "^5.16.7",
     "ant-design": "^1.0.0",
     "antd": "^5.20.2",
+    "antd-style": "^3.7.1",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
