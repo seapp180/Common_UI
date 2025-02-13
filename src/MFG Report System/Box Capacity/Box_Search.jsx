@@ -81,7 +81,9 @@ function Box_Search() {
     ReError,
     setReError,
     LotPacking1,
-    DataLotPacking1
+    DataLotPacking1,
+    
+    
   } = fn_Box_Search();
 
   return (
@@ -110,7 +112,11 @@ function Box_Search() {
                     marginLeft: "5px",
                   }}
                   placeholder="Select ITem"
-                  onBlur={() => handleProduct("SearchItem")}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleProduct("SearchItem");
+                    }
+                  }}
                 />
               </div>
             </td>
@@ -256,7 +262,6 @@ function Box_Search() {
               <div>
                 <Button
                   type="primary"
-                  // icon={loadingSearch ? <LoadingOutlined /> : <SearchOutlined />}
                   icon={<SearchOutlined />}
                   style={{
                     background: "#5AA8F5",
@@ -265,7 +270,6 @@ function Box_Search() {
                   }}
                   onClick={() => {
                     Search();
-                    // handleProduct("SearchItem");
                   }}
                 >
                   Search
@@ -331,8 +335,8 @@ function Box_Search() {
             style={{
               overflowX: "hidden",
               overflowY: "scroll",
-              height: "90vh", // Full viewport height
-              width: "90vw", // Full viewport width
+              height: "90vh", 
+              width: "90vw", 
             }}
           >
             <div style={{ flex: 1, marginRight: "10px" }}>
@@ -364,7 +368,11 @@ function Box_Search() {
                           marginLeft: "5px",
                         }}
                         placeholder="Input Item"
-                        onBlur={() => handleProduct("ItemNew")}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleProduct("ItemNew");
+                          }
+                        }}
                       />
                     </td>
                     <td style={{ textAlign: "right" }}>Product :</td>
@@ -443,31 +451,35 @@ function Box_Search() {
                       </td>
                       <td style={{ textAlign: "right" }}>Request Total:</td>
                       <td>
-                      <Input
-  value={RequestTotal}
-  onKeyPress={(event) => {
-    if (!/[0-9]/.test(event.key)) {
-      event.preventDefault();
-    }
-  }}
-  onChange={(e) => {
-    const value = e.target.value;
-    if (value === '' || value === 'null') {
-      setReError(true);
-    } else {
-      setReError(false);
-    }
-    setRequestTotal(value);
-  }}
-  style={{
-    display: "block",
-    marginTop: "5px",
-    marginLeft: "5px",
-    borderColor: ReError ? 'red' : '',
-  }}
-  placeholder="Input Total Sheet Qty"
-/>
-{ReError && <span style={{ color: 'red' }}>*กรุณากรอก Request Total</span>}
+                        <Input
+                          value={RequestTotal}
+                          onKeyPress={(event) => {
+                            if (!/[0-9]/.test(event.key)) {
+                              event.preventDefault();
+                            }
+                          }}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "" || value === "null") {
+                              setReError(true);
+                            } else {
+                              setReError(false);
+                            }
+                            setRequestTotal(value);
+                          }}
+                          style={{
+                            display: "block",
+                            marginTop: "5px",
+                            marginLeft: "5px",
+                            borderColor: ReError ? "red" : "",
+                          }}
+                          placeholder="Input Total Sheet Qty"
+                        />
+                        {ReError && (
+                          <span style={{ color: "red" }}>
+                            *กรุณากรอก Request Total
+                          </span>
+                        )}
                       </td>
                     </tr>
                   )}
@@ -489,22 +501,25 @@ function Box_Search() {
                       </td>
                       <td style={{ textAlign: "right" }}>Packing Qty :</td>
                       <td>
-                      <Input
-  value={String(PackQty).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-  onChange={(e) => {
-    const value = e.target.value.replace(/,/g, '');
-    if (!isNaN(value)) {
-      setPackQty(value);
-    }
-  }}
-  disabled
-  style={{
-    display: "block",
-    marginTop: "5px",
-    marginLeft: "5px",
-  }}
-  placeholder=""
-/>
+                        <Input
+                          value={String(PackQty).replace(
+                            /\B(?=(\d{3})+(?!\d))/g,
+                            ","
+                          )}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/,/g, "");
+                            if (!isNaN(value)) {
+                              setPackQty(value);
+                            }
+                          }}
+                          disabled
+                          style={{
+                            display: "block",
+                            marginTop: "5px",
+                            marginLeft: "5px",
+                          }}
+                          placeholder=""
+                        />
                       </td>
                     </tr>
                   )}
@@ -526,27 +541,30 @@ function Box_Search() {
                       </td>
                       <td style={{ textAlign: "right" }}>Full Box Qty :</td>
                       <td>
-                      <Input
-  onKeyPress={(event) => {
-    if (!/[0-9]/.test(event.key)) {
-      event.preventDefault();
-    }
-  }}
-  value={String(FullBoxQty).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-  onChange={(e) => {
-    const value = e.target.value.replace(/,/g, '');
-    if (!isNaN(value)) {
-      setFullBoxQty(value);
-    }
-  }}
-  style={{
-    width: "200px",
-    display: "block",
-    marginTop: "5px",
-    marginLeft: "5px",
-  }}
-  placeholder="Input Full Box Qty"
-/>
+                        <Input
+                          onKeyPress={(event) => {
+                            if (!/[0-9]/.test(event.key)) {
+                              event.preventDefault();
+                            }
+                          }}
+                          value={String(FullBoxQty).replace(
+                            /\B(?=(\d{3})+(?!\d))/g,
+                            ","
+                          )}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/,/g, "");
+                            if (!isNaN(value)) {
+                              setFullBoxQty(value);
+                            }
+                          }}
+                          style={{
+                            width: "200px",
+                            display: "block",
+                            marginTop: "5px",
+                            marginLeft: "5px",
+                          }}
+                          placeholder="Input Full Box Qty"
+                        />
                       </td>
                     </tr>
                   )}
@@ -554,27 +572,30 @@ function Box_Search() {
                     <tr>
                       <td style={{ textAlign: "right" }}>Full Box Qty :</td>
                       <td>
-                      <Input
-  onKeyPress={(event) => {
-    if (!/[0-9]/.test(event.key)) {
-      event.preventDefault();
-    }
-  }}
-  value={String(FullBoxQty).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-  onChange={(e) => {
-    const value = e.target.value.replace(/,/g, '');
-    if (!isNaN(value)) {
-      setFullBoxQty(value);
-    }
-  }}
-  style={{
-    width: "200px",
-    display: "block",
-    marginTop: "5px",
-    marginLeft: "5px",
-  }}
-  placeholder="Input Full Box Qty"
-/>
+                        <Input
+                          onKeyPress={(event) => {
+                            if (!/[0-9]/.test(event.key)) {
+                              event.preventDefault();
+                            }
+                          }}
+                          value={String(FullBoxQty).replace(
+                            /\B(?=(\d{3})+(?!\d))/g,
+                            ","
+                          )}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(/,/g, "");
+                            if (!isNaN(value)) {
+                              setFullBoxQty(value);
+                            }
+                          }}
+                          style={{
+                            width: "200px",
+                            display: "block",
+                            marginTop: "5px",
+                            marginLeft: "5px",
+                          }}
+                          placeholder="Input Full Box Qty"
+                        />
                       </td>
                       <td style={{ textAlign: "right" }}>Total Sheet Qty :</td>
                       <td>
@@ -600,7 +621,7 @@ function Box_Search() {
                     <tr>
                       <td style={{ textAlign: "right" }}>Sheet Qty :</td>
                       <td>
-                      <Input
+                        <Input
                           value={TotalSheetQty}
                           onKeyPress={(event) => {
                             if (!/[0-9]/.test(event.key)) {
@@ -715,20 +736,21 @@ function Box_Search() {
                         </Button>
                       </div>
                     </td>
-                    {radioselect =='Manual'&&(
-                    <div
-                      style={{ display: "flex", justifyContent: "flex-end" }}
-                    >
-                      <Button
-                        icon={<DeleteOutlined />}
-                        type="primary"
-                        danger
-                        style={{ marginLeft: "5px", marginTop: "1px" }}
-                        onClick={handleDelete}
+                    {radioselect == "Manual" && (
+                      <div
+                        style={{ display: "flex", justifyContent: "flex-end" }}
                       >
-                        Delete
-                      </Button>
-                    </div>)}
+                        <Button
+                          icon={<DeleteOutlined />}
+                          type="primary"
+                          danger
+                          style={{ marginLeft: "5px", marginTop: "1px" }}
+                          onClick={handleDelete}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    )}
                   </tr>
                 </table>
               </Card>
@@ -862,37 +884,39 @@ function Box_Search() {
               <Card
                 bodyStyle={{ paddingTop: 10 }}
                 style={{
-                  display: "flex",
                   flexDirection: "column",
                   alignItems: "flex-start",
                   textAlign: "center",
                   backgroundColor: "#f6f8ee",
                   marginTop: "5px",
+                  
                 }}
               >
                 <h3 className="BoxmainName">Lot Packing</h3>
-                {radioselect=='Manual'&&(
-                <Table
-                  columns={LotPacking}
-                  style={{ marginTop: "5px", marginLeft: "10px" }}
-                  className="tableLot"
-                  dataSource={DataLotPacking}
-                  bordered
-                  pagination={true}
-                  scroll={{ y: 350 }}
-                  // pagination=
-                ></Table>)}
-                 {radioselect=='Auto'&&(
-                <Table
-                  columns={LotPacking1}
-                  style={{ marginTop: "5px", marginLeft: "10px" }}
-                  className="tableLot"
-                  dataSource={DataLotPacking1}
-                  bordered
-                  pagination={true}
-                  scroll={{ y: 350 }}
-                  // pagination=
-                ></Table>)}
+                {radioselect == "Manual" && (
+                  <Table
+                    columns={LotPacking}
+                    style={{ marginTop: "5px", marginLeft: "10px" }}
+                    className="tableLot"
+                    dataSource={DataLotPacking}
+                    bordered
+                    pagination={true}
+                    scroll={{ y: 350 }}
+                    // pagination=
+                  ></Table>
+                )}
+                {radioselect == "Auto" && (
+                  <Table
+                    columns={LotPacking1}
+                    style={{ marginTop: "5px", marginLeft: "10px" }}
+                    className="tableLot"
+                    dataSource={DataLotPacking1}
+                    bordered
+                    pagination={true}
+                    scroll={{ y: 350 }}
+                    // pagination=
+                  ></Table>
+                )}
               </Card>
             </div>
           </div>
@@ -944,7 +968,7 @@ function Box_Search() {
                   Export
                 </Button>
               </div>
-            
+
               <Table
                 columns={packingTable}
                 dataSource={DataPacking}
@@ -999,9 +1023,6 @@ function Box_Search() {
                 width: "100%",
               }}
             >
-              {/* <h3 className="BoxmainName" style={{ width: "200px" }}>
-                Waiting For Receive
-              </h3> */}
               <div
                 style={{
                   display: "flex",
@@ -1034,7 +1055,7 @@ function Box_Search() {
                 dataSource={DataLotReceive}
                 bordered
                 pagination={true}
-                scroll={{ y: 700 }} // Adjust the height as needed
+                scroll={{ y: 700 }} 
               ></Table>
             </Card>
           </div>

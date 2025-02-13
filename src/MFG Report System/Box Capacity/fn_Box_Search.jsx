@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Button } from "antd";
 import ImgDelete from "../../assets/edit.png";
@@ -51,20 +51,18 @@ function fn_Box_Search() {
   let pack_qty;
   const { showLoading, hideLoading } = useLoading();
   //useEffect
-
+  const fnItem = useRef([]);
   useEffect(() => {
     if (openManual == true) {
       scrollToTop();
     }
   }, [openManual]);
-
   const scrollToTop = () => {
     window.scrollTo({
       top: 500,
       behavior: "smooth",
     });
   };
-
   const handleProduct = async (page) => {
     showLoading("กำลังโหลดข้อมูล...");
     let Page = page;
@@ -80,6 +78,9 @@ function fn_Box_Search() {
             }
           });
       }
+      setTimeout(() => {
+        fnItem.current.focus();
+      }, 0);
     } else if (Page == "ItemNew") {
       if (ItemNew != "") {
         await axios
@@ -144,6 +145,9 @@ function fn_Box_Search() {
             }
           });
       }
+      setTimeout(() => {
+        fnItem.current.focus();
+      }, 0);
     }
     await GetDataPacking(ItemNew);
     hideLoading();
@@ -322,7 +326,6 @@ function fn_Box_Search() {
       width: 30,
     },
   ];
-
   const LotPacking = [
     {
       dataIndex: "SEQ",
@@ -392,7 +395,6 @@ function fn_Box_Search() {
       },
     },
   ];
-
   const LotPacking1 = [
     {
       align: "center",
@@ -615,7 +617,7 @@ function fn_Box_Search() {
     setPageInsert(page);
     setCheckStatus(status);
     setRemain_qty("");
-    setopenManual(false)
+    setopenManual(false);
     const itemsearch1 = itemsearch.split("/")[0];
     setIsModalOpen(true);
     await axios
@@ -696,7 +698,7 @@ function fn_Box_Search() {
           text: "บันทึกข้อมูลสำเร็จ",
         });
         hideLoading();
-      } 
+      }
     }
   };
   const Search = async () => {
@@ -824,6 +826,7 @@ function fn_Box_Search() {
       setTotalSheetQty(1);
       setPackBy("");
       setRemark("");
+      setRequestTotal("");
     } else if (Page == "ResetManual") {
       setselectddlLot("");
       setRemain_qty("");
@@ -995,7 +998,6 @@ function fn_Box_Search() {
         }
       });
   };
-
   const GetDataRemainQTY_AUTO = async (ItemNew, BoxNo) => {
     const parts = BoxNo.split("/");
     const running_box = parseInt(parts[1], 10);
@@ -1078,8 +1080,8 @@ function fn_Box_Search() {
                             if (Data.length > 0) {
                               let rec;
                               do {
-                                let qty = goodQtyArray.shift(); 
-                                let lot = lotNoArray.shift(); 
+                                let qty = goodQtyArray.shift();
+                                let lot = lotNoArray.shift();
                                 await axios
                                   .post("/api/BoxCapacity/DataMAX_SEQ_AUTO", {
                                     dataList: {
@@ -1372,158 +1374,287 @@ function fn_Box_Search() {
     let Box_NO;
     let Qty = 0;
     let DataBox = [];
-    if (DataPacking.length > 0 ) {
+    let check;
+    if (DataPacking.length > 0) {
       showLoading("กำลังโหลดข้อมูล...");
       for (let i = 0; i < RequestTotal; i++) {
         // เช็คกล่องล่าสุดว่าเต็มหรือยัง
         let dataPack = await GetDataPacking(ItemNew);
-        if(dataPack.length>0){
-        await axios
-          .post("/api/BoxCapacity/DataBoxno", {
+        if (dataPack.length > 0) {
+          await axios
+            .post("/api/BoxCapacity/DataBoxno", {
+              dataList: {
+                fac: Fac.value,
+                product: ItemNew.trim().toUpperCase(),
+              },
+            })
+            .then((response) => {
+              if (response.data.length > 0) {
+                setBoxNo(response.data[0]);
+                Box_NO = response.data[0];
+                DataBox.push(response.data[0]);
+                setPackQty(0);
+              }
+            });
+          await axios.post("/api/BoxCapacity/InsBoxCapacity1", {
             dataList: {
-              fac: Fac.value,
-              product: ItemNew.trim().toUpperCase(),
+              Item: ItemNew,
+              box_No: Box_NO,
+              fac1: Fac.value,
+              box_status: Boxstatus,
+              box_qty: Qty,
+              box_max_qty: FullBoxQty,
+              sheet_qty: TotalSheetQty,
+              packingBy: PackBy,
+              remark: Remark,
+              packdate: Packdate == "" ? today : Packdate,
+              fac2: Fac.value,
             },
-          })
-          .then((response) => {
-            if (response.data.length > 0) {
-              setBoxNo(response.data[0]);
-              Box_NO = response.data[0];
-              DataBox.push(response.data[0]);
-              setPackQty(0);
-            }
           });
-        await axios.post("/api/BoxCapacity/InsBoxCapacity1", {
-          dataList: {
-            Item: ItemNew,
-            box_No: Box_NO,
-            fac1: Fac.value,
-            box_status: Boxstatus,
-            box_qty: Qty,
-            box_max_qty: FullBoxQty,
-            sheet_qty: TotalSheetQty,
-            packingBy: PackBy,
-            remark: Remark,
-            packdate: Packdate == "" ? today : Packdate,
-            fac2: Fac.value,
-          },
-        });
 
-        if (Box_NO != "") {
-          const parts = Box_NO.split("/");
-          const running_box = parseInt(parts[1], 10);
-          let Lot;
-          let Max_DATE;
-          let Data;
-          let Remain_QTY;
-          if (running_box > 1) {
-            // ตรวจสอบว่ากล่องล่าสุดเต็มหรือไม่
-            await axios
-              .post("/api/BoxCapacity/DataRemainQTY_AUTO", {
-                dataList: {
-                  boxno: Box_NO,
-                  item: ItemNew,
-                },
-              })
-              .then(async (response) => {
-                hideLoading();
-                if (response.data[0].REMAIN_QTY > 0) {
-                  Remain_QTY = response.data[0].REMAIN_QTY;
-                  const result = await Swal.fire({
-                    icon: "warning",
-                    text: "Previous box packed not full. Are you sure you want to packing in this box?",
-                    showCancelButton: true,
-                    confirmButtonText: "OK",
-                    cancelButtonText: "Cancel",
-                  });
-
-                  if (result.isConfirmed) {
-                    const result2 = await Swal.fire({
+          if (Box_NO != "") {
+            const parts = Box_NO.split("/");
+            const running_box = parseInt(parts[1], 10);
+            let Lot;
+            let Max_DATE;
+            let Data;
+            let Remain_QTY;
+            if (running_box > 1) {
+              // ตรวจสอบว่ากล่องล่าสุดเต็มหรือไม่
+              await axios
+                .post("/api/BoxCapacity/DataRemainQTY_AUTO", {
+                  dataList: {
+                    boxno: Box_NO,
+                    item: ItemNew,
+                  },
+                })
+                .then(async (response) => {
+                  hideLoading();
+                  if (response.data[0].REMAIN_QTY > 0) {
+                    Remain_QTY = response.data[0].REMAIN_QTY;
+                    const result = await Swal.fire({
                       icon: "warning",
-                      text: "Are you sure you want to auto calculate packing ?",
+                      text: "Previous box packed not full. Are you sure you want to packing in this box?",
                       showCancelButton: true,
                       confirmButtonText: "OK",
                       cancelButtonText: "Cancel",
                     });
 
-                    if (result2.isConfirmed) {
-                      showLoading("กำลังบันทึกข้อมูล...");
-                      await axios
-                        .post("/api/BoxCapacity/DataLOT_AUTO", {
-                          dataList: {
-                            boxno: Box_NO,
-                            item: ItemNew,
-                          },
-                        })
-                        .then(async (response) => {
-                          let LOT = response.data;
-                          if (response.data.length > 0) {
+                    if (result.isConfirmed) {
+                      const result2 = await Swal.fire({
+                        icon: "warning",
+                        text: "Are you sure you want to auto calculate packing ?",
+                        showCancelButton: true,
+                        confirmButtonText: "OK",
+                        cancelButtonText: "Cancel",
+                      });
+
+                      if (result2.isConfirmed) {
+                        showLoading("กำลังบันทึกข้อมูล...");
+                        await axios
+                          .post("/api/BoxCapacity/DataLOT_AUTO", {
+                            dataList: {
+                              boxno: Box_NO,
+                              item: ItemNew,
+                            },
+                          })
+                          .then(async (response) => {
+                            let LOT = response.data;
+                            if (response.data.length > 0) {
+                              await axios
+                                .post("/api/BoxCapacity/DataMAX_DATE_AUTO", {
+                                  dataList: {
+                                    lotno: LOT || "",
+                                    item: ItemNew,
+                                  },
+                                })
+                                .then((response) => {
+                                  Max_DATE = response.data;
+                                  if (Max_DATE.length > 0) {
+                                    Max_DATE = "";
+                                  } else {
+                                    Max_DATE = Max_DATE;
+                                  }
+                                });
+                            } else {
+                              Max_DATE = "";
+                            }
+                            Remain_QTY = FullBoxQty - PackQty;
+
                             await axios
-                              .post("/api/BoxCapacity/DataMAX_DATE_AUTO", {
+                              .post("/api/BoxCapacity/LotNo", {
                                 dataList: {
-                                  lotno: LOT || "",
-                                  item: ItemNew,
+                                  product: ItemNew.trim().toUpperCase(),
                                 },
                               })
-                              .then((response) => {
-                                Max_DATE = response.data;
-                                if (Max_DATE.length > 0) {
-                                  Max_DATE = "";
-                                } else {
-                                  Max_DATE = Max_DATE;
+                              .then(async (response) => {
+                                Data = response.data;
+                                let goodQtyArray = [];
+                                let lotNoArray = [];
+
+                                Data.forEach((item) => {
+                                  goodQtyArray.push(item.GOOD_QTY);
+                                  lotNoArray.push(item.LOT_NO);
+                                });
+                                if (Data.length > 0) {
+                                  let rec;
+                                  do {
+                                    let qty = goodQtyArray.shift(); // เก็บค่าของ qty
+                                    let lot = lotNoArray.shift(); // เก็บค่าของ lotno
+                                    await axios
+                                      .post(
+                                        "/api/BoxCapacity/DataMAX_SEQ_AUTO",
+                                        {
+                                          dataList: {
+                                            item: ItemNew,
+                                            boxno: Box_NO,
+                                          },
+                                        }
+                                      )
+                                      .then(async (response) => {
+                                        rec = response.data[0].MAX_SEQ;
+                                      });
+                                    if (qty > Remain_QTY) {
+                                      await axios.post(
+                                        "/api/BoxCapacity/INS_UP_AUTO_PACK1",
+                                        {
+                                          dataList: {
+                                            item: ItemNew,
+                                            boxno: Box_NO,
+                                            maxseq: rec,
+                                            lot_no: lot,
+                                            remain_qty: Remain_QTY,
+                                            packdate: Packdate,
+                                          },
+                                        }
+                                      );
+                                      Remain_QTY = 0;
+                                    } else {
+                                      await axios.post(
+                                        "/api/BoxCapacity/INS_UP_AUTO_PACK2",
+                                        {
+                                          dataList: {
+                                            item: ItemNew,
+                                            boxno: Box_NO,
+                                            maxseq: rec,
+                                            lot_no: lot,
+                                            qty_pack: qty,
+                                            packdate: Packdate,
+                                          },
+                                        }
+                                      );
+
+                                      Remain_QTY = Remain_QTY - qty;
+                                      rec = rec + 1;
+                                    }
+                                  } while (Remain_QTY > 0);
                                 }
                               });
-                          } else {
-                            Max_DATE = "";
-                          }
-                          Remain_QTY = FullBoxQty - PackQty;
-
+                            // setPackQty(FullBoxQty);
+                          });
+                        await axios
+                          .post("/api/BoxCapacity/UpdateAutoSts", {
+                            dataList: {
+                              item: ItemNew,
+                              date: Max_DATE,
+                            },
+                          })
+                          .then(async (response) => {});
+                        await GetDataPacking(ItemNew);
+                        // await Search();
+                        hideLoading();
+                      } else if (result2.isDismissed) {
+                        hideLoading();
+                        return;
+                      }
+                    } else if (result.isDismissed) {
+                      hideLoading();
+                      return;
+                    }
+                  } else {
+                    if (check != 1) {
+                      showLoading("กำลังบันทึกข้อมูล...");
+                    }
+                    await axios
+                      .post("/api/BoxCapacity/DataLOT_AUTO", {
+                        dataList: {
+                          boxno: Box_NO,
+                          item: ItemNew,
+                        },
+                      })
+                      .then(async (response) => {
+                        let LOT = response.data;
+                        if (response.data.length > 0) {
                           await axios
-                            .post("/api/BoxCapacity/LotNo", {
+                            .post("/api/BoxCapacity/DataMAX_DATE_AUTO", {
                               dataList: {
-                                product: ItemNew.trim().toUpperCase(),
+                                lotno: LOT || "",
+                                item: ItemNew,
                               },
                             })
-                            .then(async (response) => {
-                              Data = response.data;
-                              let goodQtyArray = [];
-                              let lotNoArray = [];
+                            .then((response) => {
+                              Max_DATE = response.data;
+                              if (Max_DATE.length > 0) {
+                                Max_DATE = "";
+                              } else {
+                                Max_DATE = Max_DATE;
+                              }
+                            });
+                        } else {
+                          Max_DATE = "";
+                        }
+                        Remain_QTY = FullBoxQty - PackQty;
+                        await axios
+                          .post("/api/BoxCapacity/LotNo", {
+                            dataList: {
+                              product: ItemNew.trim().toUpperCase(),
+                            },
+                          })
+                          .then(async (response) => {
+                            Data = response.data;
+                            let goodQtyArray = [];
+                            let lotNoArray = [];
 
-                              Data.forEach((item) => {
-                                goodQtyArray.push(item.GOOD_QTY);
-                                lotNoArray.push(item.LOT_NO);
-                              });
-                              if (Data.length > 0) {
-                                let rec;
-                                do {
-                                  let qty = goodQtyArray.shift(); // เก็บค่าของ qty
-                                  let lot = lotNoArray.shift(); // เก็บค่าของ lotno
-                                  await axios
-                                    .post("/api/BoxCapacity/DataMAX_SEQ_AUTO", {
+                            Data.forEach((item) => {
+                              goodQtyArray.push(item.GOOD_QTY);
+                              lotNoArray.push(item.LOT_NO);
+                            });
+                            if (Data.length > 0) {
+                              let rec;
+                              do {
+                                let qty = goodQtyArray.shift(); // เก็บค่าของ qty
+                                let lot = lotNoArray.shift(); // เก็บค่าของ lotno
+                                await axios
+                                  .post("/api/BoxCapacity/DataMAX_SEQ_AUTO", {
+                                    dataList: {
+                                      item: ItemNew,
+                                      boxno: Box_NO,
+                                    },
+                                  })
+                                  .then(async (response) => {
+                                    rec = response.data[0].MAX_SEQ;
+                                  });
+                                if (qty > Remain_QTY) {
+                                  await axios.post(
+                                    "/api/BoxCapacity/INS_UP_AUTO_PACK1",
+                                    {
                                       dataList: {
                                         item: ItemNew,
                                         boxno: Box_NO,
+                                        maxseq: rec,
+                                        lot_no: lot,
+                                        remain_qty: Remain_QTY,
+                                        packdate: Packdate,
                                       },
-                                    })
-                                    .then(async (response) => {
-                                      rec = response.data[0].MAX_SEQ;
-                                    });
-                                  if (qty > Remain_QTY) {
-                                    await axios.post(
-                                      "/api/BoxCapacity/INS_UP_AUTO_PACK1",
-                                      {
-                                        dataList: {
-                                          item: ItemNew,
-                                          boxno: Box_NO,
-                                          maxseq: rec,
-                                          lot_no: lot,
-                                          remain_qty: Remain_QTY,
-                                          packdate: Packdate,
-                                        },
-                                      }
-                                    );
-                                    Remain_QTY = 0;
-                                  } else {
+                                    }
+                                  );
+                                  Remain_QTY = 0;
+                                } else {
+                                  if (
+                                    qty !== undefined &&
+                                    qty !== null &&
+                                    qty !== ""
+                                  ) {
                                     await axios.post(
                                       "/api/BoxCapacity/INS_UP_AUTO_PACK2",
                                       {
@@ -1537,323 +1668,183 @@ function fn_Box_Search() {
                                         },
                                       }
                                     );
-
                                     Remain_QTY = Remain_QTY - qty;
                                     rec = rec + 1;
-                                 
+                                  } else {
+                                    break;
                                   }
-                                } while (Remain_QTY > 0);
-                              }
-                            });
-                          // setPackQty(FullBoxQty);
-                        });
-                      await axios
-                        .post("/api/BoxCapacity/UpdateAutoSts", {
-                          dataList: {
-                            item: ItemNew,
-                            date: Max_DATE,
-                          },
-                        })
-                        .then(async (response) => {});
-                      await GetDataPacking(ItemNew);
-                      // await Search();
-                      hideLoading();
-                    } else if (result2.isDismissed) {
-                      hideLoading();
-                      return;
-                    }
-                  } else if (result.isDismissed) {
-                    hideLoading();
-                    return;
-                  }
-                } else {
-                  showLoading("กำลังบันทึกข้อมูล...");
-                  await axios
-                    .post("/api/BoxCapacity/DataLOT_AUTO", {
-                      dataList: {
-                        boxno: Box_NO,
-                        item: ItemNew,
-                      },
-                    })
-                    .then(async (response) => {
-                      let LOT = response.data;
-                      if (response.data.length > 0) {
-                        await axios
-                          .post("/api/BoxCapacity/DataMAX_DATE_AUTO", {
-                            dataList: {
-                              lotno: LOT || "",
-                              item: ItemNew,
-                            },
-                          })
-                          .then((response) => {
-                            Max_DATE = response.data;
-                            if (Max_DATE.length > 0) {
-                              Max_DATE = "";
-                            } else {
-                              Max_DATE = Max_DATE;
+                                }
+                              } while (Remain_QTY > 0);
                             }
                           });
-                      } else {
-                        Max_DATE = "";
-                      }
-                      Remain_QTY = FullBoxQty - PackQty;
+                        // setPackQty(FullBoxQty);
+                      });
+
+                    await axios
+                      .post("/api/BoxCapacity/UpdateAutoSts", {
+                        dataList: {
+                          item: ItemNew,
+                          date: Max_DATE,
+                        },
+                      })
+                      .then(async (response) => {});
+                    await GetDataPacking(ItemNew);
+                    // await Search();
+                    // hideLoading();
+                  }
+                });
+            } else {
+              // กล่องที่เป็น 1 ไม่ต้องเช็คก่อน
+              hideLoading();
+              const result = await Swal.fire({
+                icon: "warning",
+                text: "Are you sure you want to auto calculate packing ?",
+              });
+
+              if (result.isConfirmed) {
+                showLoading("กำลังบันทึกข้อมูล...");
+                check = 1;
+                await axios
+                  .post("/api/BoxCapacity/DataLOT_AUTO", {
+                    dataList: {
+                      boxno: Box_NO,
+                      item: ItemNew,
+                    },
+                  })
+                  .then(async (response) => {
+                    let LOT = response.data;
+                    if (response.data.length > 0) {
                       await axios
-                        .post("/api/BoxCapacity/LotNo", {
+                        .post("/api/BoxCapacity/DataMAX_DATE_AUTO", {
                           dataList: {
-                            product: ItemNew.trim().toUpperCase(),
+                            lotno: LOT || "",
+                            item: ItemNew,
                           },
                         })
-                        .then(async (response) => {
-                          Data = response.data;
-                          let goodQtyArray = [];
-                          let lotNoArray = [];
+                        .then((response) => {
+                          Max_DATE = response.data;
+                          if (Max_DATE.length > 0) {
+                            Max_DATE = "";
+                          } else {
+                            Max_DATE = Max_DATE;
+                          }
+                        });
+                    } else {
+                      Max_DATE = "";
+                    }
+                    Remain_QTY = FullBoxQty - PackQty;
+                    await axios
+                      .post("/api/BoxCapacity/GetDataGOOD_QTY_FOR_AUTO", {
+                        dataList: {
+                          item: ItemNew,
+                          date: Max_DATE,
+                        },
+                      })
+                      .then(async (response) => {
+                        Data = response.data;
+                        let goodQtyArray = [];
+                        let lotNoArray = [];
 
-                          Data.forEach((item) => {
-                            goodQtyArray.push(item.GOOD_QTY);
-                            lotNoArray.push(item.LOT_NO);
-                          });
-                          if (Data.length > 0) {
-                            let rec;
-                            do {
-                              let qty = goodQtyArray.shift(); // เก็บค่าของ qty
-                              let lot = lotNoArray.shift(); // เก็บค่าของ lotno
-                              await axios
-                                .post("/api/BoxCapacity/DataMAX_SEQ_AUTO", {
+                        Data.forEach((item) => {
+                          goodQtyArray.push(item.GOOD_QTY);
+                          lotNoArray.push(item.LOT_NO);
+                        });
+                        if (Data.length > 0) {
+                          let rec;
+                          do {
+                            let qty = goodQtyArray.shift(); // เก็บค่าของ qty
+                            let lot = lotNoArray.shift(); // เก็บค่าของ lotno
+                            await axios
+                              .post("/api/BoxCapacity/DataMAX_SEQ_AUTO", {
+                                dataList: {
+                                  item: ItemNew,
+                                  boxno: Box_NO,
+                                },
+                              })
+                              .then(async (response) => {
+                                rec = response.data[0].MAX_SEQ;
+                              });
+                            if (qty > Remain_QTY) {
+                              await axios.post(
+                                "/api/BoxCapacity/INS_UP_AUTO_PACK1",
+                                {
                                   dataList: {
                                     item: ItemNew,
                                     boxno: Box_NO,
+                                    maxseq: rec,
+                                    lot_no: lot,
+                                    remain_qty: Remain_QTY,
+                                    packdate: Packdate,
                                   },
-                                })
-                                .then(async (response) => {
-                                  rec = response.data[0].MAX_SEQ;
-                                });
-                              if (qty > Remain_QTY) {
-                                await axios.post(
-                                  "/api/BoxCapacity/INS_UP_AUTO_PACK1",
-                                  {
-                                    dataList: {
-                                      item: ItemNew,
-                                      boxno: Box_NO,
-                                      maxseq: rec,
-                                      lot_no: lot,
-                                      remain_qty: Remain_QTY,
-                                      packdate: Packdate,
-                                    },
-                                  }
-                                );
-                                Remain_QTY = 0;
-                              } else {
-                                if (
-                                  qty !== undefined &&
-                                  qty !== null &&
-                                  qty !== ""
-                                ) {
-                                  await axios.post(
-                                    "/api/BoxCapacity/INS_UP_AUTO_PACK2",
-                                    {
-                                      dataList: {
-                                        item: ItemNew,
-                                        boxno: Box_NO,
-                                        maxseq: rec,
-                                        lot_no: lot,
-                                        qty_pack: qty,
-                                        packdate: Packdate,
-                                      },
-                                    }
-                                  );
-                                  Remain_QTY = Remain_QTY - qty;
-                                  rec = rec + 1;
-                                  
-                                } else {
-                                  break;
                                 }
-                              }
-                            } while (Remain_QTY > 0);
-                          }
-                        });
-                      // setPackQty(FullBoxQty);
-                    });
-
-                  await axios
-                    .post("/api/BoxCapacity/UpdateAutoSts", {
-                      dataList: {
-                        item: ItemNew,
-                        date: Max_DATE,
-                      },
-                    })
-                    .then(async (response) => {});
-                  await GetDataPacking(ItemNew);
-                  // await Search();
-                  // hideLoading();
-                }
-              });
-          } else {
-            // กล่องที่เป็น 1 ไม่ต้องเช็คก่อน
-            hideLoading();
-            const result = await Swal.fire({
-              icon: "warning",
-              text: "Are you sure you want to auto calculate packing ?",
-            });
-        
-            if (result.isConfirmed) {
-              showLoading("กำลังบันทึกข้อมูล...");
-              await axios
-                .post("/api/BoxCapacity/DataLOT_AUTO", {
-                  dataList: {
-                    boxno: Box_NO,
-                    item: ItemNew,
-                  },
-                })
-                .then(async (response) => {
-                  let LOT = response.data;
-                  if (response.data.length > 0) {
-                    await axios
-                      .post("/api/BoxCapacity/DataMAX_DATE_AUTO", {
-                        dataList: {
-                          lotno: LOT || "",
-                          item: ItemNew,
-                        },
-                      })
-                      .then((response) => {
-                        Max_DATE = response.data;
-                        if (Max_DATE.length > 0) {
-                          Max_DATE = "";
-                        } else {
-                          Max_DATE = Max_DATE;
+                              );
+                              Remain_QTY = 0;
+                            } else {
+                              await axios.post(
+                                "/api/BoxCapacity/INS_UP_AUTO_PACK2",
+                                {
+                                  dataList: {
+                                    item: ItemNew,
+                                    boxno: Box_NO,
+                                    maxseq: rec,
+                                    lot_no: lot,
+                                    qty_pack: qty,
+                                    packdate: Packdate,
+                                  },
+                                }
+                              );
+                              Remain_QTY = Remain_QTY - qty;
+                              rec = rec + 1;
+                            }
+                          } while (Remain_QTY > 0);
                         }
                       });
-                  } else {
-                    Max_DATE = "";
-                  }
-                  Remain_QTY = FullBoxQty - PackQty;
-                  await axios
-                    .post("/api/BoxCapacity/GetDataGOOD_QTY_FOR_AUTO", {
-                      dataList: {
-                        item: ItemNew,
-                        date: Max_DATE,
-                      },
-                    })
-                    .then(async (response) => {
-                      Data = response.data;
-                      let goodQtyArray = [];
-                      let lotNoArray = [];
+                    // setPackQty(FullBoxQty);
+                  });
+                await axios
+                  .post("/api/BoxCapacity/UpdateAutoSts", {
+                    dataList: {
+                      item: ItemNew,
+                      date: Max_DATE,
+                    },
+                  })
+                  .then(async (response) => {});
+                hideLoading();
 
-                      Data.forEach((item) => {
-                        goodQtyArray.push(item.GOOD_QTY);
-                        lotNoArray.push(item.LOT_NO);
-                      });
-                      if (Data.length > 0) {
-                        let rec;
-                        do {
-                          let qty = goodQtyArray.shift(); // เก็บค่าของ qty
-                          let lot = lotNoArray.shift(); // เก็บค่าของ lotno
-                          await axios
-                            .post("/api/BoxCapacity/DataMAX_SEQ_AUTO", {
-                              dataList: {
-                                item: ItemNew,
-                                boxno: Box_NO,
-                              },
-                            })
-                            .then(async (response) => {
-                              rec = response.data[0].MAX_SEQ;
-                            });
-                          if (qty > Remain_QTY) {
-                            await axios.post(
-                              "/api/BoxCapacity/INS_UP_AUTO_PACK1",
-                              {
-                                dataList: {
-                                  item: ItemNew,
-                                  boxno: Box_NO,
-                                  maxseq: rec,
-                                  lot_no: lot,
-                                  remain_qty: Remain_QTY,
-                                  packdate: Packdate,
-                                },
-                              }
-                            );
-                            Remain_QTY = 0;
-                          } else {
-                            await axios.post(
-                              "/api/BoxCapacity/INS_UP_AUTO_PACK2",
-                              {
-                                dataList: {
-                                  item: ItemNew,
-                                  boxno: Box_NO,
-                                  maxseq: rec,
-                                  lot_no: lot,
-                                  qty_pack: qty,
-                                  packdate: Packdate,
-                                },
-                              }
-                            );
-                            Remain_QTY = Remain_QTY - qty;
-                            rec = rec + 1;
-                          }
-                        } while (Remain_QTY > 0);
-                      }
-                    });
-                  setPackQty(FullBoxQty);
-                });
-              await axios
-                .post("/api/BoxCapacity/UpdateAutoSts", {
-                  dataList: {
-                    item: ItemNew,
-                    date: Max_DATE,
-                  },
-                })
-                .then(async (response) => {});
-              hideLoading();
-
-              // await Search();
+                // await Search();
+              }
             }
+          } else {
+            hideLoading();
+            return;
           }
         } else {
           hideLoading();
-          return;
+          break;
         }
-      }else{
-        hideLoading();
-        break;
       }
     }
-    }
     hideLoading();
-    
     await GetDataLotPacking1(ItemNew, DataBox);
   };
-
   const exportToExcel = async (data, namefile) => {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("Sheet 1");
-
-    // เพิ่มคอลัมน์
     sheet.columns = [
       { header: "LOT NO", key: "LOT_NO", width: 20 },
       { header: "GOOD QTY", key: "GOOD_QTY", width: 20 },
     ];
-
-    // เพิ่มข้อมูล
     data.forEach((item) => {
       sheet.addRow({
         LOT_NO: item.LOT_NO,
         GOOD_QTY: item.GOOD_QTY,
       });
     });
-
-    // กำหนดสไตล์ให้กับเซลล์ (ถ้าต้องการ)
     sheet.eachRow((row, rowNumber) => {
       row.eachCell((cell, colNumber) => {
         cell.font = { size: 12 };
-        // cell.border = {
-        //   top: { style: 'thin' },
-        //   left: { style: 'thin' },
-        //   bottom: { style: 'thin' },
-        //   right: { style: 'thin' },
-        // };
       });
     });
-
-    // เขียนไฟล์เป็น buffer และบันทึก
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: "application/octet-stream" });
     saveAs(blob, `${namefile}.xlsx`);
@@ -1891,7 +1882,6 @@ function fn_Box_Search() {
   };
   return {
     columns,
-    NewPopup,
     NewBoxCapacity,
     handleOk,
     handleCancel,
@@ -1900,9 +1890,7 @@ function fn_Box_Search() {
     ChooseMenu,
     radioselect,
     GenPack,
-    openManual,
     LotPacking,
-    tableReceive,
     ddlItem,
     ddlProduct,
     LotFrom,
@@ -1915,9 +1903,7 @@ function fn_Box_Search() {
     setPackingDateTo,
     BoxNoSeacrh,
     setBoxNoSeacrh,
-    PackType,
     Search,
-    ddlItem,
     setddlProduct,
     handleProduct,
     DataSearch,
@@ -1942,20 +1928,20 @@ function fn_Box_Search() {
     Seq,
     ddlLot,
     selectddlLot,
-    setselectddlLot,
-    Remain_qty,
     Pack_qtyLot,
     handleLotNo,
+    Remain_qty,
     DataPacking,
     SaveLotPacking,
     setPack_qtyLot,
     DataLotPacking,
     tableReceive,
     handleDelete,
+    openManual,
     PageInsert,
     BtnExport,
-    BtnExportReceive,
     DataLotReceive,
+    BtnExportReceive,
     RequestTotal,
     setPackQty,
     setRequestTotal,
@@ -1963,6 +1949,7 @@ function fn_Box_Search() {
     setReError,
     LotPacking1,
     DataLotPacking1,
+    
   };
 }
 
