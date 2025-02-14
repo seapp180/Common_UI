@@ -618,6 +618,7 @@ function fn_Box_Search() {
     setCheckStatus(status);
     setRemain_qty("");
     setopenManual(false);
+    setradioselect("Manual");
     const itemsearch1 = itemsearch.split("/")[0];
     setIsModalOpen(true);
     await axios
