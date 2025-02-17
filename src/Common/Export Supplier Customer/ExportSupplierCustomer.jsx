@@ -39,7 +39,7 @@ const ExportSupplierCustomer = () => {
       <div style={{ display: "flex", alignItems: "center" }}>
         <h2 className="TitlePage_h2">Export Supplier/Customer (Audit)</h2>
       </div>
-      <Card style={{ margin: '30px', backgroundColor: '#fff' }}>
+      <Card style={{ margin: '20px 30px', backgroundColor: '#fff' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ flex: 1, marginLeft: '20px' }}>
             For : &nbsp;
