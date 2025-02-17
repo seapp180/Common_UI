@@ -47,6 +47,9 @@ function fn_Box_Search() {
   const [RequestTotal, setRequestTotal] = useState("");
   const [ReError, setReError] = useState("");
   const [DataLotPacking1, setDataLotPacking1] = useState([]);
+  const [ItemError, setItemError] = useState("");
+  const [FullError, setFullError] = useState("");
+  const [PackbyError, setPackbyError] = useState("");
   let PackType = "";
   let pack_qty;
   const { showLoading, hideLoading } = useLoading();
@@ -650,6 +653,28 @@ function fn_Box_Search() {
   const GenPack = async (TypePack) => {
     PackType = TypePack;
     if (TypePack == "ManaulPack") {
+      if (ItemNew == "") {
+        await Swal.fire({
+          icon: "error",
+          text: "กรุณากรอกข้อมูลใน Item",
+        });
+        setItemError(true);
+        throw new Error("กรุณากรอกข้อมูลใน Item");
+      } else if (FullBoxQty == "") {
+        await Swal.fire({
+          icon: "error",
+          text: "กรุณากรอกข้อมูลใน Full Box Qty",
+        });
+        setFullError(true);
+        throw new Error("กรุณากรอกข้อมูลใน Full Box Qty");
+      } else if (PackBy == "") {
+        await Swal.fire({
+          icon: "error",
+          text: "กรุณากรอกข้อมูลใน Packing By",
+        });
+        setPackbyError(true);
+        throw new Error("กรุณากรอกข้อมูลใน Packing By");
+      }
       showLoading("กำลังบันทึกข้อมูล...");
       if (PageInsert == "NewBox") {
         await SaveBoxMainTain("NEW");
@@ -665,7 +690,37 @@ function fn_Box_Search() {
         hideLoading();
       }
     } else if (TypePack == "AutoPack") {
+      if (ItemNew == "") {
+        await Swal.fire({
+          icon: "error",
+          text: "กรุณากรอกข้อมูลใน Item",
+        });
+        setItemError(true);
+        throw new Error("กรุณากรอกข้อมูลใน Item");
+      } else if (FullBoxQty == "") {
+        await Swal.fire({
+          icon: "error",
+          text: "กรุณากรอกข้อมูลใน Full Box Qty",
+        });
+        setFullError(true);
+        throw new Error("กรุณากรอกข้อมูลใน Full Box Qty");
+      } else if (PackBy == "") {
+        await Swal.fire({
+          icon: "error",
+          text: "กรุณากรอกข้อมูลใน Packing By",
+        });
+        setPackbyError(true);
+        throw new Error("กรุณากรอกข้อมูลใน Packing By");
+      }
       if (PageInsert == "NewBox") {
+        if (ItemNew == "") {
+          await Swal.fire({
+            icon: "error",
+            text: "กรุณากรอกข้อมูลใน Item",
+          });
+          setItemError(true);
+          throw new Error("กรุณากรอกข้อมูลใน Item");
+        }
         await SaveBoxMainTain("NEW");
         await DataManual(ItemNew, BoxNo);
         await DataReceive(ItemNew);
@@ -685,11 +740,37 @@ function fn_Box_Search() {
       hideLoading();
     } else if (TypePack == "AutoGenerate") {
       if (PageInsert == "NewBox") {
-        if (RequestTotal == "") {
-          alert("กรุณากรอกจำนวนกล่องที่ต้องการแพค");
+        if (ItemNew == "") {
+          await Swal.fire({
+            icon: "error",
+            text: "กรุณากรอกข้อมูลใน Item",
+          });
+          setItemError(true);
+          throw new Error("กรุณากรอกข้อมูลใน Item");
+        } else if (RequestTotal == "") {
+          await Swal.fire({
+            icon: "error",
+            text: "กรุณากรอกจำนวนกล่องที่ต้องการแพค",
+          });
           setReError(true);
-          return;
+          throw new Error("กรุณากรอกจำนวนกล่องที่ต้องการแพค");
+          
+        } else if (FullBoxQty == "") {
+          await Swal.fire({
+            icon: "error",
+            text: "กรุณากรอกข้อมูลใน Full Box Qty",
+          });
+          setFullError(true);
+          throw new Error("กรุณากรอกข้อมูลใน Full Box Qty");
+        } else if (PackBy == "") {
+          await Swal.fire({
+            icon: "error",
+            text: "กรุณากรอกข้อมูลใน Packing By",
+          });
+          setPackbyError(true);
+          throw new Error("กรุณากรอกข้อมูลใน Packing By");
         }
+
         await DataReceive(ItemNew);
         let datapacking = await GetDataPacking(ItemNew);
         await GetAutoGenerate(ItemNew, BoxNo, "NEW", datapacking);
@@ -1950,7 +2031,12 @@ function fn_Box_Search() {
     setReError,
     LotPacking1,
     DataLotPacking1,
-    
+    ItemError,
+    setItemError,
+    FullError,
+    setFullError,
+    PackbyError,
+    setPackbyError,
   };
 }
 

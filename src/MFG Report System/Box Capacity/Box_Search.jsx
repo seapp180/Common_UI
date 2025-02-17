@@ -82,8 +82,12 @@ function Box_Search() {
     setReError,
     LotPacking1,
     DataLotPacking1,
-    
-    
+    ItemError,
+    setItemError,
+    FullError,
+    setFullError,
+    PackbyError,
+    setPackbyError,
   } = fn_Box_Search();
 
   return (
@@ -335,8 +339,8 @@ function Box_Search() {
             style={{
               overflowX: "hidden",
               overflowY: "scroll",
-              height: "90vh", 
-              width: "90vw", 
+              height: "90vh",
+              width: "90vw",
             }}
           >
             <div style={{ flex: 1, marginRight: "10px" }}>
@@ -360,12 +364,22 @@ function Box_Search() {
                     <td>
                       <Input
                         value={ItemNew.trim() == "" ? "" : ItemNew}
-                        onChange={(e) => setItemNew(e.target.value)}
+                        // onChange={(e) => setItemNew(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === "" || value === "null") {
+                            setItemError(true);
+                          } else {
+                            setItemError(false);
+                          }
+                          setItemNew(value);
+                        }}
                         style={{
                           width: "200px",
                           display: "block",
                           marginTop: "5px",
                           marginLeft: "5px",
+                          borderColor: ItemError ? "red" : "",
                         }}
                         placeholder="Input Item"
                         onKeyDown={(e) => {
@@ -374,6 +388,9 @@ function Box_Search() {
                           }
                         }}
                       />
+                      {ItemError && (
+                        <span style={{ color: "red" }}>*กรุณากรอก Item</span>
+                      )}
                     </td>
                     <td style={{ textAlign: "right" }}>Product :</td>
                     <td>
@@ -562,9 +579,15 @@ function Box_Search() {
                             display: "block",
                             marginTop: "5px",
                             marginLeft: "5px",
+                            borderColor: FullError ? "red" : "",
                           }}
                           placeholder="Input Full Box Qty"
                         />
+                        {FullError && (
+                          <span style={{ color: "red" }}>
+                            *กรุณากรอก Full Box Qty
+                          </span>
+                        )}
                       </td>
                     </tr>
                   )}
@@ -593,9 +616,15 @@ function Box_Search() {
                             display: "block",
                             marginTop: "5px",
                             marginLeft: "5px",
+                            borderColor: FullError ? "red" : "",
                           }}
                           placeholder="Input Full Box Qty"
                         />
+                        {FullError && (
+                          <span style={{ color: "red" }}>
+                            *กรุณากรอก Full Box Qty
+                          </span>
+                        )}
                       </td>
                       <td style={{ textAlign: "right" }}>Total Sheet Qty :</td>
                       <td>
@@ -645,15 +674,30 @@ function Box_Search() {
                     <td>
                       <Input
                         value={PackBy}
-                        onChange={(e) => setPackBy(e.target.value)}
+                        // onChange={(e) => setPackBy(e.target.value)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === "" || value === "null") {
+                            setPackbyError(true);
+                          } else {
+                            setPackbyError(false);
+                          }
+                          setPackBy(value);
+                        }}
                         style={{
                           width: "200px",
                           display: "block",
                           marginTop: "5px",
                           marginLeft: "5px",
+                          borderColor: PackbyError ? "red" : "",
                         }}
                         placeholder="Input Packing By"
                       />
+                        {PackbyError && (
+                          <span style={{ color: "red" }}>
+                            *กรุณากรอก Packing By
+                          </span>
+                        )}
                     </td>
                   </tr>
                   <tr>
@@ -889,7 +933,6 @@ function Box_Search() {
                   textAlign: "center",
                   backgroundColor: "#f6f8ee",
                   marginTop: "5px",
-                  
                 }}
               >
                 <h3 className="BoxmainName">Lot Packing</h3>
@@ -1055,7 +1098,7 @@ function Box_Search() {
                 dataSource={DataLotReceive}
                 bordered
                 pagination={true}
-                scroll={{ y: 700 }} 
+                scroll={{ y: 700 }}
               ></Table>
             </Card>
           </div>
