@@ -41,13 +41,13 @@ function fn_Export_Supplier_Customer() {
     axios
       .post("/api/Export_Supplier_Customer/GetdataExport", {
       Sl_for: Sl_for,
-      Add_date: Add_Date ? Add_Date.format("YYYY/MM/DD") : null,
-      To_date: To_Date ? To_Date.format("YYYY/MM/DD") : null,
+      Add_date: Add_Date ? Add_Date.format("YYYY/MM/DD") : '',
+      To_date: To_Date ? To_Date.format("YYYY/MM/DD") : '',
       Id_code: ID_Code,
       Name: Name,
       })
       .then((res) => {
-      console.log("GetdataExport", res.data);
+    
       if (res.data.length > 0) {
         
          exportToExcel(res.data, columns);

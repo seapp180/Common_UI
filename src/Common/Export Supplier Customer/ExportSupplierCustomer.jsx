@@ -34,10 +34,6 @@ const ExportSupplierCustomer = () => {
     handleReset,
     btn_Export
   } = fn_Export_Supplier_Customer();
-  console.log(Add_Date,'dateee')
-
-
-
   return (
     <Content>
       <div style={{ display: "flex", alignItems: "center" }}>
