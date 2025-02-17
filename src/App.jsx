@@ -18,7 +18,7 @@ import PoSummary from "./Common/Zpo/PO Report/PoSummary";
 import T2D_BarcodeOutput from "./Condition System/OQC/2D_BarCodeOutput/T2D_BarcodeOutput";
 import T2D_BarCodeConfirm from "./Condition System/OQC/2D_BarCodeConfirm/T2D_BarCodeConfirm";
 import T2D_BarcodeReport from "./Condition System/OQC/2D_BarCodeReport/T2D_BarcodeReport";
-
+import ExportSupplier from "./Common/Export Supplier Customer/ExportSupplierCustomer";
 const { Content } = Layout;
 // const backendUrl = import.meta.env.VITE_SERVICE_URL;
 // axios.defaults.baseURL = backendUrl;
@@ -54,6 +54,10 @@ const App = () => {
                   <Route
                     path="/CommonSystem/PoSummary"
                     element={<PoSummary />}
+                  />
+                   <Route
+                    path="/CommonSystem/ExportSupplierCustomer"
+                    element={<ExportSupplier />}
                   />
                  
                   {/*--------------------CONDITION SYSTEM--------------------*/}

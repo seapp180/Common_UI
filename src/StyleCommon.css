@@ -1,54 +1,54 @@
-.ContentAPP{
-min-height: 100vh;
-font-family:Varela Round, sans-serif ;
-margin: 0px 16px 0 !important;
-overflow:initial ;
-
+.ContentAPP {
+  min-height: 100vh;
+  font-family: Varela Round, sans-serif;
+  margin: 0px 16px 0 !important;
+  overflow: initial;
 }
 
 .TitlePage_h2 {
-    background-color: #CA965C;
-    border-radius: 25px;
-    color: #ffffff;
-    padding: 10px 20px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); margin-left: 15px;
+  background-color: #ca965c;
+  border-radius: 25px;
+  color: #ffffff;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-left: 15px;
 }
 
-.Header{
-position: fixed;
-top: 0;
-left: 0;
-right: 0;
-z-index: 1000;
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 0 16px;
-background: #705C53;    
+.Header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: #705c53;
 }
 
-.TitleHeader{
-    display: flex;
-    align-items: center;
-    margin-left: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    color: #fff;
-    font-family: Varela Round, sans-serif ;
+.TitleHeader {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+  font-family: Varela Round, sans-serif;
 }
 
-.Header-zPO{
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 16px;
-    /* background: #705C53;     */
-    }
+.Header-zPO {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  /* background: #705C53;     */
+}
