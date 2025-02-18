@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Column from "antd/es/table/Column";
 import Swal from "sweetalert2";
 import * as XLSX from "xlsx";
-import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-import { Button, Tag } from "antd";
 import { useLoading } from "../../component/loading/fn_loading";
-import {
-  CloseOutlined,
-  SaveOutlined,
-  UploadOutlined,
-  CloseCircleOutlined,
-  EditOutlined,
-} from "@ant-design/icons";
 
 function fn_Export_Supplier_Customer() {
   const { showLoading, hideLoading } = useLoading();
@@ -22,14 +12,16 @@ function fn_Export_Supplier_Customer() {
   const [To_Date, setTo_Date] = useState(null);
   const [ID_Code, setID_Code] = useState("");
   const [Name, setName] = useState("");
-  const handleReset = () => {
+
+  const handleReset =async () => {
     setSl_for("Supplier");
     setAdd_Date(null);
     setTo_Date(null);
     setID_Code("");
     setName("");
   };
-  const btn_Export = () => {
+
+  const btn_Export =async  () => {
     if(Add_Date === null || To_Date === null){
       Swal.fire({
         icon: "error",
@@ -38,7 +30,7 @@ function fn_Export_Supplier_Customer() {
     }else{
 
     showLoading('Exporting...');
-    axios
+   await axios
       .post("/api/Export_Supplier_Customer/GetdataExport", {
       Sl_for: Sl_for,
       Add_date: Add_Date ? Add_Date.format("YYYY/MM/DD") : '',
@@ -46,25 +38,26 @@ function fn_Export_Supplier_Customer() {
       Id_code: ID_Code,
       Name: Name,
       })
-      .then((res) => {
+      .then(async(res) => {
     
       if (res.data.length > 0) {
         
-         exportToExcel(res.data, columns);
+         await exportToExcel(res.data, columns);
+        
          hideLoading();
       } else {
         Swal.fire({
         icon: "error",
         title: "No data found!",
-        // text: "No data found!",
         });
         hideLoading();
       }
       });
     }
+    await handleReset();
   };
 
-  const exportToExcel = (dataHeader, dataColumns) => {
+  const exportToExcel =async (dataHeader, dataColumns) => {
     const filteredColumns = dataColumns.filter(
       (col) => col.title !== "" && col.key !== null && col.title !== undefined
     );
