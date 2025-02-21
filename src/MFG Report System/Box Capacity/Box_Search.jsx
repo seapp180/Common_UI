@@ -925,15 +925,18 @@ function Box_Search() {
                 </Card>
               )}
 
+
               <Card
                 bodyStyle={{ paddingTop: 10 }}
-                style={{
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  textAlign: "center",
-                  backgroundColor: "#f6f8ee",
-                  marginTop: "5px",
-                }}
+                // style={{
+                //   flexDirection: "column",
+                //   alignItems: "flex-start",
+                //   textAlign: "center",
+                //   backgroundColor: "#f6f8ee",
+                //   marginTop: "5px",
+                  
+                // }}
+                className="CardLot"
               >
                 <h3 className="BoxmainName">Lot Packing</h3>
                 {radioselect == "Manual" && (

@@ -1,3 +1,12 @@
+.CardLot{
+  /* display: flex; */
+  /* flex-direction: column; */
+  align-items: flex-start;
+  text-align: center;
+  background-color: #f6f8ee;
+  margin-top: 5px;
+  padding: 0;
+}
 .tableSerachBox .ant-table-thead > tr > th {
   background-color: #71949e;
   color: white;
@@ -150,4 +159,20 @@
 .no-padding tr, .no-padding td {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+}
+@media (max-resolution: 96dpi) {
+  .CardLot {
+    height: 400px;
+  }
+
+  /* .SparechartCard {
+    height: 660px;
+  }
+
+  .SparetableData {
+    height: 550px;
+  }
+  .SpareTableDashboard th{
+    padding: 20px !important;
+  } */
 }
