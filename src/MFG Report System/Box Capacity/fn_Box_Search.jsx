@@ -54,7 +54,7 @@ function fn_Box_Search() {
   let pack_qty;
   const { showLoading, hideLoading } = useLoading();
   //useEffect
-  const fnItem = useRef([]);
+  // const fnItem = useRef([]);
   useEffect(() => {
     if (openManual == true) {
       scrollToTop();
@@ -81,9 +81,9 @@ function fn_Box_Search() {
             }
           });
       }
-      setTimeout(() => {
-        fnItem.current.focus();
-      }, 0);
+      // setTimeout(() => {
+      //   fnItem.current.focus();
+      // }, 0);
     } else if (Page == "ItemNew") {
       if (ItemNew != "") {
         await axios
@@ -148,9 +148,9 @@ function fn_Box_Search() {
             }
           });
       }
-      setTimeout(() => {
-        fnItem.current.focus();
-      }, 0);
+      // setTimeout(() => {
+      //   fnItem.current.focus();
+      // }, 0);
     }
     await GetDataPacking(ItemNew);
     hideLoading();
@@ -650,7 +650,161 @@ function fn_Box_Search() {
     await GetDataLotPacking(itemname, box_no);
     await DataReceive(itemname);
   };
+  // const GenPack = async (TypePack) => {
+  //   // Disable the button to prevent double-click
+  //   // document.getElementById("genPackButton").disabled = true;
+  
+  //   PackType = TypePack;
+  //   if (TypePack == "ManaulPack") {
+  //     if (ItemNew == "") {
+  //       await Swal.fire({
+  //         icon: "error",
+  //         text: "กรุณากรอกข้อมูลใน Item",
+  //       });
+  //       setItemError(true);
+  //       // throw new Error("กรุณากรอกข้อมูลใน Item");
+  //       return;
+  //     } else if (FullBoxQty == "") {
+  //       await Swal.fire({
+  //         icon: "error",
+  //         text: "กรุณากรอกข้อมูลใน Full Box Qty",
+  //       });
+  //       setFullError(true);
+  //       // throw new Error("กรุณากรอกข้อมูลใน Full Box Qty");
+  //       return;
+  //     } else if (PackBy == "") {
+  //       await Swal.fire({
+  //         icon: "error",
+  //         text: "กรุณากรอกข้อมูลใน Packing By",
+  //       });
+  //       setPackbyError(true);
+  //       // throw new Error("กรุณากรอกข้อมูลใน Packing By");
+  //       return;
+  //     }
+  //     showLoading("กำลังบันทึกข้อมูล...");
+  //     if (PageInsert == "NewBox") {
+  //       await SaveBoxMainTain("NEW");
+  //       await DataManual(ItemNew, BoxNo);
+  //       await DataReceive(ItemNew);
+  //       setopenManual(true);
+  //       hideLoading();
+  //     } else {
+  //       await SaveBoxMainTain("UPDATE");
+  //       await DataManual(ItemNew, BoxNo);
+  //       await DataReceive(ItemNew);
+  //       setopenManual(true);
+  //       hideLoading();
+  //     }
+  //   } else if (TypePack == "AutoPack") {
+  //     if (ItemNew == "") {
+  //       await Swal.fire({
+  //         icon: "error",
+  //         text: "กรุณากรอกข้อมูลใน Item",
+  //       });
+  //       setItemError(true);
+  //       // throw new Error("กรุณากรอกข้อมูลใน Item");
+  //       return;
+  //     } else if (FullBoxQty == "") {
+  //       await Swal.fire({
+  //         icon: "error",
+  //         text: "กรุณากรอกข้อมูลใน Full Box Qty",
+  //       });
+  //       setFullError(true);
+  //       // throw new Error("กรุณากรอกข้อมูลใน Full Box Qty");
+  //       return;
+  //     } else if (PackBy == "") {
+  //       await Swal.fire({
+  //         icon: "error",
+  //         text: "กรุณากรอกข้อมูลใน Packing By",
+  //       });
+  //       setPackbyError(true);
+  //       //throw new Error("กรุณากรอกข้อมูลใน Packing By");
+  //       return;
+  //     }
+  //     if (PageInsert == "NewBox") {
+  //       if (ItemNew == "") {
+  //         await Swal.fire({
+  //           icon: "error",
+  //           text: "กรุณากรอกข้อมูลใน Item",
+  //         });
+  //         setItemError(true);
+  //         throw new Error("กรุณากรอกข้อมูลใน Item");
+  //       }
+  //       await SaveBoxMainTain("NEW");
+  //       await DataManual(ItemNew, BoxNo);
+  //       await DataReceive(ItemNew);
+  //       await GetDataRemainQTY_AUTO(ItemNew, BoxNo);
+  //       setopenManual(false);
+  //       Swal.fire({
+  //         icon: "success",
+  //         text: "บันทึกข้อมูลสำเร็จ",
+  //       });
+  //     } else {
+  //       await SaveBoxMainTain("UPDATE");
+  //       await DataManual(ItemNew, BoxNo);
+  //       await DataReceive(ItemNew);
+  //       await GetDataRemainQTY_AUTO(ItemNew, BoxNo);
+  //       setopenManual(false);
+  //     }
+  //     hideLoading();
+  //   } else if (TypePack == "AutoGenerate") {
+  //     if (PageInsert == "NewBox") {
+  //       if (ItemNew == "") {
+  //         await Swal.fire({
+  //           icon: "error",
+  //           text: "กรุณากรอกข้อมูลใน Item",
+  //         });
+  //         setItemError(true);
+  //         // throw new Error("กรุณากรอกข้อมูลใน Item");
+  //         return;
+  //       } else if (RequestTotal == "") {
+  //         await Swal.fire({
+  //           icon: "error",
+  //           text: "กรุณากรอกจำนวนกล่องที่ต้องการแพค",
+  //         });
+  //         setReError(true);
+  //         // throw new Error("กรุณากรอกจำนวนกล่องที่ต้องการแพค");
+  //         return;             
+  //       } else if (FullBoxQty == "") {
+  //         await Swal.fire({
+  //           icon: "error",
+  //           text: "กรุณากรอกข้อมูลใน Full Box Qty",
+  //         });
+  //         setFullError(true);
+  //         // throw new Error("กรุณากรอกข้อมูลใน Full Box Qty");
+  //         return;
+  //       } else if (PackBy == "") {
+  //         await Swal.fire({
+  //           icon: "error",
+  //           text: "กรุณากรอกข้อมูลใน Packing By",
+  //         });
+  //         setPackbyError(true);
+  //         // throw new Error("กรุณากรอกข้อมูลใน Packing By");
+  //         return;
+  //       }
+  
+  //       await DataReceive(ItemNew);
+  //       let datapacking = await GetDataPacking(ItemNew);
+  //       await GetAutoGenerate(ItemNew, BoxNo, "NEW", datapacking);
+  //       setopenManual(false);
+  //       await Swal.fire({
+  //         icon: "success",
+  //         text: "บันทึกข้อมูลสำเร็จ",
+  //       });
+  //       hideLoading();
+  //     }
+  //   }
+  
+  //   // Re-enable the button after the operation is complete
+  //  // document.getElementById("genPackButton").disabled = false;
+  // };
   const GenPack = async (TypePack) => {
+    // Disable the button to prevent double-click
+    const button = document.getElementById("genPackButton");
+    if (button) {
+      button.disabled = true;
+    }
+  
     PackType = TypePack;
     if (TypePack == "ManaulPack") {
       if (ItemNew == "") {
@@ -659,21 +813,30 @@ function fn_Box_Search() {
           text: "กรุณากรอกข้อมูลใน Item",
         });
         setItemError(true);
-        throw new Error("กรุณากรอกข้อมูลใน Item");
+        if (button) {
+          button.disabled = false;
+        }
+        return;
       } else if (FullBoxQty == "") {
         await Swal.fire({
           icon: "error",
           text: "กรุณากรอกข้อมูลใน Full Box Qty",
         });
         setFullError(true);
-        throw new Error("กรุณากรอกข้อมูลใน Full Box Qty");
+        if (button) {
+          button.disabled = false;
+        }
+        return;
       } else if (PackBy == "") {
         await Swal.fire({
           icon: "error",
           text: "กรุณากรอกข้อมูลใน Packing By",
         });
         setPackbyError(true);
-        throw new Error("กรุณากรอกข้อมูลใน Packing By");
+        if (button) {
+          button.disabled = false;
+        }
+        return;
       }
       showLoading("กำลังบันทึกข้อมูล...");
       if (PageInsert == "NewBox") {
@@ -696,21 +859,30 @@ function fn_Box_Search() {
           text: "กรุณากรอกข้อมูลใน Item",
         });
         setItemError(true);
-        throw new Error("กรุณากรอกข้อมูลใน Item");
+        if (button) {
+          button.disabled = false;
+        }
+        return;
       } else if (FullBoxQty == "") {
         await Swal.fire({
           icon: "error",
           text: "กรุณากรอกข้อมูลใน Full Box Qty",
         });
         setFullError(true);
-        throw new Error("กรุณากรอกข้อมูลใน Full Box Qty");
+        if (button) {
+          button.disabled = false;
+        }
+        return;
       } else if (PackBy == "") {
         await Swal.fire({
           icon: "error",
           text: "กรุณากรอกข้อมูลใน Packing By",
         });
         setPackbyError(true);
-        throw new Error("กรุณากรอกข้อมูลใน Packing By");
+        if (button) {
+          button.disabled = false;
+        }
+        return;
       }
       if (PageInsert == "NewBox") {
         if (ItemNew == "") {
@@ -719,7 +891,10 @@ function fn_Box_Search() {
             text: "กรุณากรอกข้อมูลใน Item",
           });
           setItemError(true);
-          throw new Error("กรุณากรอกข้อมูลใน Item");
+          if (button) {
+            button.disabled = false;
+          }
+          return;
         }
         await SaveBoxMainTain("NEW");
         await DataManual(ItemNew, BoxNo);
@@ -746,31 +921,42 @@ function fn_Box_Search() {
             text: "กรุณากรอกข้อมูลใน Item",
           });
           setItemError(true);
-          throw new Error("กรุณากรอกข้อมูลใน Item");
+          if (button) {
+            button.disabled = false;
+          }
+          return;
         } else if (RequestTotal == "") {
           await Swal.fire({
             icon: "error",
             text: "กรุณากรอกจำนวนกล่องที่ต้องการแพค",
           });
           setReError(true);
-          throw new Error("กรุณากรอกจำนวนกล่องที่ต้องการแพค");
-          
+          if (button) {
+            button.disabled = false;
+          }
+          return;
         } else if (FullBoxQty == "") {
           await Swal.fire({
             icon: "error",
             text: "กรุณากรอกข้อมูลใน Full Box Qty",
           });
           setFullError(true);
-          throw new Error("กรุณากรอกข้อมูลใน Full Box Qty");
+          if (button) {
+            button.disabled = false;
+          }
+          return;
         } else if (PackBy == "") {
           await Swal.fire({
             icon: "error",
             text: "กรุณากรอกข้อมูลใน Packing By",
           });
           setPackbyError(true);
-          throw new Error("กรุณากรอกข้อมูลใน Packing By");
+          if (button) {
+            button.disabled = false;
+          }
+          return;
         }
-
+  
         await DataReceive(ItemNew);
         let datapacking = await GetDataPacking(ItemNew);
         await GetAutoGenerate(ItemNew, BoxNo, "NEW", datapacking);
@@ -782,7 +968,15 @@ function fn_Box_Search() {
         hideLoading();
       }
     }
+  
+    // Re-enable the button after the operation is complete
+    if (button) {
+      button.disabled = false;
+    }
   };
+  
+  // Add the button with the id "genPackButton"
+ 
   const Search = async () => {
     if (
       ddlProduct == "" &&
@@ -1342,11 +1536,16 @@ function fn_Box_Search() {
         });
       hideLoading();
     } else {
-      showLoading("กำลังบันทึกข้อมูล...");
-      Swal.fire({
+    
+      const result = await Swal.fire({
         icon: "warning",
-        text: "Are you sure you want to auto calculate packing ?",
+        text: "Are you sure you want to auto calculate packing?",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
       });
+      if (result.isConfirmed) {
+        showLoading("กำลังบันทึกข้อมูล...");
       await axios
         .post("/api/BoxCapacity/DataLOT_AUTO", {
           dataList: {
@@ -1446,6 +1645,7 @@ function fn_Box_Search() {
           },
         })
         .then(async (response) => {});
+      }
       await GetDataPacking(ItemNew);
       await GetDataLotPacking(ItemNew, BoxNo);
       await Search();

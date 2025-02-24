@@ -727,6 +727,7 @@ function Box_Search() {
                         {radioselect == "Manual" && (
                           <>
                             <Button
+                            id="genPackButton"
                               icon={<MedicineBoxOutlined />}
                               type="primary"
                               style={{
@@ -739,6 +740,7 @@ function Box_Search() {
                               Manual
                             </Button>
                             <Button
+                            id="genPackButton"
                               icon={<MedicineBoxOutlined />}
                               type="primary"
                               style={{
@@ -754,6 +756,7 @@ function Box_Search() {
                         {radioselect == "Auto" && (
                           <>
                             <Button
+                            id="genPackButton"
                               icon={<MedicineBoxOutlined />}
                               type="primary"
                               style={{
