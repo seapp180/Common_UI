@@ -19,6 +19,7 @@ import T2D_BarcodeOutput from "./Condition System/OQC/2D_BarCodeOutput/T2D_Barco
 import T2D_BarCodeConfirm from "./Condition System/OQC/2D_BarCodeConfirm/T2D_BarCodeConfirm";
 import T2D_BarcodeReport from "./Condition System/OQC/2D_BarCodeReport/T2D_BarcodeReport";
 import ExportSupplier from "./Common/Export Supplier Customer/ExportSupplierCustomer";
+// import BoxSelectionINV from "./MFG Report System/Box Selection By INV/BoxSelectINV";
 const { Content } = Layout;
 // const backendUrl = import.meta.env.VITE_SERVICE_URL;
 // axios.defaults.baseURL = backendUrl;
@@ -97,6 +98,11 @@ const App = () => {
                     path="/CommonSystem/MFGReportSystem/BoxCapacity"
                     element={<BoxCapacity />}
                   />
+                  {/* --------------------------------------------------------- */}
+                  {/* <Route
+                    path="/CommonSystem/MFGReportSystem/BoxCapacitySelection"
+                    element={<BoxSelectionINV />}
+                  /> */}
                   {/* --------------------------------------------------------- */}
                 </Routes>
               </div>

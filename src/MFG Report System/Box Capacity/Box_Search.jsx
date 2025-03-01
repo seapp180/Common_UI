@@ -340,14 +340,14 @@ function Box_Search() {
           <div
             style={{
               overflowX: "hidden",
-              overflowY: "scroll",
-              height: "90vh",
+              // overflowY: "scroll",
+              // height: "90vh",
               width: "90vw",
             }}
           >
             <div style={{ flex: 1, marginRight: "10px" }}>
               <Card className="BoxnoMaintain" bodyStyle={{ paddingTop: 10 }}>
-                <h3 className="BoxmainName">Box Maintain</h3>
+                <h3 className="BoxmainName" >Box Maintain</h3>
                 <Radio.Group
                   onChange={ChooseMenu}
                   value={radioselect}
@@ -1001,14 +1001,16 @@ function Box_Search() {
           >
             <Card
               style={{
-                display: "flex",
+                // display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 textAlign: "center",
                 backgroundColor: "#f6f8ee",
                 marginTop: "10px",
-                maxHeight: "300px",
+                // maxHeight: "350px",
                 width: "100%",
+              
+                height: "50%",
               }}
             >
               <div
@@ -1082,13 +1084,14 @@ function Box_Search() {
             </Card>
             <Card
               style={{
-                display: "flex",
+                // display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 textAlign: "center",
                 backgroundColor: "#f6f8ee",
                 marginTop: "10px",
                 width: "100%",
+                height: "50%",
               }}
             >
               <div
@@ -1123,7 +1126,38 @@ function Box_Search() {
                 dataSource={DataLotReceive}
                 bordered
                 pagination={true}
-                scroll={{ y: 700 }}
+                // scroll={{ y: 700 }}
+                scroll={{ y: 1000 }}
+                summary={(pageData) => {
+                  let totalQty = 0;
+                  pageData.forEach(({ GOOD_QTY }) => {
+                    totalQty += GOOD_QTY;
+                  });
+
+                  return (
+                    <Table.Summary.Row
+                      style={{ fontSize: "16px" }}
+                      className="no-padding"
+                    >
+                      <Table.Summary.Cell
+                        index={0}
+                        colSpan={2}
+                        align="right"
+                        className="no-padding"
+                      >
+                        Total
+                      </Table.Summary.Cell>
+                      <Table.Summary.Cell
+                        index={columns.length - 1}
+                        colSpan={1}
+                        align="center"
+                        className="no-padding"
+                      >
+                        {totalQty.toLocaleString()}
+                      </Table.Summary.Cell>
+                    </Table.Summary.Row>
+                  );
+                }}
               ></Table>
             </Card>
           </div>

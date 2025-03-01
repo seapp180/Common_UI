@@ -61,6 +61,7 @@
 .BoxnoMaintain {
   width: 100%;
   background-color: #f6f8ee;
+  /* padding-bottom:0 ; */
 }
 
 .CardManual {
