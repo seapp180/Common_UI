@@ -88,6 +88,8 @@ function Box_Search() {
     setFullError,
     PackbyError,
     setPackbyError,
+    Name_User,
+    handleUser
   } = fn_Box_Search();
 
   return (
@@ -108,7 +110,7 @@ function Box_Search() {
                 <Input
                   showSearch
                   value={ddlProduct.trim() == "" ? "" : ddlProduct}
-                  onChange={(e) => setddlProduct(e.target.value)}
+                  onChange={(e) => setddlProduct(e.target.value.toUpperCase())}
                   style={{
                     width: "200px",
                     display: "block",
@@ -366,7 +368,7 @@ function Box_Search() {
                         value={ItemNew.trim() == "" ? "" : ItemNew}
                         // onChange={(e) => setItemNew(e.target.value)}
                         onChange={(e) => {
-                          const value = e.target.value;
+                          const value = e.target.value.toUpperCase();
                           if (value === "" || value === "null") {
                             setItemError(true);
                           } else {
@@ -671,7 +673,8 @@ function Box_Search() {
                   )}
                   <tr>
                     <td style={{ textAlign: "right" }}>Packing By :</td>
-                    <td>
+                    <td colSpan={3}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
                       <Input
                         value={PackBy}
                         // onChange={(e) => setPackBy(e.target.value)}
@@ -684,8 +687,12 @@ function Box_Search() {
                           }
                           setPackBy(value);
                         }}
+                        // onBlur={handleUser}
+                        onBlur={(e) => {
+                          handleUser(e.target.value);
+                        }}
                         style={{
-                          width: "200px",
+                          width: "295px",
                           display: "block",
                           marginTop: "5px",
                           marginLeft: "5px",
@@ -693,12 +700,25 @@ function Box_Search() {
                         }}
                         placeholder="Input Packing By"
                       />
-                        {PackbyError && (
-                          <span style={{ color: "red" }}>
-                            *กรุณากรอก Packing By
-                          </span>
-                        )}
+                      {PackbyError && (
+                        <span style={{ color: "red" }}>
+                          *กรุณากรอก Packing By
+                        </span>
+                      )}
+                      <Input
+                      fullWidth
+                       value={Name_User}
+                        // onChange={(e) => setAnotherRemark(e.target.value)}
+                        style={{
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                        }}
+                        disabled
+                      />
+                    </div>
                     </td>
+                   
                   </tr>
                   <tr>
                     <td style={{ textAlign: "right" }}>Remark :</td>
@@ -727,7 +747,7 @@ function Box_Search() {
                         {radioselect == "Manual" && (
                           <>
                             <Button
-                            id="genPackButton"
+                              id="genPackButton"
                               icon={<MedicineBoxOutlined />}
                               type="primary"
                               style={{
@@ -740,7 +760,7 @@ function Box_Search() {
                               Manual
                             </Button>
                             <Button
-                            id="genPackButton"
+                              id="genPackButton"
                               icon={<MedicineBoxOutlined />}
                               type="primary"
                               style={{
@@ -756,7 +776,7 @@ function Box_Search() {
                         {radioselect == "Auto" && (
                           <>
                             <Button
-                            id="genPackButton"
+                              id="genPackButton"
                               icon={<MedicineBoxOutlined />}
                               type="primary"
                               style={{
@@ -928,7 +948,6 @@ function Box_Search() {
                 </Card>
               )}
 
-
               <Card
                 bodyStyle={{ paddingTop: 10 }}
                 // style={{
@@ -937,7 +956,7 @@ function Box_Search() {
                 //   textAlign: "center",
                 //   backgroundColor: "#f6f8ee",
                 //   marginTop: "5px",
-                  
+
                 // }}
                 className="CardLot"
               >
