@@ -631,9 +631,7 @@ function fn_Box_Search() {
     let itemname;
     let box_no;
     handleUser(packging_by);
-    await DataManual(itemname, box_no);
-    await GetDataLotPacking(itemname, box_no);
-    await DataReceive(itemname);
+   
     setPageInsert(page);
     setCheckStatus(status);
     setRemain_qty("");
@@ -663,6 +661,11 @@ function fn_Box_Search() {
         setPackBy(res.data[0].PACK_BY);
         setRemark(res.data[0].REMARK);
       });
+      showLoading("กำลังโหลดข้อมูล...");
+      await DataManual(itemname, box_no);
+      await GetDataLotPacking(itemname, box_no);
+      hideLoading();
+      await DataReceive(itemname);
     
     
   };
@@ -1049,7 +1052,6 @@ function fn_Box_Search() {
     await DataHeader(itemname, boxno);
   };
   const GetDataPacking = async (itemname) => {
-    console.log(itemname,'itemname')
     let data = [];
     await axios
     .post("/api/BoxCapacity/LotNo", {
@@ -2204,16 +2206,15 @@ function fn_Box_Search() {
         if(res.data.length > 0){
           setName_User(res.data[0].NAME_USER);
         }else{
-           Swal.fire({
-            icon: "error",
-            text: "ไม่พบข้อมูล User",
-          })
+          //  Swal.fire({
+          //   icon: "error",
+          //   text: "ไม่พบข้อมูล User",
+          // })
           setName_User("No User");
         }
         
       });
 
-    console.log(data, "eiei");
   };
   return {
     columns,
