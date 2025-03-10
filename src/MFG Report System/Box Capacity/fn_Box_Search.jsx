@@ -882,17 +882,17 @@ function fn_Box_Search() {
   ) => {
     let itemname;
     let box_no;
-    if(page === "UPDATE"){
-     setcheckradio("hidden")  
+    if (page === "UPDATE") {
+      setcheckradio("hidden");
     }
-   
+
     handleUser(packging_by, page);
     setPageInsert(page);
     setCheckStatus(status);
     setRemain_qty("");
     setopenManual(false);
     setradioselect("Manual");
-    
+
     const itemsearch1 = itemsearch.split("/")[0];
     setIsModalOpen(true);
     await axios
@@ -1245,10 +1245,10 @@ function fn_Box_Search() {
       setRequestTotal("");
       setName_User("");
       setselectddlProductNew("");
-      setopenManual(false)
-      setDataLotPacking([])
-      setDataPacking([])
-      setDataLotReceive([])
+      setopenManual(false);
+      setDataLotPacking([]);
+      setDataPacking([]);
+      setDataLotReceive([]);
     } else if (Page == "ResetManual") {
       setselectddlLot("");
       setRemain_qty("");
@@ -2315,7 +2315,7 @@ function fn_Box_Search() {
     const blob = new Blob([buffer], { type: "application/octet-stream" });
     saveAs(blob, `${namefile}.xlsx`);
   };
-  const handleUser = async (data,page) => {
+  const handleUser = async (data, page) => {
     await axios
       .post("/api/BoxCapacity/DATA_USER", {
         dataList: {
@@ -2421,11 +2421,9 @@ function fn_Box_Search() {
     setselectddlProductNew,
     dataNewProduct,
     ddlNewProduct,
-    PageInsert,
     setProductShow,
-    setselectddlProductNew,
     handleDeleteLot,
-    checkradio
+    checkradio,
   };
 }
 

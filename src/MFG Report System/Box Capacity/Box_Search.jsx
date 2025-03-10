@@ -92,12 +92,14 @@ function Box_Search() {
     handleUser,
     selectddlProduct,
     dataProduct,
+    setdataProduct,
     selectddlProductNew,
+    setselectddlProductNew,
     dataNewProduct,
     ddlNewProduct,
-    setselectddlProductNew,
+    setProductShow,
     handleDeleteLot,
-    checkradio
+    checkradio,
   } = fn_Box_Search();
 
   return (
@@ -382,17 +384,22 @@ function Box_Search() {
                   value={radioselect}
                   style={{ padding: "10px" }}
                 >
-                  <Radio style={{ marginLeft: "30px" }} 
-                  //  disabled={PageInsert === 'UPDATE' ? true : false}
-                   value={"Manual"}>
+                  <Radio
+                    style={{ marginLeft: "30px" }}
+                    //  disabled={PageInsert === 'UPDATE' ? true : false}
+                    value={"Manual"}
+                  >
                     Pack by Box
                   </Radio>
-                  {(checkradio !== "hidden" &&
-                  <Radio style={{ marginLeft: "30px" }} value={"Auto"}
-                //  disabled={ PageInsert === 'NewBox' ? false : true}  
-                  >
-                    Auto Generate Pack
-                  </Radio>)}
+                  {checkradio !== "hidden" && (
+                    <Radio
+                      style={{ marginLeft: "30px" }}
+                      value={"Auto"}
+                      //  disabled={ PageInsert === 'NewBox' ? false : true}
+                    >
+                      Auto Generate Pack
+                    </Radio>
+                  )}
                 </Radio.Group>
                 <table>
                   <tr>
@@ -411,33 +418,34 @@ function Box_Search() {
                         />
                       )}
                       {PageInsert == "NewBox" && (
-                     <Select
-                     showSearch
-                     
-                     value={selectddlProductNew}
-                     onSearch={(value, e) => {
-                       handleProduct({ label: value }, "ItemNew");
-                     }}
-                     onChange={(index,e) => {
-                       handleProduct(e, "ItemNew","SELECT");
-                       if (ItemError) {
-                        setItemError(false);
-                      }
-                     }}
-                     style={{
-                       width: "200px",
-                       display: "block",
-                       marginTop: "5px",
-                       marginLeft: "5px",
-                       borderColor: ItemError ? "red" : "",
-                     }}
-                     placeholder="Select Item"
-                     optionFilterProp="children"
-                     filterOption={(input, option) =>
-                       (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-                     }
-                     options={dataNewProduct}
-                   />
+                        <Select
+                          showSearch
+                          value={selectddlProductNew}
+                          onSearch={(value, e) => {
+                            handleProduct({ label: value }, "ItemNew");
+                          }}
+                          onChange={(index, e) => {
+                            handleProduct(e, "ItemNew", "SELECT");
+                            if (ItemError) {
+                              setItemError(false);
+                            }
+                          }}
+                          style={{
+                            width: "200px",
+                            display: "block",
+                            marginTop: "5px",
+                            marginLeft: "5px",
+                            borderColor: ItemError ? "red" : "",
+                          }}
+                          placeholder="Select Item"
+                          optionFilterProp="children"
+                          filterOption={(input, option) =>
+                            (option?.label ?? "")
+                              .toLowerCase()
+                              .includes(input.toLowerCase())
+                          }
+                          options={dataNewProduct}
+                        />
                       )}
                       {ItemError && (
                         <span style={{ color: "red" }}>*กรุณากรอก Item</span>
@@ -742,7 +750,7 @@ function Box_Search() {
                           // }}
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
-                              handleUser(e.target.value)
+                              handleUser(e.target.value);
                             }
                           }}
                           style={{
@@ -1060,7 +1068,11 @@ function Box_Search() {
                 {radioselect == "Manual" && (
                   <Table
                     columns={LotPacking}
-                    style={{ marginTop: "5px", marginLeft: "10px", height: "200px"}}
+                    style={{
+                      marginTop: "5px",
+                      marginLeft: "10px",
+                      height: "200px",
+                    }}
                     className="tableLot"
                     dataSource={DataLotPacking}
                     bordered
@@ -1134,49 +1146,49 @@ function Box_Search() {
               </div>
 
               <Table
-  columns={packingTable}
-  dataSource={DataPacking}
-  className="tablePacking"
-  style={{
-    height: "300px",
-    width: "100%",
-  }}
-  bordered
-  pagination={false}
-  scroll={{ y: 200 }}
-  summary={(pageData) => {
-    let totalQty = 0;
-    pageData.forEach(({ GOOD_QTY }) => {
-      totalQty += GOOD_QTY;
-    });
+                columns={packingTable}
+                dataSource={DataPacking}
+                className="tablePacking"
+                style={{
+                  height: "300px",
+                  width: "100%",
+                }}
+                bordered
+                pagination={false}
+                scroll={{ y: 200 }}
+                summary={(pageData) => {
+                  let totalQty = 0;
+                  pageData.forEach(({ GOOD_QTY }) => {
+                    totalQty += GOOD_QTY;
+                  });
 
-    return (
-      <Table.Summary fixed>
-        <Table.Summary.Row
-          style={{ fontSize: "16px" }}
-          className="no-padding"
-        >
-          <Table.Summary.Cell
-            index={0}
-            colSpan={2}
-            align="right"
-            className="no-padding"
-          >
-            Total
-          </Table.Summary.Cell>
-          <Table.Summary.Cell
-            index={columns.length - 1}
-            colSpan={1}
-            align="center"
-            className="no-padding"
-          >
-            {totalQty.toLocaleString()}
-          </Table.Summary.Cell>
-        </Table.Summary.Row>
-      </Table.Summary>
-    );
-  }}
-></Table>
+                  return (
+                    <Table.Summary fixed>
+                      <Table.Summary.Row
+                        style={{ fontSize: "16px" }}
+                        className="no-padding"
+                      >
+                        <Table.Summary.Cell
+                          index={0}
+                          colSpan={2}
+                          align="right"
+                          className="no-padding"
+                        >
+                          Total
+                        </Table.Summary.Cell>
+                        <Table.Summary.Cell
+                          index={columns.length - 1}
+                          colSpan={1}
+                          align="center"
+                          className="no-padding"
+                        >
+                          {totalQty.toLocaleString()}
+                        </Table.Summary.Cell>
+                      </Table.Summary.Row>
+                    </Table.Summary>
+                  );
+                }}
+              ></Table>
             </Card>
             <Card
               style={{
@@ -1217,7 +1229,7 @@ function Box_Search() {
               </div>
               <Table
                 columns={tableReceive}
-                style={{ marginTop: "5px",height: "150px", width: "100%", }}
+                style={{ marginTop: "5px", height: "150px", width: "100%" }}
                 className="tableRecieve"
                 dataSource={DataLotReceive}
                 bordered
@@ -1232,27 +1244,27 @@ function Box_Search() {
 
                   return (
                     <Table.Summary fixed>
-                    <Table.Summary.Row
-                      style={{ fontSize: "16px" }}
-                      className="no-padding"
-                    >
-                      <Table.Summary.Cell
-                        index={0}
-                        colSpan={2}
-                        align="right"
+                      <Table.Summary.Row
+                        style={{ fontSize: "16px" }}
                         className="no-padding"
                       >
-                        Total
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell
-                        index={columns.length - 1}
-                        colSpan={1}
-                        align="center"
-                        className="no-padding"
-                      >
-                        {totalQty.toLocaleString()}
-                      </Table.Summary.Cell>
-                    </Table.Summary.Row>
+                        <Table.Summary.Cell
+                          index={0}
+                          colSpan={2}
+                          align="right"
+                          className="no-padding"
+                        >
+                          Total
+                        </Table.Summary.Cell>
+                        <Table.Summary.Cell
+                          index={columns.length - 1}
+                          colSpan={1}
+                          align="center"
+                          className="no-padding"
+                        >
+                          {totalQty.toLocaleString()}
+                        </Table.Summary.Cell>
+                      </Table.Summary.Row>
                     </Table.Summary>
                   );
                 }}
