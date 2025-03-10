@@ -152,11 +152,11 @@
   padding-top: 0 !important;
   padding-bottom: 0 !important;
 }
-/* .scrollable-column {
+.scrollable-column {
   max-width: 100%; 
   overflow-x: auto;
   white-space: nowrap;
-} */
+}
 .no-padding tr, .no-padding td {
   padding-top: 0 !important;
   padding-bottom: 0 !important;

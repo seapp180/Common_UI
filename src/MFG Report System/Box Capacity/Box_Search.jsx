@@ -89,7 +89,15 @@ function Box_Search() {
     PackbyError,
     setPackbyError,
     Name_User,
-    handleUser
+    handleUser,
+    selectddlProduct,
+    dataProduct,
+    selectddlProductNew,
+    dataNewProduct,
+    ddlNewProduct,
+    setselectddlProductNew,
+    handleDeleteLot,
+    checkradio
   } = fn_Box_Search();
 
   return (
@@ -107,7 +115,7 @@ function Box_Search() {
             </td>
             <td>
               <div>
-                <Input
+                {/* <Input
                   showSearch
                   value={ddlProduct.trim() == "" ? "" : ddlProduct}
                   onChange={(e) => setddlProduct(e.target.value.toUpperCase())}
@@ -123,6 +131,27 @@ function Box_Search() {
                       handleProduct("SearchItem");
                     }
                   }}
+                /> */}
+                <Select
+                  showSearch
+                  value={selectddlProduct}
+                  // onChange={(index, e) => handleProduct(e, "SearchItem")}
+                  onSearch={(value, e) => {
+                    handleProduct({ label: value }, "SearchItem");
+                  }}
+                  onChange={(index, e) => handleProduct(e, "SearchItem")}
+                  style={{
+                    width: "200px",
+                    textAlign: "left",
+                  }}
+                  placeholder="Select Item"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={dataProduct}
                 />
               </div>
             </td>
@@ -347,49 +376,69 @@ function Box_Search() {
           >
             <div style={{ flex: 1, marginRight: "10px" }}>
               <Card className="BoxnoMaintain" bodyStyle={{ paddingTop: 10 }}>
-                <h3 className="BoxmainName" >Box Maintain</h3>
+                <h3 className="BoxmainName">Box Maintain</h3>
                 <Radio.Group
                   onChange={ChooseMenu}
                   value={radioselect}
                   style={{ padding: "10px" }}
                 >
-                  <Radio style={{ marginLeft: "30px" }} value={"Manual"}>
+                  <Radio style={{ marginLeft: "30px" }} 
+                  //  disabled={PageInsert === 'UPDATE' ? true : false}
+                   value={"Manual"}>
                     Pack by Box
                   </Radio>
-                  <Radio style={{ marginLeft: "30px" }} value={"Auto"}>
+                  {(checkradio !== "hidden" &&
+                  <Radio style={{ marginLeft: "30px" }} value={"Auto"}
+                //  disabled={ PageInsert === 'NewBox' ? false : true}  
+                  >
                     Auto Generate Pack
-                  </Radio>
+                  </Radio>)}
                 </Radio.Group>
                 <table>
                   <tr>
                     <td style={{ textAlign: "right" }}>Item :</td>
                     <td>
-                      <Input
-                        value={ItemNew.trim() == "" ? "" : ItemNew}
-                        // onChange={(e) => setItemNew(e.target.value)}
-                        onChange={(e) => {
-                          const value = e.target.value.toUpperCase();
-                          if (value === "" || value === "null") {
-                            setItemError(true);
-                          } else {
-                            setItemError(false);
-                          }
-                          setItemNew(value);
-                        }}
-                        style={{
-                          width: "200px",
-                          display: "block",
-                          marginTop: "5px",
-                          marginLeft: "5px",
-                          borderColor: ItemError ? "red" : "",
-                        }}
-                        placeholder="Input Item"
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            handleProduct("ItemNew");
-                          }
-                        }}
-                      />
+                      {PageInsert == "UPDATE" && (
+                        <Input
+                          value={selectddlProductNew}
+                          style={{
+                            width: "200px",
+                            display: "block",
+                            marginTop: "5px",
+                            marginLeft: "5px",
+                          }}
+                          disabled
+                        />
+                      )}
+                      {PageInsert == "NewBox" && (
+                     <Select
+                     showSearch
+                     
+                     value={selectddlProductNew}
+                     onSearch={(value, e) => {
+                       handleProduct({ label: value }, "ItemNew");
+                     }}
+                     onChange={(index,e) => {
+                       handleProduct(e, "ItemNew","SELECT");
+                       if (ItemError) {
+                        setItemError(false);
+                      }
+                     }}
+                     style={{
+                       width: "200px",
+                       display: "block",
+                       marginTop: "5px",
+                       marginLeft: "5px",
+                       borderColor: ItemError ? "red" : "",
+                     }}
+                     placeholder="Select Item"
+                     optionFilterProp="children"
+                     filterOption={(input, option) =>
+                       (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                     }
+                     options={dataNewProduct}
+                   />
+                      )}
                       {ItemError && (
                         <span style={{ color: "red" }}>*กรุณากรอก Item</span>
                       )}
@@ -674,51 +723,55 @@ function Box_Search() {
                   <tr>
                     <td style={{ textAlign: "right" }}>Packing By :</td>
                     <td colSpan={3}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <Input
-                        value={PackBy}
-                        // onChange={(e) => setPackBy(e.target.value)}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          if (value === "" || value === "null") {
-                            setPackbyError(true);
-                          } else {
-                            setPackbyError(false);
-                          }
-                          setPackBy(value);
-                        }}
-                        // onBlur={handleUser}
-                        onBlur={(e) => {
-                          handleUser(e.target.value);
-                        }}
-                        style={{
-                          width: "295px",
-                          display: "block",
-                          marginTop: "5px",
-                          marginLeft: "5px",
-                          borderColor: PackbyError ? "red" : "",
-                        }}
-                        placeholder="Input Packing By"
-                      />
-                      {PackbyError && (
-                        <span style={{ color: "red" }}>
-                          *กรุณากรอก Packing By
-                        </span>
-                      )}
-                      <Input
-                      fullWidth
-                       value={Name_User}
-                        // onChange={(e) => setAnotherRemark(e.target.value)}
-                        style={{
-                          display: "block",
-                          marginTop: "5px",
-                          marginLeft: "5px",
-                        }}
-                        disabled
-                      />
-                    </div>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <Input
+                          value={PackBy}
+                          // onChange={(e) => setPackBy(e.target.value)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "" || value === "null") {
+                              setPackbyError(true);
+                            } else {
+                              setPackbyError(false);
+                            }
+                            setPackBy(value);
+                          }}
+                          // onBlur={handleUser}
+                          // onBlur={(e) => {
+                          //   handleUser(e.target.value);
+                          // }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              handleUser(e.target.value)
+                            }
+                          }}
+                          style={{
+                            width: "295px",
+                            display: "block",
+                            marginTop: "5px",
+                            marginLeft: "5px",
+                            borderColor: PackbyError ? "red" : "",
+                          }}
+                          placeholder="Input Packing By"
+                        />
+                        {PackbyError && (
+                          <span style={{ color: "red" }}>
+                            *กรุณากรอก Packing By
+                          </span>
+                        )}
+                        <Input
+                          fullWidth
+                          value={Name_User}
+                          // onChange={(e) => setAnotherRemark(e.target.value)}
+                          style={{
+                            display: "block",
+                            marginTop: "5px",
+                            marginLeft: "5px",
+                          }}
+                          disabled
+                        />
+                      </div>
                     </td>
-                   
                   </tr>
                   <tr>
                     <td style={{ textAlign: "right" }}>Remark :</td>
@@ -821,7 +874,6 @@ function Box_Search() {
                   </tr>
                 </table>
               </Card>
-
               {(openManual || PageInsert == "UPADTE") && (
                 <Card className="CardManual" bodyStyle={{ paddingTop: 10 }}>
                   <h3 className="BoxmainName">Manual</h3>
@@ -832,7 +884,7 @@ function Box_Search() {
                       flexWrap: "wrap",
                       width: "100%",
                       alignItems: "center",
-                      marginTop: "8px",
+                      marginTop: "10px",
                       margin: "0 auto",
                       justifyContent: "center",
                     }}
@@ -948,7 +1000,7 @@ function Box_Search() {
                 </Card>
               )}
 
-              <Card
+              {/* <Card
                 bodyStyle={{ paddingTop: 10 }}
                 // style={{
                 //   flexDirection: "column",
@@ -985,6 +1037,48 @@ function Box_Search() {
                     // pagination=
                   ></Table>
                 )}
+              </Card> */}
+              <Card bodyStyle={{ paddingTop: 10 }} className="CardLot">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <h3 className="BoxmainName">Lot Packing</h3>
+                  <Button
+                    icon={<DeleteOutlined />}
+                    type="primary"
+                    size="small"
+                    danger
+                    onClick={handleDeleteLot}
+                  >
+                    Delete
+                  </Button>
+                </div>
+                {radioselect == "Manual" && (
+                  <Table
+                    columns={LotPacking}
+                    style={{ marginTop: "5px", marginLeft: "10px", height: "200px"}}
+                    className="tableLot"
+                    dataSource={DataLotPacking}
+                    bordered
+                    pagination={false}
+                    scroll={{ y: 170 }}
+                  ></Table>
+                )}
+                {radioselect == "Auto" && (
+                  <Table
+                    columns={LotPacking1}
+                    style={{ marginTop: "5px", marginLeft: "10px" }}
+                    className="tableLot"
+                    dataSource={DataLotPacking1}
+                    bordered
+                    pagination={true}
+                    scroll={{ y: 350 }}
+                  ></Table>
+                )}
               </Card>
             </div>
           </div>
@@ -1009,7 +1103,7 @@ function Box_Search() {
                 marginTop: "10px",
                 // maxHeight: "350px",
                 width: "100%",
-              
+
                 height: "50%",
               }}
             >
@@ -1040,47 +1134,49 @@ function Box_Search() {
               </div>
 
               <Table
-                columns={packingTable}
-                dataSource={DataPacking}
-                className="tablePacking"
-                style={{
-                  height: openManual ? "265px" : "265px",
-                  width: "100%",
-                }}
-                bordered
-                pagination={false}
-                scroll={{ y: 1000 }}
-                summary={(pageData) => {
-                  let totalQty = 0;
-                  pageData.forEach(({ GOOD_QTY }) => {
-                    totalQty += GOOD_QTY;
-                  });
+  columns={packingTable}
+  dataSource={DataPacking}
+  className="tablePacking"
+  style={{
+    height: "300px",
+    width: "100%",
+  }}
+  bordered
+  pagination={false}
+  scroll={{ y: 200 }}
+  summary={(pageData) => {
+    let totalQty = 0;
+    pageData.forEach(({ GOOD_QTY }) => {
+      totalQty += GOOD_QTY;
+    });
 
-                  return (
-                    <Table.Summary.Row
-                      style={{ fontSize: "16px" }}
-                      className="no-padding"
-                    >
-                      <Table.Summary.Cell
-                        index={0}
-                        colSpan={2}
-                        align="right"
-                        className="no-padding"
-                      >
-                        Total
-                      </Table.Summary.Cell>
-                      <Table.Summary.Cell
-                        index={columns.length - 1}
-                        colSpan={1}
-                        align="center"
-                        className="no-padding"
-                      >
-                        {totalQty.toLocaleString()}
-                      </Table.Summary.Cell>
-                    </Table.Summary.Row>
-                  );
-                }}
-              ></Table>
+    return (
+      <Table.Summary fixed>
+        <Table.Summary.Row
+          style={{ fontSize: "16px" }}
+          className="no-padding"
+        >
+          <Table.Summary.Cell
+            index={0}
+            colSpan={2}
+            align="right"
+            className="no-padding"
+          >
+            Total
+          </Table.Summary.Cell>
+          <Table.Summary.Cell
+            index={columns.length - 1}
+            colSpan={1}
+            align="center"
+            className="no-padding"
+          >
+            {totalQty.toLocaleString()}
+          </Table.Summary.Cell>
+        </Table.Summary.Row>
+      </Table.Summary>
+    );
+  }}
+></Table>
             </Card>
             <Card
               style={{
@@ -1121,13 +1217,13 @@ function Box_Search() {
               </div>
               <Table
                 columns={tableReceive}
-                style={{ marginTop: "5px", height: "100%", width: "100%" }}
+                style={{ marginTop: "5px",height: "150px", width: "100%", }}
                 className="tableRecieve"
                 dataSource={DataLotReceive}
                 bordered
-                pagination={true}
+                pagination={false}
                 // scroll={{ y: 700 }}
-                scroll={{ y: 1000 }}
+                scroll={{ y: 200 }}
                 summary={(pageData) => {
                   let totalQty = 0;
                   pageData.forEach(({ GOOD_QTY }) => {
@@ -1135,6 +1231,7 @@ function Box_Search() {
                   });
 
                   return (
+                    <Table.Summary fixed>
                     <Table.Summary.Row
                       style={{ fontSize: "16px" }}
                       className="no-padding"
@@ -1156,6 +1253,7 @@ function Box_Search() {
                         {totalQty.toLocaleString()}
                       </Table.Summary.Cell>
                     </Table.Summary.Row>
+                    </Table.Summary>
                   );
                 }}
               ></Table>

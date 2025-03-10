@@ -1,0 +1,28 @@
+
+  .TBFox .ant-table-thead > tr > th {
+    background-color: #dbac49;
+    color: white;
+    padding: 0;
+    height: 40px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .TBFox .ant-table-tbody > tr > td {
+    font-family: "Varela Round", sans-serif;
+    font-size: 14px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .TitleNew_h2{
+    background-color: #ca965c;
+    border-radius: 25px;
+    color: #ffffff;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-left: 15px;
+    width: 20%;
+  }
+  
