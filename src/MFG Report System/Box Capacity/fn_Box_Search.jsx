@@ -1535,7 +1535,7 @@ function fn_Box_Search() {
       });
   };
   const GetDataRemainQTY_AUTO = async (selectddlProductNew, BoxNo) => {
-    console.log("GetDataRemainQTY_AUTO AUTO PACk");
+  
     hideLoading();
     const parts = BoxNo.split("/");
     const running_box = parseInt(parts[1], 10);
@@ -1544,7 +1544,7 @@ function fn_Box_Search() {
     let Remain_QTY;
 
     if (running_box > 1) {
-      console.log("running_box > 1");
+   
       await axios
         .post("/api/BoxCapacity/DataRemainQTY_AUTO", {
           dataList: {
@@ -1635,12 +1635,7 @@ function fn_Box_Search() {
                                     rec = response.data[0].MAX_SEQ;
                                   });
                                 if (qty > Remain_QTY) {
-                                  console.log(
-                                    "qty > Remain_QTY",
-                                    qty,
-                                    Remain_QTY,
-                                    "INS_UP_AUTO_PACK1 || runningboxมากกว่า 1"
-                                  );
+                                
                                   await axios.post(
                                     "/api/BoxCapacity/INS_UP_AUTO_PACK1",
                                     {
@@ -1661,11 +1656,7 @@ function fn_Box_Search() {
                                     qty !== null &&
                                     qty !== ""
                                   ) {
-                                    console.log(
-                                      "qty > Remain_QTY",
-                                      qty,
-                                      "INS_UP_AUTO_PACK2 || runningboxมากกว่า 1"
-                                    );
+                                   
                                     await axios.post(
                                       "/api/BoxCapacity/INS_UP_AUTO_PACK2",
                                       {
@@ -1712,9 +1703,7 @@ function fn_Box_Search() {
               }
             });
           } else {
-            console.log(
-              "running_box > 1 else กรณีที่ไม่มีข้อมูลใน box ก่อนหน้า"
-            );
+         
             await axios
               .post("/api/BoxCapacity/DataLOT_AUTO", {
                 dataList: {
@@ -1776,12 +1765,7 @@ function fn_Box_Search() {
                             rec = response.data[0].MAX_SEQ;
                           });
                         if (qty > Remain_QTY) {
-                          console.log(
-                            "qty > Remain_QTY",
-                            qty,
-                            Remain_QTY,
-                            "INS_UP_AUTO_PACK1 กรณี ก่อนหน้า box ไม่มีข้อมูล"
-                          );
+                        
                           await axios.post(
                             "/api/BoxCapacity/INS_UP_AUTO_PACK1",
                             {
@@ -1798,11 +1782,7 @@ function fn_Box_Search() {
                           Remain_QTY = 0;
                         } else {
                           if (qty !== undefined && qty !== null && qty !== "") {
-                            console.log(
-                              "qty > Remain_QTY",
-                              qty,
-                              "INS_UP_AUTO_PACK2 กรณี ก่อนหน้า box ไม่มีข้อมูล"
-                            );
+                         
                             await axios.post(
                               "/api/BoxCapacity/INS_UP_AUTO_PACK2",
                               {
@@ -1852,7 +1832,6 @@ function fn_Box_Search() {
       });
       if (result.isConfirmed) {
         showLoading("กำลังบันทึกข้อมูล...");
-        console.log("GetDataRemainQTY_AUTO AUTO PACk box = 1");
         await axios
           .post("/api/BoxCapacity/DataLOT_AUTO", {
             dataList: {
@@ -1914,14 +1893,7 @@ function fn_Box_Search() {
                         rec = response.data[0].MAX_SEQ;
                       });
                     if (qty > Remain_QTY) {
-                      console.log(
-                        "qty :",
-                        qty,
-                        "AUTO PACk box = 1",
-                        "Remain_QTY :",
-                        Remain_QTY,
-                        "INS_UP_AUTO_PACK1"
-                      );
+               
                       await axios.post("/api/BoxCapacity/INS_UP_AUTO_PACK1", {
                         dataList: {
                           item: selectddlProductNew,
@@ -1935,12 +1907,7 @@ function fn_Box_Search() {
                       Remain_QTY = 0;
                     } else {
                       if (qty !== undefined && qty !== null && qty !== "") {
-                        console.log(
-                          "qty :",
-                          qty,
-                          "AUTO PACk box = 1",
-                          "INS_UP_AUTO_PACK1"
-                        );
+                   
                         await axios.post("/api/BoxCapacity/INS_UP_AUTO_PACK2", {
                           dataList: {
                             item: selectddlProductNew,
