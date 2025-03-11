@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { Button } from "antd";
+import { Button, Table } from "antd";
 import ImgDelete from "../../assets/edit.png";
 import { DeleteOutlined } from "@ant-design/icons";
 import { useLoading } from "../../component/loading/fn_loading";
@@ -8,6 +8,8 @@ import Swal from "sweetalert2";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { Checkbox } from "antd";
+import { set } from "date-fns";
+import { hi } from "date-fns/locale/hi";
 
 function fn_Box_Search() {
   const today = new Date().toISOString().split("T")[0];
@@ -58,6 +60,22 @@ function fn_Box_Search() {
   const [Name_User, setName_User] = useState("");
   const [selectedLots, setSelectedLots] = useState([]);
   const [checkradio, setcheckradio] = useState("visible");
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const onSelectChange = (key) => {
+    setSelectedRowKeys((prevSelectedRowKeys) => {
+      if (prevSelectedRowKeys.includes(key)) {
+        return prevSelectedRowKeys.filter((selectedKey) => selectedKey !== key);
+      } else {
+        return [...prevSelectedRowKeys, key];
+      }
+    });
+  };
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (newSelectedRowKeys) => {
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
+  };
   let PackType = "";
   let pack_qty;
   const { showLoading, hideLoading } = useLoading();
@@ -454,103 +472,103 @@ function fn_Box_Search() {
   //     },
   //   },
   // ];
-  const LotPacking = [
-    {
-      dataIndex: "SEQ",
-      key: "seq",
-      align: "center",
-      render: (text, record, index) => {
-        return text;
-      },
-      width: 10,
-    },
-    {
-      title: "Packing Date",
-      dataIndex: "LOT_DATE",
-      key: "Packing Date",
-      render: (text, record, index) => {
-        return text;
-      },
-      align: "center",
-      width: 50,
-    },
-    {
-      title: "Lot No.",
-      dataIndex: "LOT_NO",
-      key: "Lot No.",
-      render: (text, record, index) => {
-        return text;
-      },
-      align: "center",
-      width: 40,
-    },
-    {
-      title: "Qty",
-      dataIndex: "LOT_QTY",
-      key: "Qty",
-      render: (text, record, index) => {
-        return text ? text.toLocaleString() : "0";
-      },
-      align: "center",
-      width: 40,
-    },
-    {
-      title: "Select",
-      key: "select",
-      align: "center",
-      width: 20,
-      render: (text, record, index) => {
-        return (
-          // <Checkbox
-          //   onChange={(e) => {
-          //     if (e.target.checked) {
-          //       handleDeleteLot(
-          //         record.SEQ,
-          //         record.LOT_NO,
-          //         record.LOT_ITEM_CODE,
-          //         record.LOT_BOX_NO,
-          //         record.LOT_QTY,
-          //         e.target.checked
-          //       );
-          //     }
-          //   }}
-          // />
-          <Checkbox
-            checked={selectedLots.some((lot) => lot.seq_id === record.SEQ)}
-            onChange={(e) => handleSelectLot(record, e.target.checked)}
-          />
-        );
-      },
-    },
-    // {
-    //   align: "center",
-    //   width: 10,
-    //   render: (text, record, index) => {
-    //     text = (
-    //       <Button
-    //         style={{
-    //           backgroundColor: "red",
-    //           color: "white",
-    //           marginBottom: "5px",
-    //           marginTop: "5px",
-    //         }}
-    //         onClick={() =>
-    //           handleDeleteLot(
-    //             record.SEQ,
-    //             record.LOT_NO,
-    //             record.LOT_ITEM_CODE,
-    //             record.LOT_BOX_NO,
-    //             record.LOT_QTY
-    //           )
-    //         }
-    //         icon={<DeleteOutlined />}
-    //         danger
-    //       ></Button>
-    //     );
-    //     return text;
-    //   },
-    // },
-  ];
+  // const LotPacking = [
+  //   {
+  //     dataIndex: "SEQ",
+  //     key: "seq",
+  //     align: "center",
+  //     render: (text, record, index) => {
+  //       return text;
+  //     },
+  //     width: 10,
+  //   },
+  //   {
+  //     title: "Packing Date",
+  //     dataIndex: "LOT_DATE",
+  //     key: "Packing Date",
+  //     render: (text, record, index) => {
+  //       return text;
+  //     },
+  //     align: "center",
+  //     width: 50,
+  //   },
+  //   {
+  //     title: "Lot No.",
+  //     dataIndex: "LOT_NO",
+  //     key: "Lot No.",
+  //     render: (text, record, index) => {
+  //       return text;
+  //     },
+  //     align: "center",
+  //     width: 40,
+  //   },
+  //   {
+  //     title: "Qty",
+  //     dataIndex: "LOT_QTY",
+  //     key: "Qty",
+  //     render: (text, record, index) => {
+  //       return text ? text.toLocaleString() : "0";
+  //     },
+  //     align: "center",
+  //     width: 40,
+  //   },
+  //   {
+  //     title: "Select",
+  //     key: "select",
+  //     align: "center",
+  //     width: 20,
+  //     render: (text, record, index) => {
+  //       return (
+  //         // <Checkbox
+  //         //   onChange={(e) => {
+  //         //     if (e.target.checked) {
+  //         //       handleDeleteLot(
+  //         //         record.SEQ,
+  //         //         record.LOT_NO,
+  //         //         record.LOT_ITEM_CODE,
+  //         //         record.LOT_BOX_NO,
+  //         //         record.LOT_QTY,
+  //         //         e.target.checked
+  //         //       );
+  //         //     }
+  //         //   }}
+  //         // />
+  //         <Checkbox
+  //           checked={selectedLots.some((lot) => lot.seq_id === record.SEQ)}
+  //           onChange={(e) => handleSelectLot(record, e.target.checked)}
+  //         />
+  //       );
+  //     },
+  //   },
+  //   // {
+  //   //   align: "center",
+  //   //   width: 10,
+  //   //   render: (text, record, index) => {
+  //   //     text = (
+  //   //       <Button
+  //   //         style={{
+  //   //           backgroundColor: "red",
+  //   //           color: "white",
+  //   //           marginBottom: "5px",
+  //   //           marginTop: "5px",
+  //   //         }}
+  //   //         onClick={() =>
+  //   //           handleDeleteLot(
+  //   //             record.SEQ,
+  //   //             record.LOT_NO,
+  //   //             record.LOT_ITEM_CODE,
+  //   //             record.LOT_BOX_NO,
+  //   //             record.LOT_QTY
+  //   //           )
+  //   //         }
+  //   //         icon={<DeleteOutlined />}
+  //   //         danger
+  //   //       ></Button>
+  //   //     );
+  //   //     return text;
+  //   //   },
+  //   // },
+  // ];
   const LotPacking1 = [
     {
       align: "center",
@@ -598,6 +616,75 @@ function fn_Box_Search() {
       },
       align: "center",
       width: 40,
+    },
+  ];
+  const LotPacking = [
+    {
+      dataIndex: "SEQ",
+      key: "seq",
+      align: "center",
+      render: (text, record, index) => {
+        return text;
+      },
+      width: 10,
+    },
+    {
+      title: "Packing Date",
+      dataIndex: "LOT_DATE",
+      key: "Packing Date",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 50,
+    },
+    {
+      title: "Lot No.",
+      dataIndex: "LOT_NO",
+      key: "Lot No.",
+      render: (text, record, index) => {
+        return text;
+      },
+      align: "center",
+      width: 40,
+    },
+    {
+      title: "Qty",
+      dataIndex: "LOT_QTY",
+      key: "Qty",
+      render: (text, record, index) => {
+        return text ? text.toLocaleString() : "0";
+      },
+      align: "center",
+      width: 40,
+    },
+    {
+      title: (
+        <Checkbox
+          // indeterminate={selectedRowKeys.length > 0 && selectedRowKeys.length < DataLotPacking.length}
+          checked={selectedRowKeys.length === DataLotPacking.length}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setSelectedRowKeys(DataLotPacking.map((item) => item));
+            } else {
+              setSelectedRowKeys([]);
+            }
+          }}
+        />
+      ),
+      key: "select",
+      align: "center",
+      width: 20,
+      render: (text, record, index) => {
+        return (
+          (
+            <Checkbox
+              checked={selectedRowKeys.includes(record)}
+              onChange={() => onSelectChange(record)}
+            />
+          )
+        );
+      },
     },
   ];
   const tableReceive = [
@@ -714,6 +801,7 @@ function fn_Box_Search() {
           setPack_qtyLot;
           setPackdate(today);
           setName_User("");
+          setselectddlProductNew("");
         });
       await Search();
     }
@@ -784,7 +872,7 @@ function fn_Box_Search() {
   //   }
   // };
   const handleDeleteLot = async () => {
-    if (selectedLots.length === 0) {
+    if (selectedRowKeys.length === 0) {
       Swal.fire("Warning", "กรุณาเลือก Lot ที่ต้องการลบ", "warning");
       return;
     }
@@ -798,58 +886,63 @@ function fn_Box_Search() {
       confirmButtonText: "ใช่",
       cancelButtonText: "ไม่ใช่",
     });
-
+    showLoading("กำลังลบข้อมูล...");
     if (result.isConfirmed) {
       try {
         await Promise.all(
-          selectedLots.map(async (lot) => {
+          selectedRowKeys.map(async (lot) => {
             await axios.post("/api/BoxCapacity/DeleteLotPacking", {
               dataList: JSON.parse(
                 JSON.stringify({
-                  lot: lot.lot_no,
-                  item: lot.item_no,
-                  boxno: lot.box_no,
-                  seq: lot.seq_id,
+                  lot: lot.LOT_NO,
+                  item: lot.LOT_ITEM_CODE,
+                  boxno: lot.LOT_BOX_NO,
+                  seq: lot.SEQ,
                 })
               ),
             });
 
             await axios.post("/api/BoxCapacity/UpdateSeqLotPacking", {
               dataList: {
-                lot: lot.lot_no,
-                item: lot.item_no,
-                boxno: lot.box_no,
+                lot: lot.LOT_NO,
+                item: lot.LOT_ITEM_CODE,
+                boxno: lot.LOT_BOX_NO,
               },
             });
 
             await axios.post("/api/BoxCapacity/UpdateBoxMaster", {
               dataList: {
-                qty: lot.qty_box,
-                item: lot.item_no,
-                boxno: lot.box_no,
+                qty: lot.LOT_QTY,
+                item: lot.LOT_ITEM_CODE,
+                boxno: lot.LOT_BOX_NO,
               },
             });
 
             await axios.post("/api/BoxCapacity/updateReject", {
-              dataList: { lot: lot.lot_no },
+              dataList: { lot: lot.LOT_NO },
             });
           })
         );
-
+        hideLoading();
         Swal.fire("Deleted!", "Lot ถูกลบเรียบร้อยแล้ว", "success");
 
         await GetDataLotPacking(
-          selectedLots[0].item_no,
-          selectedLots[0].box_no
+          selectedRowKeys[0].LOT_ITEM_CODE,
+          selectedRowKeys[0].LOT_BOX_NO
         );
-        await DataManual(selectedLots[0].item_no, selectedLots[0].box_no);
-        await DataReceive(selectedLots[0].item_no);
-        setSelectedLots([]);
+        await DataManual(
+          selectedRowKeys[0].LOT_ITEM_CODE,
+          selectedRowKeys[0].LOT_BOX_NO
+        );
+        await DataReceive(selectedRowKeys[0].LOT_ITEM_CODE);
+        setSelectedRowKeys([]);
       } catch (error) {
+        hideLoading();
         console.error("Error during deletion:", error);
         Swal.fire("Error!", "เกิดข้อผิดพลาดในการลบ Lot", "error");
       }
     } else {
+      hideLoading();
       Swal.fire("ยกเลิก", "การลบถูกยกเลิก", "error");
     }
   };
@@ -965,7 +1058,7 @@ function fn_Box_Search() {
         }
         return;
       }
-      showLoading("กำลังบันทึกข้อมูล...");
+      // showLoading("กำลังบันทึกข้อมูล...");
       if (PageInsert == "NewBox") {
         await SaveBoxMainTain("NEW");
         await DataManual(selectddlProductNew, BoxNo);
@@ -981,7 +1074,6 @@ function fn_Box_Search() {
       }
       hideLoading();
     } else if (TypePack == "AutoPack") {
-      showLoading("กำลังค้นหาข้อมูล...");
       if (selectddlProductNew == "") {
         await Swal.fire({
           icon: "error",
@@ -1025,20 +1117,24 @@ function fn_Box_Search() {
           }
           return;
         }
+        showLoading("กำลังค้นหาข้อมูล...");
         await SaveBoxMainTain("NEW");
         await DataManual(selectddlProductNew, BoxNo);
         await DataReceive(selectddlProductNew);
-        await GetDataRemainQTY_AUTO(selectddlProductNew, BoxNo);
+        let datapacking = await GetDataPacking(selectddlProductNew);
+        await GetDataRemainQTY_AUTO(selectddlProductNew, BoxNo, datapacking);
         setopenManual(false);
         Swal.fire({
           icon: "success",
           text: "บันทึกข้อมูลสำเร็จ",
         });
       } else {
+        showLoading("กำลังค้นหาข้อมูล...");
         await SaveBoxMainTain("UPDATE");
         await DataManual(selectddlProductNew, BoxNo);
         await DataReceive(selectddlProductNew);
-        await GetDataRemainQTY_AUTO(selectddlProductNew, BoxNo);
+        let datapacking = await GetDataPacking(selectddlProductNew);
+        await GetDataRemainQTY_AUTO(selectddlProductNew, BoxNo, datapacking);
         setopenManual(false);
       }
       hideLoading();
@@ -1085,7 +1181,7 @@ function fn_Box_Search() {
           }
           return;
         }
-
+        // showLoading("กำลังค้นหาข้อมูล...");
         await DataReceive(selectddlProductNew);
         let datapacking = await GetDataPacking(selectddlProductNew);
         await GetAutoGenerate(selectddlProductNew, BoxNo, "NEW", datapacking);
@@ -1097,13 +1193,10 @@ function fn_Box_Search() {
         hideLoading();
       }
     }
-
-    // Re-enable the button after the operation is complete
     if (button) {
       button.disabled = false;
     }
   };
-  // Add the button with the id "genPackButton"
 
   const Search = async () => {
     if (
@@ -1423,13 +1516,16 @@ function fn_Box_Search() {
       });
   };
   const GetDataRemainQTY_AUTO = async (selectddlProductNew, BoxNo) => {
+    console.log("GetDataRemainQTY_AUTO AUTO PACk");
     hideLoading();
     const parts = BoxNo.split("/");
     const running_box = parseInt(parts[1], 10);
     let Max_DATE;
     let Data;
     let Remain_QTY;
+
     if (running_box > 1) {
+      console.log("running_box > 1");
       await axios
         .post("/api/BoxCapacity/DataRemainQTY_AUTO", {
           dataList: {
@@ -1468,6 +1564,7 @@ function fn_Box_Search() {
                       .then(async (response) => {
                         let LOT = response.data;
                         if (response.data.length > 0) {
+                     
                           await axios
                             .post("/api/BoxCapacity/DataMAX_DATE_AUTO", {
                               dataList: {
@@ -1476,6 +1573,7 @@ function fn_Box_Search() {
                               },
                             })
                             .then((response) => {
+                             
                               Max_DATE = response.data;
                               if (Max_DATE.length > 0) {
                                 Max_DATE = "";
@@ -1487,6 +1585,7 @@ function fn_Box_Search() {
                           Max_DATE = "";
                         }
                         Remain_QTY = FullBoxQty - PackQty;
+                      
                         await axios
                           .post("/api/BoxCapacity/LotNo", {
                             dataList: {
@@ -1518,6 +1617,7 @@ function fn_Box_Search() {
                                     rec = response.data[0].MAX_SEQ;
                                   });
                                 if (qty > Remain_QTY) {
+                                  console.log("qty > Remain_QTY",qty,Remain_QTY,"INS_UP_AUTO_PACK1 || runningboxมากกว่า 1");
                                   await axios.post(
                                     "/api/BoxCapacity/INS_UP_AUTO_PACK1",
                                     {
@@ -1533,26 +1633,36 @@ function fn_Box_Search() {
                                   );
                                   Remain_QTY = 0;
                                 } else {
-                                  await axios.post(
-                                    "/api/BoxCapacity/INS_UP_AUTO_PACK2",
-                                    {
-                                      dataList: {
-                                        item: selectddlProductNew,
-                                        boxno: BoxNo,
-                                        maxseq: rec,
-                                        lot_no: lot,
-                                        qty_pack: qty,
-                                        packdate: Packdate,
-                                      },
-                                    }
-                                  );
-                                  Remain_QTY = Remain_QTY - qty;
-                                  rec = rec + 1;
+                                  if (
+                                    qty !== undefined &&
+                                    qty !== null &&
+                                    qty !== ""
+                                  ) {
+                                    console.log("qty > Remain_QTY",qty,"INS_UP_AUTO_PACK2 || runningboxมากกว่า 1");
+                                    await axios.post(
+                                      "/api/BoxCapacity/INS_UP_AUTO_PACK2",
+                                      {
+                                        dataList: {
+                                          item: selectddlProductNew,
+                                          boxno: BoxNo,
+                                          maxseq: rec,
+                                          lot_no: lot,
+                                          qty_pack: qty,
+                                          packdate: Packdate,
+                                        },
+                                      }
+                                    );
+                                    Remain_QTY = Remain_QTY - qty;
+                                    rec = rec + 1;
+                                  } else {
+                                    break;
+                                  }
                                 }
                               } while (Remain_QTY > 0);
                             }
                           });
-                        setPackQty(FullBoxQty);
+                        // setPackQty(FullBoxQty);
+                        setPackQty(Remain_QTY);
                       });
                     await axios
                       .post("/api/BoxCapacity/UpdateAutoSts", {
@@ -1574,6 +1684,7 @@ function fn_Box_Search() {
               }
             });
           } else {
+            console.log("running_box > 1 else กรณีที่ไม่มีข้อมูลใน box ก่อนหน้า");
             await axios
               .post("/api/BoxCapacity/DataLOT_AUTO", {
                 dataList: {
@@ -1634,6 +1745,7 @@ function fn_Box_Search() {
                             rec = response.data[0].MAX_SEQ;
                           });
                         if (qty > Remain_QTY) {
+                          console.log("qty > Remain_QTY",qty,Remain_QTY ,"INS_UP_AUTO_PACK1 กรณี ก่อนหน้า box ไม่มีข้อมูล")
                           await axios.post(
                             "/api/BoxCapacity/INS_UP_AUTO_PACK1",
                             {
@@ -1649,26 +1761,31 @@ function fn_Box_Search() {
                           );
                           Remain_QTY = 0;
                         } else {
-                          await axios.post(
-                            "/api/BoxCapacity/INS_UP_AUTO_PACK2",
-                            {
-                              dataList: {
-                                item: selectddlProductNew,
-                                boxno: BoxNo,
-                                maxseq: rec,
-                                lot_no: lot,
-                                qty_pack: qty,
-                                packdate: Packdate,
-                              },
-                            }
-                          );
-                          Remain_QTY = Remain_QTY - qty;
-                          rec = rec + 1;
+                          if (qty !== undefined && qty !== null && qty !== "") {
+                            console.log("qty > Remain_QTY",qty, "INS_UP_AUTO_PACK2 กรณี ก่อนหน้า box ไม่มีข้อมูล")
+                            await axios.post(
+                              "/api/BoxCapacity/INS_UP_AUTO_PACK2",
+                              {
+                                dataList: {
+                                  item: selectddlProductNew,
+                                  boxno: BoxNo,
+                                  maxseq: rec,
+                                  lot_no: lot,
+                                  qty_pack: qty,
+                                  packdate: Packdate,
+                                },
+                              }
+                            );
+                            Remain_QTY = Remain_QTY - qty;
+                            rec = rec + 1;
+                          } else {
+                            break;
+                          }
                         }
                       } while (Remain_QTY > 0);
                     }
                   });
-                setPackQty(FullBoxQty);
+                setPackQty(Remain_QTY);
               });
             await axios
               .post("/api/BoxCapacity/UpdateAutoSts", {
@@ -1694,6 +1811,7 @@ function fn_Box_Search() {
       });
       if (result.isConfirmed) {
         showLoading("กำลังบันทึกข้อมูล...");
+        console.log("GetDataRemainQTY_AUTO AUTO PACk box = 1");
         await axios
           .post("/api/BoxCapacity/DataLOT_AUTO", {
             dataList: {
@@ -1755,6 +1873,7 @@ function fn_Box_Search() {
                         rec = response.data[0].MAX_SEQ;
                       });
                     if (qty > Remain_QTY) {
+                      console.log("qty :",qty,"AUTO PACk box = 1","Remain_QTY :",Remain_QTY,"INS_UP_AUTO_PACK1");
                       await axios.post("/api/BoxCapacity/INS_UP_AUTO_PACK1", {
                         dataList: {
                           item: selectddlProductNew,
@@ -1767,23 +1886,28 @@ function fn_Box_Search() {
                       });
                       Remain_QTY = 0;
                     } else {
-                      await axios.post("/api/BoxCapacity/INS_UP_AUTO_PACK2", {
-                        dataList: {
-                          item: selectddlProductNew,
-                          boxno: BoxNo,
-                          maxseq: rec,
-                          lot_no: lot,
-                          qty_pack: qty,
-                          packdate: Packdate,
-                        },
-                      });
-                      Remain_QTY = Remain_QTY - qty;
-                      rec = rec + 1;
+                      if (qty !== undefined && qty !== null && qty !== "") {
+                        console.log("qty :",qty,"AUTO PACk box = 1","INS_UP_AUTO_PACK1");
+                        await axios.post("/api/BoxCapacity/INS_UP_AUTO_PACK2", {
+                          dataList: {
+                            item: selectddlProductNew,
+                            boxno: BoxNo,
+                            maxseq: rec,
+                            lot_no: lot,
+                            qty_pack: qty,
+                            packdate: Packdate,
+                          },
+                        });
+                        Remain_QTY = Remain_QTY - qty;
+                        rec = rec + 1;
+                      } else {
+                        break;
+                      }
                     }
                   } while (Remain_QTY > 0);
                 }
               });
-            setPackQty(FullBoxQty);
+            setPackQty(Remain_QTY);
           });
         await axios
           .post("/api/BoxCapacity/UpdateAutoSts", {
@@ -1799,6 +1923,7 @@ function fn_Box_Search() {
       await Search();
       hideLoading();
     }
+    await DataHeader(selectddlProductNew, BoxNo);
   };
   const GetAutoGenerate = async (
     selectddlProductNew,
@@ -1965,22 +2090,30 @@ function fn_Box_Search() {
                                       );
                                       Remain_QTY = 0;
                                     } else {
-                                      await axios.post(
-                                        "/api/BoxCapacity/INS_UP_AUTO_PACK2",
-                                        {
-                                          dataList: {
-                                            item: selectddlProductNew,
-                                            boxno: Box_NO,
-                                            maxseq: rec,
-                                            lot_no: lot,
-                                            qty_pack: qty,
-                                            packdate: Packdate,
-                                          },
-                                        }
-                                      );
+                                      if (
+                                        qty !== undefined &&
+                                        qty !== null &&
+                                        qty !== ""
+                                      ) {
+                                        await axios.post(
+                                          "/api/BoxCapacity/INS_UP_AUTO_PACK2",
+                                          {
+                                            dataList: {
+                                              item: selectddlProductNew,
+                                              boxno: Box_NO,
+                                              maxseq: rec,
+                                              lot_no: lot,
+                                              qty_pack: qty,
+                                              packdate: Packdate,
+                                            },
+                                          }
+                                        );
 
-                                      Remain_QTY = Remain_QTY - qty;
-                                      rec = rec + 1;
+                                        Remain_QTY = Remain_QTY - qty;
+                                        rec = rec + 1;
+                                      } else {
+                                        break;
+                                      }
                                     }
                                   } while (Remain_QTY > 0);
                                 }
@@ -2424,6 +2557,7 @@ function fn_Box_Search() {
     setProductShow,
     handleDeleteLot,
     checkradio,
+    rowSelection,
   };
 }
 

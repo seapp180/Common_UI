@@ -100,6 +100,7 @@ function Box_Search() {
     setProductShow,
     handleDeleteLot,
     checkradio,
+    rowSelection
   } = fn_Box_Search();
 
   return (
@@ -1066,19 +1067,19 @@ function Box_Search() {
                   </Button>
                 </div>
                 {radioselect == "Manual" && (
-                  <Table
-                    columns={LotPacking}
-                    style={{
-                      marginTop: "5px",
-                      marginLeft: "10px",
-                      height: "200px",
-                    }}
-                    className="tableLot"
-                    dataSource={DataLotPacking}
-                    bordered
-                    pagination={false}
-                    scroll={{ y: 170 }}
-                  ></Table>
+                 <Table
+                 columns={LotPacking}
+                 style={{
+                   marginTop: "5px",
+                   marginLeft: "10px",
+                   height: "200px",
+                 }}
+                 className="tableLot"
+                 dataSource={DataLotPacking}
+                 bordered
+                 pagination={false}
+                 scroll={{ y: 170 }}
+               ></Table>
                 )}
                 {radioselect == "Auto" && (
                   <Table
