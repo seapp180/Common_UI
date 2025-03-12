@@ -100,9 +100,9 @@ function Box_Search() {
     setProductShow,
     handleDeleteLot,
     checkradio,
-    rowSelection
+    rowSelection,
+    CheckStatus
   } = fn_Box_Search();
-
   return (
     <Content>
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -147,7 +147,7 @@ function Box_Search() {
                     width: "200px",
                     textAlign: "left",
                   }}
-                  placeholder="Select Item"
+                  placeholder="Item"
                   optionFilterProp="children"
                   filterOption={(input, option) =>
                     (option?.label ?? "")
@@ -438,7 +438,7 @@ function Box_Search() {
                             marginLeft: "5px",
                             borderColor: ItemError ? "red" : "",
                           }}
-                          placeholder="Select Item"
+                          placeholder="Item"
                           optionFilterProp="children"
                           filterOption={(input, option) =>
                             (option?.label ?? "")
@@ -550,7 +550,7 @@ function Box_Search() {
                             marginLeft: "5px",
                             borderColor: ReError ? "red" : "",
                           }}
-                          placeholder="Input Total Sheet Qty"
+                          placeholder="กรอกจำนวน Box"
                         />
                         {ReError && (
                           <span style={{ color: "red" }}>
@@ -641,7 +641,7 @@ function Box_Search() {
                             marginLeft: "5px",
                             borderColor: FullError ? "red" : "",
                           }}
-                          placeholder="Input Full Box Qty"
+                          placeholder="กรอก Full Box Qty"
                         />
                         {FullError && (
                           <span style={{ color: "red" }}>
@@ -678,7 +678,7 @@ function Box_Search() {
                             marginLeft: "5px",
                             borderColor: FullError ? "red" : "",
                           }}
-                          placeholder="Input Full Box Qty"
+                          placeholder="กรอก Full Box Qty"
                         />
                         {FullError && (
                           <span style={{ color: "red" }}>
@@ -701,7 +701,7 @@ function Box_Search() {
                             marginTop: "5px",
                             marginLeft: "5px",
                           }}
-                          placeholder="Input Total Sheet Qty"
+                          placeholder="กรอก Total Sheet Qty"
                         />
                       </td>
                     </tr>
@@ -724,7 +724,7 @@ function Box_Search() {
                             marginTop: "5px",
                             marginLeft: "5px",
                           }}
-                          placeholder="Input Total Sheet Qty"
+                          placeholder="กรอก Total Sheet Qty"
                         />
                       </td>
                     </tr>
@@ -761,7 +761,7 @@ function Box_Search() {
                             marginLeft: "5px",
                             borderColor: PackbyError ? "red" : "",
                           }}
-                          placeholder="Input Packing By"
+                          placeholder="กรอก Packing By"
                         />
                         {PackbyError && (
                           <span style={{ color: "red" }}>
@@ -794,7 +794,7 @@ function Box_Search() {
                           marginTop: "5px",
                           marginLeft: "5px",
                         }}
-                        placeholder="Input Remark"
+                        placeholder="กรอก Remark"
                       />
                     </td>
                   </tr>
@@ -807,7 +807,10 @@ function Box_Search() {
                     <td>
                       <div>
                         {radioselect == "Manual" && (
+                          
                           <>
+                          {(CheckStatus == "ACTIVE" || CheckStatus == "") && (
+                            <>
                             <Button
                               id="genPackButton"
                               icon={<MedicineBoxOutlined />}
@@ -833,11 +836,14 @@ function Box_Search() {
                             >
                               Auto Pack
                             </Button>
+                            </>)}
                           </>
+                          
                         )}
                         {radioselect == "Auto" && (
                           <>
-                            <Button
+                           {(CheckStatus == "ACTIVE"||CheckStatus == "") && (
+                            <><Button
                               id="genPackButton"
                               icon={<MedicineBoxOutlined />}
                               type="primary"
@@ -848,9 +854,12 @@ function Box_Search() {
                               onClick={() => GenPack("AutoGenerate")}
                             >
                               Auto Generate
-                            </Button>
+                            </Button></>
+                           )}
+                            
                           </>
                         )}
+                         {(CheckStatus == "ACTIVE"||CheckStatus == "") && (
                         <Button
                           icon={<ReloadOutlined />}
                           type="primary"
@@ -862,13 +871,14 @@ function Box_Search() {
                           onClick={() => Clear("ResetMaintain")}
                         >
                           Reset
-                        </Button>
+                        </Button>)}
                       </div>
                     </td>
                     {radioselect == "Manual" && (
                       <div
                         style={{ display: "flex", justifyContent: "flex-end" }}
                       >
+                         {(CheckStatus == "ACTIVE"||CheckStatus == "") && (
                         <Button
                           icon={<DeleteOutlined />}
                           type="primary"
@@ -877,7 +887,7 @@ function Box_Search() {
                           onClick={handleDelete}
                         >
                           Delete
-                        </Button>
+                        </Button>)}
                       </div>
                     )}
                   </tr>
@@ -932,7 +942,7 @@ function Box_Search() {
                         marginLeft: "10px",
                         textAlign: "left",
                       }}
-                      placeholder="Select Lot No"
+                      placeholder="เลือก Lot No"
                       optionFilterProp="children"
                       filterOption={(input, option) =>
                         (option?.label ?? "")
@@ -1056,6 +1066,7 @@ function Box_Search() {
                   }}
                 >
                   <h3 className="BoxmainName">Lot Packing</h3>
+                  {(CheckStatus == "ACTIVE"||CheckStatus == "") && (
                   <Button
                     icon={<DeleteOutlined />}
                     type="primary"
@@ -1064,7 +1075,7 @@ function Box_Search() {
                     onClick={handleDeleteLot}
                   >
                     Delete
-                  </Button>
+                  </Button>)}
                 </div>
                 {radioselect == "Manual" && (
                  <Table
