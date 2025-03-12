@@ -19,6 +19,8 @@ import T2D_BarcodeOutput from "./Condition System/OQC/2D_BarCodeOutput/T2D_Barco
 import T2D_BarCodeConfirm from "./Condition System/OQC/2D_BarCodeConfirm/T2D_BarCodeConfirm";
 import T2D_BarcodeReport from "./Condition System/OQC/2D_BarCodeReport/T2D_BarcodeReport";
 import ExportSupplier from "./Common/Export Supplier Customer/ExportSupplierCustomer";
+import BoxFoncon from "./MFG Report System/Box Foxcon/BoxFoxcon";
+import NewBoxFoxcon from "./MFG Report System/Box Foxcon/NewBoxFoxcon";
 // import BoxSelectionINV from "./MFG Report System/Box Selection By INV/BoxSelectINV";
 import TestScan from "./Scantest/scantest";
 const { Content } = Layout;
@@ -104,10 +106,14 @@ const App = () => {
                     element={<TestScan />}  
                   />
                   {/* --------------------------------------------------------- */}
-                  {/* <Route
-                    path="/CommonSystem/MFGReportSystem/BoxCapacitySelection"
-                    element={<BoxSelectionINV />}
-                  /> */}
+                  <Route
+                    path="/CommonSystem/MFGReportSystem/BoxCapacityFoxcon"
+                    element={<BoxFoncon />}
+                  />
+                   <Route
+                    path="/CommonSystem/MFGReportSystem/NewBoxFoxcon"
+                    element={<NewBoxFoxcon />}
+                  />
                   {/* --------------------------------------------------------- */}
                 </Routes>
               </div>
