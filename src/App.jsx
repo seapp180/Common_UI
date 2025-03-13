@@ -21,8 +21,6 @@ import T2D_BarcodeReport from "./Condition System/OQC/2D_BarCodeReport/T2D_Barco
 import ExportSupplier from "./Common/Export Supplier Customer/ExportSupplierCustomer";
 import BoxFoncon from "./MFG Report System/Box Foxcon/BoxFoxcon";
 import NewBoxFoxcon from "./MFG Report System/Box Foxcon/NewBoxFoxcon";
-// import BoxSelectionINV from "./MFG Report System/Box Selection By INV/BoxSelectINV";
-import TestScan from "./Scantest/scantest";
 const { Content } = Layout;
 // const backendUrl = import.meta.env.VITE_SERVICE_URL;
 // axios.defaults.baseURL = backendUrl;
@@ -100,10 +98,6 @@ const App = () => {
                   <Route
                     path="/CommonSystem/MFGReportSystem/BoxCapacity"
                     element={<BoxCapacity />}
-                  />
-                  <Route
-                    path="/CommonSystem/MFGReportSystem/testScan"
-                    element={<TestScan />}  
                   />
                   {/* --------------------------------------------------------- */}
                   <Route

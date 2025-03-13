@@ -8,8 +8,6 @@ import Swal from "sweetalert2";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { Checkbox } from "antd";
-import { set } from "date-fns";
-import { hi } from "date-fns/locale/hi";
 
 function fn_Box_Search() {
   const today = new Date().toISOString().split("T")[0];
@@ -245,6 +243,7 @@ function fn_Box_Search() {
     setName_User("");
     setselectddlProductNew("");
     setdataNewProduct([]);
+    setCheckStatus("")
 
     // await axios
     //   .post("/api/BoxCapacity/DDLItemProduct", {
@@ -658,33 +657,38 @@ function fn_Box_Search() {
       align: "center",
       width: 40,
     },
-    {
-      title: (
-        <Checkbox
-          // indeterminate={selectedRowKeys.length > 0 && selectedRowKeys.length < DataLotPacking.length}
-          checked={selectedRowKeys.length === DataLotPacking.length}
-          onChange={(e) => {
-            if (e.target.checked) {
-              setSelectedRowKeys(DataLotPacking.map((item) => item));
-            } else {
-              setSelectedRowKeys([]);
-            }
-          }}
-        />
-      ),
-      key: "select",
-      align: "center",
-      width: 20,
-      render: (text, record, index) => {
-        return (
-          <Checkbox
-            checked={selectedRowKeys.includes(record)}
-            onChange={() => onSelectChange(record)}
-          />
-        );
-      },
-    },
+    // เงื่อนไขสำหรับเพิ่ม Checkbox Column
+    ...(CheckStatus === "ACTIVE" || CheckStatus === ""
+      ? [
+          {
+            title: (
+              <Checkbox
+                checked={selectedRowKeys.length === DataLotPacking.length}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedRowKeys(DataLotPacking.map((item) => item));
+                  } else {
+                    setSelectedRowKeys([]);
+                  }
+                }}
+              />
+            ),
+            key: "select",
+            align: "center",
+            width: 20,
+            render: (text, record, index) => {
+              return (
+                <Checkbox
+                  checked={selectedRowKeys.includes(record)}
+                  onChange={() => onSelectChange(record)}
+                />
+              );
+            },
+          },
+        ]
+      : []), // ถ้า CheckStatus ไม่ใช่ ACTIVE หรือ "" จะไม่เพิ่มคอลัมน์ checkbox
   ];
+  
   const tableReceive = [
     {
       align: "center",
@@ -1067,6 +1071,7 @@ function fn_Box_Search() {
         await SaveBoxMainTain("UPDATE");
         await DataManual(selectddlProductNew, BoxNo);
         await DataReceive(selectddlProductNew);
+        await GetDataLotPacking(selectddlProductNew, BoxNo);
         setopenManual(true);
         hideLoading();
       }
@@ -1410,7 +1415,13 @@ function fn_Box_Search() {
             fac2: Fac.value,
           },
         });
-
+        const response1 = await axios.post("/api/BoxCapacity/UpdateDateLot", {
+          dataList: {
+            item: selectddlProductNew,
+            boxno: BoxNo,
+            packdate: Packdate == "" ? today : Packdate,
+          },
+        });
         // return { status: "success", data: response.data };
       } catch (error) {
         console.error("Error updating data:", error);
@@ -2578,6 +2589,7 @@ function fn_Box_Search() {
     handleDeleteLot,
     checkradio,
     rowSelection,
+    CheckStatus
   };
 }
 
