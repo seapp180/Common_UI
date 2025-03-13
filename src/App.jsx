@@ -21,6 +21,7 @@ import T2D_BarcodeReport from "./Condition System/OQC/2D_BarCodeReport/T2D_Barco
 import ExportSupplier from "./Common/Export Supplier Customer/ExportSupplierCustomer";
 import BoxFoncon from "./MFG Report System/Box Foxcon/BoxFoxcon";
 import NewBoxFoxcon from "./MFG Report System/Box Foxcon/NewBoxFoxcon";
+import Qrscantest from "./Scantest/scantest";
 const { Content } = Layout;
 // const backendUrl = import.meta.env.VITE_SERVICE_URL;
 // axios.defaults.baseURL = backendUrl;
@@ -109,6 +110,10 @@ const App = () => {
                     element={<NewBoxFoxcon />}
                   />
                   {/* --------------------------------------------------------- */}
+                  <Route
+                    path="/CommonSystem/Scantest"
+                    element={<Qrscantest />}
+                  />
                 </Routes>
               </div>
             </Content>

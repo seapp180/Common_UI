@@ -43,6 +43,10 @@ function Scantest() {
         placement: "bottomRight",
         duration: 2,
       });
+      setStrEmpcode("");
+      setStrName("");
+      setStrContent("");
+      fnFocus("txtEmpcode");
     } else {
       notification.error({
         message: "Save Error",
