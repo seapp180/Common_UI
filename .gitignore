@@ -23,7 +23,8 @@ dist-ssr
 *.sw?
 .env
 dockerfile
-
+Scantest
 ./dist
 dist
+
 # Box Selection By INV
