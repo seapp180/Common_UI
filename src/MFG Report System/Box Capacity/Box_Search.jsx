@@ -859,7 +859,6 @@ function Box_Search() {
                             )}
                           </>
                         )}
-                        {console.log("status", PageInsert, CheckStatus)}
                         {((CheckStatus == "ACTIVE" && PageInsert == "UPDATE") ||
                           CheckStatus == "") && (
                             <Button
@@ -1071,7 +1070,6 @@ function Box_Search() {
                     alignItems: "center",
                   }}
                 >
-                  {console.log("radiocheck", radioselect)}
                   <h3 className="BoxmainName">Lot Packing</h3>
                   {((CheckStatus == "ACTIVE" || CheckStatus == "") && radioselect !=='Auto') && (
                     <Button
