@@ -101,7 +101,7 @@ function Box_Search() {
     handleDeleteLot,
     checkradio,
     rowSelection,
-    CheckStatus
+    CheckStatus,
   } = fn_Box_Search();
   return (
     <Content>
@@ -746,9 +746,9 @@ function Box_Search() {
                             setPackBy(value);
                           }}
                           // onBlur={handleUser}
-                          // onBlur={(e) => {
-                          //   handleUser(e.target.value);
-                          // }}
+                          onBlur={(e) => {
+                            handleUser(e.target.value);
+                          }}
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
                               handleUser(e.target.value);
@@ -807,87 +807,93 @@ function Box_Search() {
                     <td>
                       <div>
                         {radioselect == "Manual" && (
-                          
                           <>
-                          {(CheckStatus == "ACTIVE" || CheckStatus == "") && (
-                            <>
-                            <Button
-                              id="genPackButton"
-                              icon={<MedicineBoxOutlined />}
-                              type="primary"
-                              style={{
-                                background: "#3498db",
-                                color: "#fff",
-                                marginLeft: "10px",
-                              }}
-                              onClick={() => GenPack("ManaulPack")}
-                            >
-                              Manual
-                            </Button>
-                            <Button
-                              id="genPackButton"
-                              icon={<MedicineBoxOutlined />}
-                              type="primary"
-                              style={{
-                                marginLeft: "10px",
-                                backgroundColor: "#f4d03f",
-                              }}
-                              onClick={() => GenPack("AutoPack")}
-                            >
-                              Auto Pack
-                            </Button>
-                            </>)}
+                            {(CheckStatus == "ACTIVE" || CheckStatus == "") && (
+                              <>
+                                <Button
+                                  id="genPackButton"
+                                  icon={<MedicineBoxOutlined />}
+                                  type="primary"
+                                  style={{
+                                    background: "#3498db",
+                                    color: "#fff",
+                                    marginLeft: "10px",
+                                  }}
+                                  onClick={() => GenPack("ManaulPack")}
+                                >
+                                  Manual
+                                </Button>
+                                <Button
+                                  id="genPackButton"
+                                  icon={<MedicineBoxOutlined />}
+                                  type="primary"
+                                  style={{
+                                    marginLeft: "10px",
+                                    backgroundColor: "#f4d03f",
+                                  }}
+                                  onClick={() => GenPack("AutoPack")}
+                                >
+                                  Auto Pack
+                                </Button>
+                              </>
+                            )}
                           </>
-                          
                         )}
                         {radioselect == "Auto" && (
                           <>
-                           {(CheckStatus == "ACTIVE"||CheckStatus == "") && (
-                            <><Button
-                              id="genPackButton"
-                              icon={<MedicineBoxOutlined />}
-                              type="primary"
-                              style={{
-                                marginLeft: "10px",
-                                backgroundColor: "#f4d03f",
-                              }}
-                              onClick={() => GenPack("AutoGenerate")}
-                            >
-                              Auto Generate
-                            </Button></>
-                           )}
-                            
+                            {(CheckStatus == "ACTIVE" || CheckStatus == "") && (
+                              <>
+                                <Button
+                                  id="genPackButton"
+                                  icon={<MedicineBoxOutlined />}
+                                  type="primary"
+                                  style={{
+                                    marginLeft: "10px",
+                                    backgroundColor: "#f4d03f",
+                                  }}
+                                  onClick={() => GenPack("AutoGenerate")}
+                                >
+                                  Auto Generate
+                                </Button>
+                              </>
+                            )}
                           </>
                         )}
-                         {(CheckStatus == "ACTIVE"||CheckStatus == "") && (
-                        <Button
-                          icon={<ReloadOutlined />}
-                          type="primary"
-                          danger
-                          style={{
-                            marginLeft: "10px",
-                            backgroundColor: "	#A9A9A9",
-                          }}
-                          onClick={() => Clear("ResetMaintain")}
-                        >
-                          Reset
-                        </Button>)}
+                        {console.log("status", PageInsert, CheckStatus)}
+                        {((CheckStatus == "ACTIVE" && PageInsert == "UPDATE") ||
+                          CheckStatus == "") && (
+                            <Button
+                            icon={<DeleteOutlined />}
+                            type="primary"
+                            danger
+                            style={{  marginLeft: "10px", marginTop: "1px" }}
+                            onClick={handleDelete}
+                          >
+                            Delete
+                          </Button>
+                        
+                        )}
                       </div>
                     </td>
                     {radioselect == "Manual" && (
                       <div
                         style={{ display: "flex", justifyContent: "flex-end" }}
                       >
-                         {(CheckStatus == "ACTIVE"||CheckStatus == "") && (
-                        <Button
-                          icon={<DeleteOutlined />}
+                        {((CheckStatus == "ACTIVE" && PageInsert !== "UPDATE") || CheckStatus == "") && (
+                          <Button
+                          icon={<ReloadOutlined />}
                           type="primary"
                           danger
-                          style={{ marginLeft: "5px", marginTop: "1px" }}
-                          onClick={handleDelete}
+                          style={{
+                            marginLeft: "10px",
+                            marginTop:'2px',
+                            backgroundColor: "	#A9A9A9",
+                          }}
+                          onClick={() => Clear("ResetMaintain")}
                         >
-                          Delete
-                        </Button>)}
+                          Reset
+                        </Button>
+                        )}
                       </div>
                     )}
                   </tr>
@@ -1065,32 +1071,34 @@ function Box_Search() {
                     alignItems: "center",
                   }}
                 >
+                  {console.log("radiocheck", radioselect)}
                   <h3 className="BoxmainName">Lot Packing</h3>
-                  {(CheckStatus == "ACTIVE"||CheckStatus == "") && (
-                  <Button
-                    icon={<DeleteOutlined />}
-                    type="primary"
-                    size="small"
-                    danger
-                    onClick={handleDeleteLot}
-                  >
-                    Delete
-                  </Button>)}
+                  {((CheckStatus == "ACTIVE" || CheckStatus == "") && radioselect !=='Auto') && (
+                    <Button
+                      icon={<DeleteOutlined />}
+                      type="primary"
+                      size="small"
+                      danger
+                      onClick={handleDeleteLot}
+                    >
+                      Delete
+                    </Button>
+                  )}
                 </div>
                 {radioselect == "Manual" && (
-                 <Table
-                 columns={LotPacking}
-                 style={{
-                   marginTop: "5px",
-                   marginLeft: "10px",
-                   height: "200px",
-                 }}
-                 className="tableLot"
-                 dataSource={DataLotPacking}
-                 bordered
-                 pagination={false}
-                 scroll={{ y: 170 }}
-               ></Table>
+                  <Table
+                    columns={LotPacking}
+                    style={{
+                      marginTop: "5px",
+                      marginLeft: "10px",
+                      height: "200px",
+                    }}
+                    className="tableLot"
+                    dataSource={DataLotPacking}
+                    bordered
+                    pagination={false}
+                    scroll={{ y: 170 }}
+                  ></Table>
                 )}
                 {radioselect == "Auto" && (
                   <Table

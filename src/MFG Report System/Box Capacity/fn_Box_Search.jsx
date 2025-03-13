@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { Checkbox } from "antd";
+import { set } from "date-fns";
 
 function fn_Box_Search() {
   const today = new Date().toISOString().split("T")[0];
@@ -211,7 +212,14 @@ function fn_Box_Search() {
       setdataNewProduct([]);
       setProductShow("");
       setFac("");
+      setFullBoxQty("");
+      setBoxNo("");
+      setPackQty("");
+      setPackBy("");
+      setRemark("");
+      setPackdate(today);
       setopenManual(false);
+      setName_User("")
     }
   };
   const NewPopup = () => {
@@ -937,6 +945,20 @@ function fn_Box_Search() {
           selectedRowKeys[0].LOT_BOX_NO
         );
         await DataReceive(selectedRowKeys[0].LOT_ITEM_CODE);
+        await axios
+        .post("/api/BoxCapacity/SearchBoxCapacity", {
+          datalist: {
+            Product: selectedRowKeys[0].LOT_ITEM_CODE,
+            LotFrom: LotFrom,
+            LotTo: LotTo,
+            PackingDateFrom: PackingDateFrom,
+            PackingDateTo: PackingDateTo,
+            BoxNoSeacrh:  selectedRowKeys[0].LOT_BOX_NO
+          },
+        })
+        .then((res) => {
+          setDataSearch(res.data);
+        });
         setSelectedRowKeys([]);
       } catch (error) {
         hideLoading();
@@ -1049,7 +1071,7 @@ function fn_Box_Search() {
           button.disabled = false;
         }
         return;
-      } else if (PackBy == "" || Name_User =='No User') {
+      } else if (PackBy == "" || Name_User =='No User' || Name_User == '') {
         await Swal.fire({
           icon: "error",
           text: "กรุณากรอกข้อมูลใน Packing By",
@@ -1415,13 +1437,16 @@ function fn_Box_Search() {
             fac2: Fac.value,
           },
         });
-        const response1 = await axios.post("/api/BoxCapacity/UpdateDateLot", {
+        if(DataLotPacking.length> 0){
+           const response1 = await axios.post("/api/BoxCapacity/UpdateDateLot", {
           dataList: {
             item: selectddlProductNew,
             boxno: BoxNo,
             packdate: Packdate == "" ? today : Packdate,
           },
         });
+        }
+       
         // return { status: "success", data: response.data };
       } catch (error) {
         console.error("Error updating data:", error);
@@ -1495,7 +1520,7 @@ function fn_Box_Search() {
               boxno: BoxNo,
               lot: selectddlLot,
               lot_qty: Pack_qtyLot,
-              packdate: today,
+              packdate: Packdate == "" ? today : Packdate,
             },
           })
           .then((res) => {
