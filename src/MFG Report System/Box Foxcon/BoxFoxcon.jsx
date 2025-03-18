@@ -1,12 +1,26 @@
 import React, { useState } from "react";
-import { Layout, Button, Table, Select, Modal, Input, Card, Radio } from "antd";
+import {
+  Layout,
+  Button,
+  Table,
+  Select,
+  Modal,
+  Input,
+  Card,
+  Radio,
+  Space,
+  Form,
+  DatePicker,
+} from "antd";
 import {
   SearchOutlined,
   SaveOutlined,
   PlusOutlined,
   MedicineBoxOutlined,
   ReloadOutlined,
+  PrinterOutlined,
   DeleteOutlined,
+  ScanOutlined,
 } from "@ant-design/icons";
 const { Content } = Layout;
 import "../Box Foxcon/BoxFoxcon.css";
@@ -14,7 +28,52 @@ import "../Box Foxcon/BoxFoxcon.css";
 // import ImgExcel from "../../assets/excel.png";
 import { fn_BoxFoxcon } from "./fn_BoxFoxcon";
 function BoxFoxcon() {
-  const { handleGoToNextPage ,item, setItem} = fn_BoxFoxcon();
+  const {
+    handleGoToNextPage,
+    showModal,
+    handleOk,
+    handleCancel,
+    isModalOpen,
+    dataSource,
+    columns,
+    handleUser,
+    PackBy,
+    setPackBy,
+    ProductNew,
+    setProductNew,
+    BoxNo,
+    setBoxNo,
+    BoxQty,
+    setBoxQty,
+    BoxDate,
+    setBoxDate,
+    Packlabel,
+    setPacklabel,
+    FistName,
+    Surname,
+    Reset,
+    GetProductKey,
+    fcPackBy,
+    fcProduct,
+    fcBoxqty,
+    GetPackLabel,
+    dis_product,
+    dis_boxqty,
+    dis_packlabel,
+    GetBoxQty,
+    fcPacklabel,
+    ProductSeacrh,
+    setProductSeacrh,
+    LotSearch,
+    setLotSearch,
+    packDateFrom,
+    setPackDateFrom,
+    packDateTo,
+    setPackDateTo,
+    BoxSearch,
+    setBoxSearch,
+    DataPackLabel,GenBoxNo
+  } = fn_BoxFoxcon();
   return (
     <Content>
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -31,8 +90,8 @@ function BoxFoxcon() {
             <td>
               <div>
                 <Input
-                  value={item}
-                  onChange={(e) => setItem(e.target.value)}
+                  value={ProductSeacrh}
+                  onChange={(e) => setProductSeacrh(e.target.value)}
                   style={{
                     width: "200px",
                     display: "block",
@@ -51,8 +110,8 @@ function BoxFoxcon() {
             <td>
               <div>
                 <Input
-                  // value={LotTo}
-                  // onChange={(e) => setLotTo(e.target.value)}
+                  value={LotSearch}
+                  onChange={(e) => setLotSearch(e.target.value)}
                   style={{
                     width: "200px",
                     display: "block",
@@ -75,8 +134,8 @@ function BoxFoxcon() {
                 <Input
                   showSearch
                   type="date"
-                  // value={ddlProduct.trim() == "" ? "" : ddlProduct}
-                  // onChange={(e) => setddlProduct(e.target.value.toUpperCase())}
+                  value={packDateFrom}
+                  onChange={(e) => setPackDateFrom(e.target.value)}
                   style={{
                     width: "200px",
                     display: "block",
@@ -101,7 +160,8 @@ function BoxFoxcon() {
               <div>
                 <Input
                   type="date"
-                  // value={ddlItem}
+                  value={packDateTo}
+                  onChange={(e) => setPackDateTo(e.target.value)}
                   style={{
                     width: "200px",
                     display: "block",
@@ -122,7 +182,7 @@ function BoxFoxcon() {
             <td>
               <div>
                 <Input
-                  // value={BoxNoSeacrh}
+                  value={BoxSearch}
                   style={{
                     width: "200px",
                     display: "block",
@@ -130,7 +190,7 @@ function BoxFoxcon() {
                     marginLeft: "5px",
                   }}
                   placeholder="Box No :"
-                  // onChange={(e) => setBoxNoSeacrh(e.target.value)}
+                  onChange={(e) => setBoxSearch(e.target.value)}
                 />
               </div>
             </td>
@@ -167,7 +227,8 @@ function BoxFoxcon() {
                     color: "#fff",
                     marginLeft: "10px",
                   }}
-                  onClick={() => handleGoToNextPage("NewBoxFoxcon")}
+                  // onClick={() => handleGoToNextPage("NewBoxFoxcon")}
+                  onClick={showModal}
                 >
                   New
                 </Button>
@@ -176,7 +237,7 @@ function BoxFoxcon() {
                   danger
                   type="primary"
                   style={{ marginLeft: "10px", backgroundColor: "	#A9A9A9" }}
-                  // onClick={() => Clear("SerachBox")}
+                  onClick={() => Reset("ResetSearch")}
                 >
                   Reset
                 </Button>
@@ -185,9 +246,7 @@ function BoxFoxcon() {
             <td></td>
           </tr>
         </table>
-        <div>
-   
-  </div>
+        <div></div>
       </div>
 
       <Table
@@ -200,8 +259,270 @@ function BoxFoxcon() {
         scroll={{ y: 500 }}
         // pagination=
       ></Table>
+      <div>
+        <Modal
+          bo
+          width="95%"
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={null}
+          style={{
+            top: 20,
+            maxHeight: "calc(100vh - 20px)", // ย้ายจาก bodyStyle
+            overflow: "hidden", // ย้ายจาก bodyStyle
+          }}
+        >
+          <h3 className="TitleNew_h2">Box Capacity (Foxconn)</h3>
+
+          <div layout="inline" style={{ marginBottom: 16 }}>
+            <div style={{ display: "flex" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: 16,
+                }}
+              >
+                <label style={{ marginRight: 8, width: "100px" }}>
+                  Pack By :
+                </label>
+                <Input
+                  value={PackBy}
+                  ref={fcPackBy}
+                  onChange={(e) => setPackBy(e.target.value)}
+                  // onBlur={handleUser}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleUser(e.target.value);
+                    }
+                  }}
+                  suffix={<ScanOutlined style={{ color: "gray" }} />}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: 16,
+                }}
+              >
+                <label style={{ marginRight: 8, width: "100px" }}>Name :</label>
+                <Input value={FistName} disabled />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: 16,
+                }}
+              >
+                <label style={{ marginRight: 8, width: "100px" }}>
+                  Surname :
+                </label>
+                <Input value={Surname} disabled />
+              </div>
+              <div>
+                <Button
+                  type="default"
+                  style={{ backgroundColor: "#A9A9A9", color: "white" }}
+                  onClick={() => Reset("ResetName")}
+                >
+                  Reset
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div layout="inline" style={{ marginBottom: 16 }}>
+            <div style={{ display: "flex" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: 16,
+                }}
+              >
+                <label style={{ marginRight: 8, width: "100px" }}>
+                  Product :
+                </label>
+                <Input
+                  ref={fcProduct}
+                  disabled={dis_product}
+                  value={ProductNew}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      GetProductKey(e.target.value);
+                    }
+                  }}
+                  onChange={(e) => setProductNew(e.target.value)}
+                  suffix={<ScanOutlined style={{ color: "gray" }} />}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: 16,
+                }}
+              >
+                <label style={{ marginRight: 8, width: "100px" }}>
+                  Box No. :
+                </label>
+                <Input value={BoxNo} disabled />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: 16,
+                }}
+              >
+                <label style={{ marginRight: 8, width: "100px" }}>
+                  Box Qty :
+                </label>
+                <Input
+                  ref={fcBoxqty}
+                  disabled={dis_boxqty}
+                  value={BoxQty}
+                  onChange={(e) => {
+                    const input = e.target.value.replace(/[^0-9]/g, ""); // อนุญาตเฉพาะตัวเลข
+                    const formattedInput = new Intl.NumberFormat().format(
+                      input
+                    ); // เพิ่มลูกน้ำขั้นตำแหน่ง
+                    setBoxQty(formattedInput);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      GetBoxQty(e.target.value);
+                    }
+                  }}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: 16,
+                }}
+              >
+                <label style={{ marginRight: 8, width: "100px" }}>
+                  Box date :
+                </label>
+                <Input value={BoxDate} disabled />
+              </div>
+            </div>
+          </div>
+          <div layout="inline" style={{ marginBottom: 16 }}>
+            <div style={{ display: "flex" }}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  width: "50%",
+                }}
+              >
+                <label style={{ marginRight: 8, width: "100px" }}>
+                  Pack Label :
+                </label>
+                <Input
+                  value={Packlabel}
+                  disabled={dis_packlabel}
+                  ref={fcPacklabel}
+                  onChange={(e) => setPacklabel(e.target.value)}
+                  suffix={<ScanOutlined style={{ color: "gray" }} />}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      GetPackLabel(e.target.value);
+                    }
+                  }}
+                />
+              </div>
+              {/* <div>
+                <Button
+                  style={{
+                    marginLeft: "10px",
+                    backgroundColor: "#A9A9A9",
+                    color: "white",
+                  }}
+                  type="default"
+                >
+                  Reset
+                </Button>
+              </div> */}
+            </div>
+          </div>
+{console.log(DataPackLabel,"DataPackLabel")}
+          {/* Table Section */}
+          <Table
+            dataSource={DataPackLabel}
+            columns={columns}
+            pagination={false}
+            className="TableNew"
+            summary={(pageData) => {
+              let totalQty = pageData.reduce(
+                (sum, record) => sum + record.QTY,
+                0
+              );
+              return (
+                <Table.Summary.Row>
+                  <Table.Summary.Cell
+                    index={0}
+                    colSpan={5}
+                    style={{ textAlign: "right" }}
+                  >
+                    <b>Total</b>
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell index={1}>
+                    <b>{totalQty.toLocaleString()}</b>
+                  </Table.Summary.Cell>
+                  <Table.Summary.Cell
+                    index={2}
+                    colSpan={2}
+                  ></Table.Summary.Cell>
+                </Table.Summary.Row>
+              );
+            }}
+          />
+
+          {/* Buttons */}
+          <Space style={{ marginTop: 16 }}>
+            <Button type="primary"
+            onClick={GenBoxNo}>Gen Box No.</Button>
+            <Button
+              style={{ backgroundColor: "#FF3131", color: "white" }}
+              onClick={() => Reset("Cancel")}
+            >
+              Cancel
+            </Button>
+          </Space>
+
+          {/* Box Details */}
+
+          <Space
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: 16,
+            }}
+          >
+            <Button
+              type="primary"
+              icon={<PrinterOutlined />}
+              style={{ background: "green", borderColor: "green" }}
+            >
+              Print WH Label
+            </Button>
+            <Button
+              type="primary"
+              icon={<PrinterOutlined />}
+              style={{ background: "goldenrod", borderColor: "goldenrod" }}
+            >
+              Print Box Label
+            </Button>
+          </Space>
+        </Modal>
+      </div>
     </Content>
-    
   );
 }
 

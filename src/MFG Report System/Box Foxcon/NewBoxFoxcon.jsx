@@ -76,7 +76,7 @@ function NewBoxFoxcon() {
                 }}
               >
                 <label style={{ marginRight: 8, width: "100px" }}>Name :</label>
-                <Input />
+                <Input disabled />
               </div>
               <div
                 style={{
@@ -88,10 +88,10 @@ function NewBoxFoxcon() {
                 <label style={{ marginRight: 8, width: "100px" }}>
                   Surname :
                 </label>
-                <Input />
+                <Input disabled />
               </div>
               <div>
-                <Button type="default">Reset</Button>
+                <Button type="default" style={{backgroundColor:'#A9A9A9',color:'white'}}>Reset</Button>
               </div>
             </div>
           </div>
@@ -107,10 +107,12 @@ function NewBoxFoxcon() {
                 <label style={{ marginRight: 8, width: "100px" }}>
                   Pack Label :
                 </label>
-                <Input/>
+                <Input />
               </div>
-              <div >
-                <Button type="default">Reset</Button>
+              <div>
+                <Button style={{ marginLeft: "10px" ,backgroundColor:'#A9A9A9',color:'white'}} type="default">
+                  Reset
+                </Button>
               </div>
             </div>
           </div>
@@ -120,6 +122,7 @@ function NewBoxFoxcon() {
             dataSource={dataSource}
             columns={columns}
             pagination={false}
+            className="TableNew"
             summary={(pageData) => {
               let totalQty = pageData.reduce(
                 (sum, record) => sum + record.qty,
@@ -127,11 +130,15 @@ function NewBoxFoxcon() {
               );
               return (
                 <Table.Summary.Row>
-                  <Table.Summary.Cell index={0} colSpan={5}>
+                  <Table.Summary.Cell
+                    index={0}
+                    colSpan={5}
+                    style={{ textAlign: "right" }}
+                  >
                     <b>Total</b>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell index={1}>
-                    <b>{totalQty}</b>
+                    <b>{totalQty.toLocaleString()}</b>
                   </Table.Summary.Cell>
                   <Table.Summary.Cell
                     index={2}
@@ -145,49 +152,61 @@ function NewBoxFoxcon() {
           {/* Buttons */}
           <Space style={{ marginTop: 16 }}>
             <Button type="primary">Gen Box No.</Button>
-            <Button>Cancel</Button>
+            <Button style={{backgroundColor:'#FF3131',color:'white'}}>Cancel</Button>
           </Space>
 
           {/* Box Details */}
           <div
             style={{
-              marginTop: 16,
-              padding: 16,
+              marginTop: 5,
+              padding: 5,
               background: "#f5f5f5",
               borderRadius: 10,
             }}
           >
-            <p>
-              <b>Product:</b> RGP-494W-0D
-            </p>
-            <p>
-              <b>Box No.:</b> 52502/00141
-            </p>
-            <p>
-              <b>Box Qty:</b> 5,762
-            </p>
-            <p>
-              <b>Packing Date:</b> 01/03/2025
-            </p>
+            <div
+              style={{
+                // marginTop: 16,
+                // padding: 16,
+                background: "#f5f5f5",
+                borderRadius: 10,
+                display: "flex",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+              }}
+            >
+              <p>
+                <b>Product:</b> RGP-494W-0D
+              </p>
+              <p>
+                <b>Box No.:</b> 52502/00141
+              </p>
+              <p>
+                <b>Box Qty:</b> 5,762
+              </p>
+              <p>
+                <b>Packing Date:</b> 01/03/2025
+              </p>
+            </div>
 
             {/* Print Buttons */}
-            <Space>
-              <Button
-                type="primary"
-                icon={<PrinterOutlined />}
-                style={{ background: "green", borderColor: "green" }}
-              >
-                Print WH Label
-              </Button>
-              <Button
-                type="primary"
-                icon={<PrinterOutlined />}
-                style={{ background: "goldenrod", borderColor: "goldenrod" }}
-              >
-                Print Box Label
-              </Button>
-            </Space>
           </div>
+          <Space style={{ display: "flex", justifyContent: "center", marginTop: 16 }}>
+    <Button
+      type="primary"
+      icon={<PrinterOutlined />}
+      style={{ background: "green", borderColor: "green" }}
+    >
+      Print WH Label
+    </Button>
+    <Button
+      type="primary"
+      icon={<PrinterOutlined />}
+      style={{ background: "goldenrod", borderColor: "goldenrod" }}
+    >
+      Print Box Label
+    </Button>
+  </Space>
         </div>
       </div>
     );
