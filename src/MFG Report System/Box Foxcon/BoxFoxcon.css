@@ -3,9 +3,10 @@
     background-color: #dbac49;
     color: white;
     padding: 0;
-    height: 40px;
+    height: 35px;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
+    text-align: center;
   }
   .TBFox .ant-table-tbody > tr > td {
     font-family: "Varela Round", sans-serif;

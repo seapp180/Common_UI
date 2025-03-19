@@ -1,25 +1,9 @@
 import React, { useState } from "react";
-import {
-  Layout,
-  Button,
-  Table,
-  Select,
-  Modal,
-  Input,
-  Card,
-  Radio,
-  Space,
-  Form,
-  DatePicker,
-} from "antd";
+import { Layout, Button, Table, Modal, Input, Space, Select } from "antd";
 import {
   SearchOutlined,
-  SaveOutlined,
   PlusOutlined,
-  MedicineBoxOutlined,
-  ReloadOutlined,
   PrinterOutlined,
-  DeleteOutlined,
   ScanOutlined,
 } from "@ant-design/icons";
 const { Content } = Layout;
@@ -34,7 +18,6 @@ function BoxFoxcon() {
     handleOk,
     handleCancel,
     isModalOpen,
-    dataSource,
     columns,
     handleUser,
     PackBy,
@@ -72,7 +55,16 @@ function BoxFoxcon() {
     setPackDateTo,
     BoxSearch,
     setBoxSearch,
-    DataPackLabel,GenBoxNo
+    DataPackLabel,
+    GenBoxNo,
+    dis_genbox,
+    dis_print,
+    Search,
+    DataSearch,
+    DataSource,
+    selectProduct,
+    setSelectProduct,
+    handleProduct,
   } = fn_BoxFoxcon();
   return (
     <Content>
@@ -89,7 +81,7 @@ function BoxFoxcon() {
             </td>
             <td>
               <div>
-                <Input
+                {/* <Input
                   value={ProductSeacrh}
                   onChange={(e) => setProductSeacrh(e.target.value)}
                   style={{
@@ -99,6 +91,28 @@ function BoxFoxcon() {
                     marginLeft: "5px",
                   }}
                   placeholder="Input Product."
+                /> */}
+                
+                <Select
+                  showSearch
+                  value={selectProduct}
+                  // onChange={(index, e) => handleProduct(e, "SearchItem")}
+                  onSearch={(value, e) => {
+                    handleProduct({ label: value });
+                  }}
+                  onChange={(index, e) => handleProduct(e)}
+                  style={{
+                    width: "200px",
+                    textAlign: "left",
+                  }}
+                  placeholder="Item"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                    .toLowerCase()
+                      // .includes(input.toLowerCase())
+                  }
+                  options={ProductSeacrh}
                 />
               </div>
             </td>
@@ -213,9 +227,9 @@ function BoxFoxcon() {
                     color: "#fff",
                     marginLeft: "10px",
                   }}
-                  // onClick={() => {
-                  //   Search();
-                  // }}
+                  onClick={() => {
+                    Search();
+                  }}
                 >
                   Search
                 </Button>
@@ -250,10 +264,10 @@ function BoxFoxcon() {
       </div>
 
       <Table
-        // columns={columns}
+        columns={DataSearch}
         style={{ marginTop: "5px" }}
         className="TBFox"
-        // dataSource={DataSearch}
+        dataSource={DataSource}
         bordered
         pagination={true}
         scroll={{ y: 500 }}
@@ -451,7 +465,7 @@ function BoxFoxcon() {
               </div> */}
             </div>
           </div>
-{console.log(DataPackLabel,"DataPackLabel")}
+          {console.log(DataPackLabel, "DataPackLabel")}
           {/* Table Section */}
           <Table
             dataSource={DataPackLabel}
@@ -486,13 +500,26 @@ function BoxFoxcon() {
 
           {/* Buttons */}
           <Space style={{ marginTop: 16 }}>
-            <Button type="primary"
-            onClick={GenBoxNo}>Gen Box No.</Button>
+            <Button
+              disabled={dis_genbox}
+              type="primary"
+              onClick={() => GenBoxNo("GEN")}
+            >
+              Gen Box No.
+            </Button>
             <Button
               style={{ backgroundColor: "#FF3131", color: "white" }}
               onClick={() => Reset("Cancel")}
             >
               Cancel
+            </Button>
+            <Button
+              type="primary"
+              disabled={dis_print}
+              icon={<PrinterOutlined />}
+              style={{ background: "green", borderColor: "green" }}
+            >
+              Print WH Label
             </Button>
           </Space>
 
@@ -505,20 +532,20 @@ function BoxFoxcon() {
               marginTop: 16,
             }}
           >
-            <Button
+            {/* <Button
               type="primary"
               icon={<PrinterOutlined />}
               style={{ background: "green", borderColor: "green" }}
             >
               Print WH Label
-            </Button>
-            <Button
+            </Button> */}
+            {/* <Button
               type="primary"
               icon={<PrinterOutlined />}
               style={{ background: "goldenrod", borderColor: "goldenrod" }}
             >
               Print Box Label
-            </Button>
+            </Button> */}
           </Space>
         </Modal>
       </div>

@@ -197,6 +197,7 @@ function fn_Box_Search() {
           }
 
           await GetDataPacking(data.label);
+          await DataReceive(data.label);
         } catch (error) {
           console.error("API Error:", error);
         }
@@ -220,6 +221,8 @@ function fn_Box_Search() {
       setPackdate(today);
       setopenManual(false);
       setName_User("")
+      setDataPacking([]);
+      setDataLotReceive([]);
     }
   };
   const NewPopup = () => {
