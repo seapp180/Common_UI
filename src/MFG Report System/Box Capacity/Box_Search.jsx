@@ -102,6 +102,7 @@ function Box_Search() {
     checkradio,
     rowSelection,
     CheckStatus,
+    dis_show
   } = fn_Box_Search();
   return (
     <Content>
@@ -819,6 +820,7 @@ function Box_Search() {
                                     color: "#fff",
                                     marginLeft: "10px",
                                   }}
+                                  disabled={dis_show}
                                   onClick={() => GenPack("ManaulPack")}
                                 >
                                   Manual
@@ -826,6 +828,7 @@ function Box_Search() {
                                 <Button
                                   id="genPackButton"
                                   icon={<MedicineBoxOutlined />}
+                                  disabled={dis_show}
                                   type="primary"
                                   style={{
                                     marginLeft: "10px",
@@ -851,6 +854,7 @@ function Box_Search() {
                                     marginLeft: "10px",
                                     backgroundColor: "#f4d03f",
                                   }}
+                                  disabled={dis_show}
                                   onClick={() => GenPack("AutoGenerate")}
                                 >
                                   Auto Generate
@@ -862,6 +866,7 @@ function Box_Search() {
                         {((CheckStatus == "ACTIVE" && PageInsert == "UPDATE") ||
                           CheckStatus == "") && (
                             <Button
+                            disabled={dis_show}
                             icon={<DeleteOutlined />}
                             type="primary"
                             danger
@@ -1001,6 +1006,7 @@ function Box_Search() {
                   >
                     <Button
                       icon={<SaveOutlined />}
+                      disabled={dis_show}
                       type="primary"
                       style={{
                         background: "#50C878",
@@ -1077,6 +1083,7 @@ function Box_Search() {
                       type="primary"
                       size="small"
                       danger
+                      disabled={dis_show}
                       onClick={handleDeleteLot}
                     >
                       Delete
