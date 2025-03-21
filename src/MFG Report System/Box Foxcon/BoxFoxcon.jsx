@@ -446,9 +446,11 @@ function BoxFoxcon() {
                   suffix={<ScanOutlined style={{ color: "gray" }} />}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      GetPackLabel(e.target.value);
+                      e.preventDefault();
+                      GetPackLabel();
                     }
                   }}
+                  // onBlur={(e) => {GetPackLabel(e.target.value);}}
                 />
               </div>
               {/* <div>

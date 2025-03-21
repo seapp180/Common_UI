@@ -1493,8 +1493,37 @@ function fn_Box_Search() {
           })
           .then((res) => {});
       }
-
+      await axios
+      .post("/api/BoxCapacity/InsLotPacking", {
+        dataList: {
+          item: selectddlProductNew,
+          boxno: BoxNo,
+          lot: selectddlLot,
+          lot_qty: Pack_qtyLot,
+          packdate: Packdate == "" ? today : Packdate,
+        },
+      }) .then((res) => {});
+      await axios
+      .post("/api/BoxCapacity/DataStatus", {
+        dataList: {
+          product: selectddlProductNew,
+          boxno: BoxNo,
+        },
+      })
+      .then((res) => {
+        LOT_STATUS = res.data[0].STATUS;
+        setBoxstatus(LOT_STATUS);
+      });
+    await axios.post("/api/BoxCapacity/UpdataStatus", {
+      dataList: {
+        item: selectddlProductNew,
+        boxno: BoxNo,
+        status: LOT_STATUS,
+      },
+    });
+     
       if (Number(Remain_qty) == Number(Pack_qtyLot)) {
+
         try {
           const res = await axios.post("/api/BoxCapacity/UpdateManual", {
             dataList: {
@@ -1503,36 +1532,8 @@ function fn_Box_Search() {
               boxno: BoxNo,
             },
           });
-          await axios
-            .post("/api/BoxCapacity/InsLotPacking", {
-              dataList: {
-                item: selectddlProductNew,
-                boxno: BoxNo,
-                lot: selectddlLot,
-                lot_qty: Pack_qtyLot,
-                packdate: Packdate == "" ? today : Packdate,
-              },
-            })
-            .then((res) => {});
-          await axios
-            .post("/api/BoxCapacity/DataStatus", {
-              dataList: {
-                product: selectddlProductNew,
-                boxno: BoxNo,
-              },
-            })
-            .then((res) => {
-              LOT_STATUS = res.data[0].STATUS;
-              setBoxstatus(LOT_STATUS);
-            });
-          await axios.post("/api/BoxCapacity/UpdataStatus", {
-            dataList: {
-              item: selectddlProductNew,
-              boxno: BoxNo,
-              status: LOT_STATUS,
-            },
-          });
-
+        
+     
         } catch (error) {
           console.error("Error during UpdateManual:", error);
         }
@@ -1550,6 +1551,7 @@ function fn_Box_Search() {
       } else {
         await GetDataLotPacking(selectddlProductNew, BoxNo);
         await DataManual(selectddlProductNew, BoxNo);
+        await GetDataPacking(selectddlProductNew);
         setselectddlLot("");
         setPack_qtyLot(0);
         setRemain_qty("");

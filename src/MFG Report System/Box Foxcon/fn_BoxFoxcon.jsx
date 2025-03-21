@@ -66,9 +66,9 @@ function fn_BoxFoxcon() {
       state: { message: item },
     });
   };
-useEffect(() => {
-  // GetddlProduct();
- }, []);
+  useEffect(() => {
+    // GetddlProduct();
+  }, []);
   const seenProducts = new Set();
   const columns = [
     {
@@ -583,89 +583,113 @@ useEffect(() => {
     setdis_print(true);
   };
   const GetPackLabel = async () => {
-    console.log(Packlabel.length, "Packlabel.length", Packlabel);
-    try {
-      const response = await axios.post("/api/BoxFoxcon/GetproductScan", {
-        packid: Packlabel.trim() || "",
-      });
-      if (response.data.length == 0) {
-        Swal.fire({
-          icon: "error",
-          text: "Not found packing data, Please check packing label !!",
-        });
+    console.log(Packlabel.length, "Packlabel.length", Packlabel, BoxQty.length);
+    
+    if (Number(BoxQty) == 0 || BoxQty.length == 0) {
+      console.log("Please enter box qty !!");
+      Swal.fire({
+        icon: "error",
+        text: "Please enter box qty !!",
+      }).then(() => {
         setTimeout(() => {
           fcPacklabel.current.focus();
         }, 0);
-        setPacklabel("");
-      } else {
-        await axios
-          .post("/api/BoxFoxcon/GetDataPackLabel", {
-            pack_label: Packlabel.trim() || "",
-          })
-          .then(async (res) => {
-            if (res.data.length > 0) {
-              Swal.fire({
-                text: "This packing exist other box no!!",
-                icon: "error",
-              });
-              setTimeout(() => {
-                fcPacklabel.current.focus();
-              }, 200);
-            } else {
-              axios
-                .post("/api/BoxFoxcon/GetproductScan", {
-                  packid: Packlabel.trim() || "",
-                })
-                .then((res) => {
-                  console.log(res.data, "DATA_SCAn");
-                  if (res.data.length > 0) {
-                    if (res.data[0].ITEM !== ProductNew) {
+      });
+    } else if (Packlabel.length == 0) {
+      console.log("Please enter packing label !!");
+      Swal.fire({
+        icon: "error",
+        text: "Please enter packing label !!",
+      }).then(() => {
+        setTimeout(() => {
+          fcPacklabel.current.focus();
+        }, 0);
+      });
+    }
+     else {
+      try {
+        const response = await axios.post("/api/BoxFoxcon/GetproductScan", {
+          packid: Packlabel.trim() || "",
+        });
+        if (response.data.length == 0) {
+          Swal.fire({
+            icon: "error",
+            text: "Not found packing data, Please check packing label !!",
+          });
+          setTimeout(() => {
+            fcPacklabel.current.focus();
+          }, 0);
+          setPacklabel("");
+        } else {
+          await axios
+            .post("/api/BoxFoxcon/GetDataPackLabel", {
+              pack_label: Packlabel.trim() || "",
+            })
+            .then(async (res) => {
+              if (res.data.length > 0) {
+                Swal.fire({
+                  text: "This packing exist other box no!!",
+                  icon: "error",
+                });
+                setTimeout(() => {
+                  fcPacklabel.current.focus();
+                }, 200);
+              } else {
+                axios
+                  .post("/api/BoxFoxcon/GetproductScan", {
+                    packid: Packlabel.trim() || "",
+                  })
+                  .then((res) => {
+                    console.log(res.data, "DATA_SCAn");
+                    if (res.data.length > 0) {
+                      if (res.data[0].ITEM !== ProductNew) {
+                        Swal.fire({
+                          text: "Product not match",
+                          icon: "error",
+                        });
+                        setTimeout(() => {
+                          fcPacklabel.current.focus();
+                        }, 200);
+                        return;
+                      }
+                      setDataPackLabel((prevData) => {
+                        // กรองข้อมูลใหม่ที่ไม่มี Pack ID ซ้ำ
+                        const newData = res.data.filter(
+                          (newItem) =>
+                            !prevData.some(
+                              (existingItem) =>
+                                existingItem.PACK_ID === newItem.PACK_ID
+                            )
+                        );
+
+                        // รวมข้อมูลใหม่กับข้อมูลเดิม
+                        const updatedData = [...prevData, ...newData];
+
+                        // จัดเรียงข้อมูลตาม LOT
+                        updatedData.sort((a, b) => a.LOT.localeCompare(b.LOT));
+                        setPacklabel("");
+                        return updatedData;
+                      });
+                    } else {
                       Swal.fire({
-                        text: "Product not match",
+                        text: "No product data found for this packing label!",
                         icon: "error",
                       });
                       setTimeout(() => {
                         fcPacklabel.current.focus();
                       }, 200);
-                      return;
                     }
-                    setDataPackLabel((prevData) => {
-                      // กรองข้อมูลใหม่ที่ไม่มี Pack ID ซ้ำ
-                      const newData = res.data.filter(
-                        (newItem) =>
-                          !prevData.some(
-                            (existingItem) =>
-                              existingItem.PACK_ID === newItem.PACK_ID
-                          )
-                      );
-
-                      // รวมข้อมูลใหม่กับข้อมูลเดิม
-                      const updatedData = [...prevData, ...newData];
-
-                      // จัดเรียงข้อมูลตาม LOT
-                      updatedData.sort((a, b) => a.LOT.localeCompare(b.LOT));
-                      setPacklabel("");
-                      return updatedData;
-                    });
-                  } else {
-                    Swal.fire({
-                      text: "No product data found for this packing label!",
-                      icon: "error",
-                    });
-                    setTimeout(() => {
-                      fcPacklabel.current.focus();
-                    }, 200);
-                  }
-                });
-            }
-          });
+                  });
+              }
+            });
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        Swal.fire({
+          icon: "error",
+          text: "เกิดข้อผิดพลาดในการดึงข้อมูล",
+        });
       }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      Swal.fire({
-        icon: "error",
-        text: "เกิดข้อผิดพลาดในการดึงข้อมูล",
-      });
     }
   };
   const GetBoxQty = async () => {
@@ -676,13 +700,13 @@ useEffect(() => {
   const Search = async () => {
     console.log(packDateFrom, "packDateFrom");
     console.log(packDateTo, "packDateTo");
-    console.log(ProductSeacrh, "ProductSeacrh");
+    console.log(selectProduct, "ProductSeacrh");
     console.log(LotSearch, "LotSearch");
     console.log(BoxSearch, "BoxSearch");
     await axios
       .post("/api/BoxFoxcon/SearchBoxFoxConn", {
         dataList: {
-          product: ProductSeacrh.trim() || "",
+          product: selectProduct.trim() || "",
           lot: LotSearch.trim() || "",
           boxno: BoxSearch.trim() || "",
           datefrom: packDateFrom,
@@ -698,28 +722,27 @@ useEffect(() => {
     console.log(data.label, "selectProduct");
     setSelectProduct(data.label);
     await axios
-    .post("/api/BoxFoxcon/ddlProduct", {
-      product:data.label
-    })
-    .then((res) => {
-      console.log(res.data, "res.data55");
-      setProductSeacrh(res.data)
-     });
+      .post("/api/BoxFoxcon/ddlProduct", {
+        product: data.label,
+      })
+      .then((res) => {
+        console.log(res.data, "res.data55");
+        setProductSeacrh(res.data);
+      });
   };
 
-  const GetddlProduct = async () => {
-    // console.log(data.label, "GetddlProduct");
-    // setSelectProduct(data.label);
-    await axios
-    .post("/api/BoxFoxcon/GetddlProduct", {
-      // product:data.label
-    })
-    .then((res) => {
-      console.log(res.data, "GetddlProduct");
-      setProductSeacrh(res.data)
-     });
-  };
-
+  // const GetddlProduct = async () => {
+  //   // console.log(data.label, "GetddlProduct");
+  //   // setSelectProduct(data.label);
+  //   await axios
+  //   .post("/api/BoxFoxcon/GetddlProduct", {
+  //     // product:data.label
+  //   })
+  //   .then((res) => {
+  //     console.log(res.data, "GetddlProduct");
+  //     setProductSeacrh(res.data)
+  //    });
+  // };
 
   return {
     handleGoToNextPage,
