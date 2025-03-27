@@ -9,7 +9,8 @@ import {
   PrinterOutlined,
 } from "@ant-design/icons";
 import { useLoading } from "../../component/loading/fn_loading";
-import { set } from "date-fns";
+import { Box } from "lucide-react";
+import { da } from "date-fns/locale";
 
 function formatDateToMMDDYYYY(date) {
   const d = new Date(date);
@@ -28,7 +29,7 @@ function fn_BoxFoxcon() {
   const [ProductNew, setProductNew] = useState("");
   const [BoxNo, setBoxNo] = useState("");
   const [BoxQty, setBoxQty] = useState("");
-  const [BoxDate, setBoxDate] = useState(today);
+  const [BoxDate, setBoxDate] = useState(date);
   const [Packlabel, setPacklabel] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -53,6 +54,9 @@ function fn_BoxFoxcon() {
   const [dis_packlabel, setdis_packlabel] = useState(true);
   const [dis_genbox, setdis_genbox] = useState(false);
   const [dis_print, setdis_print] = useState(true);
+  // checkpahe
+  const [sts_page, setsts_page] = useState("");
+  const [item_box, setitem_box] = useState("");
   const handleOk = () => {
     setIsModalOpen(false);
   };
@@ -61,7 +65,6 @@ function fn_BoxFoxcon() {
     setIsModalOpen(false);
   };
   const handleGoToNextPage = (page) => {
-    console.log(page, "page");
     navigate("/CommonSystem/MFGReportSystem/NewBoxFoxcon", {
       state: { message: item },
     });
@@ -76,7 +79,7 @@ function fn_BoxFoxcon() {
       dataIndex: "key",
       key: "key",
       render: (text, record, index) => {
-        return index + 1;
+        return record.key || index + 1;
       },
     },
     {
@@ -138,28 +141,47 @@ function fn_BoxFoxcon() {
         <Button
           type="danger"
           icon={<DeleteOutlined />}
-          onClick={() => handleDelete(record.PACK_ID)}
+          disabled={sts_page === "GEN_SUCCESS"}
+          onClick={() => {
+       
+            handleDelete(
+              record.PACK_ID,
+              record.ITEM,
+              record.BOX_NO,
+              record.SEQ,
+              record.LOT,
+              record.PRODUCT,
+              record.BIN,
+              "DELETE"
+            );
+          }}
         />
       ),
     },
   ];
+  const seenProducts1 = new Set();
+  const seenBoxNos = new Set();
   const DataSearch = [
-    {
-      title: "No.",
-      dataIndex: "key",
-      key: "key",
-      render: (text, record, index) => {
-        return index + 1;
-      },
-      width: 30,
-      align: "center",
-    },
+    // {
+    //   title: "No.",
+    //   dataIndex: "key",
+    //   key: "key",
+    //   render: (text, record, index) => {
+    //     return index + 1;
+    //   },
+    //   width: 30,
+    //   align: "center",
+    // },
     {
       title: "Product",
       dataIndex: "PRODUCT",
       key: "product",
       render: (text, record, index) => {
-        return text;
+        if (!seenProducts1.has(text)) {
+          seenProducts1.add(text); // เก็บค่าใน Set
+          return text; // แสดงค่าเฉพาะแถวแรกที่เจอ
+        }
+        return ""; // ซ่อนค่าที่ซ้ำกัน
       },
       width: 150,
       align: "center",
@@ -169,7 +191,11 @@ function fn_BoxFoxcon() {
       dataIndex: "BOX_NO",
       key: "BoxNo",
       render: (text, record, index) => {
-        return text;
+        if (!seenBoxNos.has(text)) {
+          seenBoxNos.add(text); // เก็บค่าใน Set
+          return text; // แสดงค่าเฉพาะแถวแรกที่เจอ
+        }
+        return ""; // ซ่อนค่าที่ซ้ำกัน
       },
       width: 150,
       align: "center",
@@ -199,7 +225,7 @@ function fn_BoxFoxcon() {
       dataIndex: "LOT",
       key: "lotno",
       render: (text, record, index) => {
-        return text ? text.toLocaleString() : "0";
+        return text;
       },
       width: 120,
       align: "center",
@@ -242,76 +268,256 @@ function fn_BoxFoxcon() {
       render: (text, record, index) => {
         return text;
       },
-      width: 150,
+      width: 100,
       align: "center",
     },
     {
       title: "Edit",
-      dataIndex: "PACK_DATE",
-      key: "qty",
+      dataIndex: "",
+      key: "",
       render: (text, record, index) => {
-        return <EditOutlined />;
+        return (
+          <button
+            style={{
+              backgroundColor: "white",
+              border: "none",
+              cursor: "pointer", // เปลี่ยนเมาส์เป็น pointer
+            }}
+            onMouseOver={(e) => {
+              e.target.style.backgroundColor = "#f0f0f0"; // เปลี่ยนสีพื้นหลังเมื่อชี้เมาส์
+            }}
+            onMouseOut={(e) => {
+              e.target.style.backgroundColor = "white"; // คืนค่าพื้นหลังเดิมเมื่อเมาส์ออก
+            }}
+            onClick={() =>
+              handle_Edit(record.PRODUCT, record.BOX_NO, record.LOT, "UPDATE")
+            }
+          >
+            <EditOutlined />
+          </button>
+        );
       },
+      width: 70,
+      align: "center",
     },
+
     {
       title: "Delete",
-      dataIndex: "PACK_DATE",
-      key: "qty",
+      dataIndex: "",
+      key: "",
       render: (text, record, index) => {
-        return <DeleteOutlined />;
+        return (
+          <DeleteOutlined
+            onClick={() =>
+              handleDeleteAll(record.PRODUCT, record.BOX_NO, record.ITEM)
+            }
+          />
+        );
       },
+      width: 50,
+      align: "center",
     },
     {
       title: "Label",
-      dataIndex: "PACK_DATE",
-      key: "qty",
+      dataIndex: "",
+      key: "",
       render: (text, record, index) => {
         return <PrinterOutlined />;
       },
+      width: 50,
+      align: "center",
     },
   ];
-  const handleDelete = (packId) => {
-    console.log("PACK_ID to delete:", packId);
-    console.log("Before delete:", DataPackLabel);
-    setDataPackLabel((prevData) => {
-      const updatedData = prevData.filter((item) => item.PACK_ID !== packId);
-      console.log("After delete:", updatedData);
-      return updatedData;
-    });
+  const handleDeleteAll = async (prd, Box_No, item_box) => {
+    await axios
+      .post("/api/BoxFoxcon/GetEdit_BoxDet_Detail", {
+        dataList: { product: prd, boxno: Box_No },
+      })
+      .then((res) => {
+        if (res.data.length > 0) {
+          Swal.fire({
+            icon: "error",
+            text: "ไม่สามารถลบข้อมูลได้ เนื่องจากมี Lot No. อยู่",
+          });
+          return;
+        } else {
+          Swal.fire({
+            title: "ยืนยันการลบ",
+            text: "คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "ลบข้อมูล",
+            cancelButtonText: "ยกเลิก",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // ถ้าผู้ใช้กดยืนยัน ให้ส่งคำขอลบ
+              axios
+                .post("/api/BoxFoxcon/DeleteBoxMaster", {
+                  dataList: { item: item_box, box_no: Box_No },
+                })
+                .then(async (res) => {
+                  // ถ้าลบสำเร็จ
+                  if (res.status === 200) {
+                    Swal.fire({
+                      icon: "success",
+                      text: "ลบข้อมูลสำเร็จ!",
+                    });
+                    await Search(item_box, Box_No);
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                  Swal.fire({
+                    icon: "error",
+                    text: "เกิดข้อผิดพลาดในการลบข้อมูล",
+                  });
+                });
+            }
+          });
+        }
+      });
+  };
+  const handle_Edit = async (item, box_no, lotno, type) => {
+    setsts_page(type);
+
+    setdis_boxqty(false);
+    setdis_packlabel(false);
+    setdis_genbox(false);
+    setdis_product(true);
+    let id;
+    showLoading("...กำลังค้นหาข้อมูล");
+    await axios
+      .post("/api/BoxFoxcon/GetEdit_MSTR", {
+        dataList: {
+          product: item,
+          boxno: box_no,
+        },
+      })
+      .then((res) => {
+        setProductNew(res.data[0].PRODUCT);
+        setBoxNo(res.data[0].BOX_NO);
+        setBoxDate(res.data[0].BOX_DATE);
+        setBoxQty(res.data[0].BOX_QTY);
+        setitem_box(res.data[0].ITEM);
+        id = res.data[0].PACK_BY;
+        setPackBy(res.data[0].PACK_BY);
+      });
+    await axios
+      .get("/api/BoxFoxcon/GetUser", {
+        params: { empcode: id || "" },
+      })
+      .then((res) => {
+        setFistName(res.data[0].F_NAME);
+        setSurname(res.data[0].SURNAME);
+        setFac(res.data[0].FAC);
+      });
+    await axios
+      .post("/api/BoxFoxcon/GetEdit_BoxDet_Detail", {
+        dataList: { product: item, boxno: box_no },
+      })
+      .then((res) => {
+        setDataPackLabel(res.data);
+      });
+    hideLoading();
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (
+    packId,
+    item_no,
+    box_no,
+    seq_no,
+    lot_no,
+    product,
+    bin,
+    status
+  ) => {
+    if (sts_page == "UPDATE") {
+
+      if (status == "DELETE") {
+        await axios.post("/api/BoxFoxcon/DeleteBoxDet_Foxconn", {
+          dataList: {
+            seq: seq_no,
+            lot: lot_no,
+            item: product,
+            boxno: box_no,
+            pack_id: packId,
+            lot_bin: bin,
+          },
+        });
+        await axios.post("/api/BoxFoxcon/updateDeleteRejectFoxconn", {
+          dataList: {
+            lot: lot_no,
+          },
+        });
+        // await axios.post("/api/BoxFoxcon/DeleteBoxDetDetail_Foxconn", {
+        //   dataList: {
+        //     item: product,
+        //     boxno: box_no,
+        //     lot: lot_no,
+        //     pack_id: packId,
+        //   },
+        // });
+        await axios.post("/api/BoxFoxcon/UpdateSeqDet", {
+          dataList: { item: product, boxno: box_no },
+        });
+        Swal.fire({
+          icon: "success",
+          text: " ลบข้อมูลสำเร็จ",
+        });
+        await axios
+      .post("/api/BoxFoxcon/GetEdit_BoxDet_Detail", {
+        dataList: { product: item_no, boxno: box_no },
+      })
+      .then((res) => {
+        setDataPackLabel(res.data);
+      });
+      } else {
+        setDataPackLabel((prevData) => {
+          const updatedData = prevData.filter(
+            (item) => item.PACK_ID !== packId
+          );
+          return updatedData;
+        });
+      }
+    } else {
+      setDataPackLabel((prevData) => {
+        const updatedData = prevData.filter((item) => item.PACK_ID !== packId);
+        return updatedData;
+      });
+    }
   };
   const handleUser = async () => {
     try {
       const response = await axios.get("/api/BoxFoxcon/GetUser", {
         params: { empcode: PackBy || "" },
       });
-      console.log(response.data);
       if (response.data.length > 0) {
-        console.log(response.data[0], "DATA1111");
         setFistName(response.data[0].F_NAME);
         setSurname(response.data[0].SURNAME);
         let fac_code = response.data[0].FAC;
-        console.log(fac_code, "fac_code");
         await axios
           .post("/api/BoxFoxcon/GetFactoryCode", {
             fac: fac_code,
           })
           .then((res) => {
-            console.log(res.data[0].FAC_CODE, "res.data[0].FAC_CODE");
             setFac(res.data[0].FAC_CODE);
           });
+        setdis_product(false);
         setTimeout(() => {
           fcProduct.current.focus();
         }, 0);
-        setdis_product(false);
       } else {
         Swal.fire({
           icon: "error",
           text: "ไม่พบข้อมูล User",
         });
+        setdis_product(true);
         setTimeout(() => {
           fcPackBy.current.focus();
         }, 0);
-        setdis_product(true);
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -322,7 +528,6 @@ function fn_BoxFoxcon() {
     }
   };
   const Reset = (status) => {
-    console.log(status, "status");
     if (status == "ResetName") {
       setPackBy("");
       setFistName("");
@@ -335,12 +540,19 @@ function fn_BoxFoxcon() {
       setDataPackLabel([]);
       setdis_genbox(false);
       setdis_print(true);
-      setBoxDate(today);
+      setBoxDate(date);
     } else if (status == "ResetSearch") {
-      set;
+      setProductSeacrh("");
+      setLotSearch("");
+      setPackDateFrom("");
+      setPackDateTo("");
+      setBoxSearch("");
+      setDataSource([]);
     }
   };
   const GetProductKey = async () => {
+    let item;
+    let Max;
     if (ProductNew.length <= 20) {
       try {
         const response = await axios.get("/api/BoxFoxcon/GetProductKey", {
@@ -348,11 +560,35 @@ function fn_BoxFoxcon() {
         });
         if (response.data.length > 0) {
           setProductNew(response.data[0].PRD_NAME);
+          setdis_boxqty(false);
+          setdis_packlabel(false);
           setTimeout(() => {
             fcBoxqty.current.focus();
           }, 0);
-          setdis_boxqty(false);
-          setdis_packlabel(false);
+
+          const Prd_id = await axios.post("/api/BoxFoxcon/GetProductName", {
+            dataList: { fac: Fac, product: ProductNew.trim() || "" },
+          });
+          if (Prd_id.data.length > 0) {
+            item = Prd_id.data[0].ITEM;
+            await axios
+              .post("/api/BoxFoxcon/DataBox_Qty", {
+                product: item,
+              })
+              .then(async (res) => {
+                if (res.data.length == 0) {
+                  setBoxQty(res.data[0].MAX_QTY);
+                } else {
+                  await axios
+                    .post("/api/BoxFoxcon/DataPPL_QTYfoxConn", {
+                      product: item,
+                    })
+                    .then((res) => {
+                      setBoxQty(res.data[0].PPI_QTY);
+                    });
+                }
+              });
+          }
         } else {
           Swal.fire({
             icon: "error",
@@ -378,7 +614,29 @@ function fn_BoxFoxcon() {
           packid: ProductNew.trim() || "",
         });
         if (response.data.length > 0) {
-          console.log(response.data[0].ITEM, "response.data[0].ITEM");
+          const Prd_id = await axios.post("/api/BoxFoxcon/GetProductName", {
+            dataList: { fac: Fac, product: response.data[0].ITEM || "" },
+          });
+          if (Prd_id.data.length > 0) {
+            item = Prd_id.data[0].ITEM;
+            await axios
+              .post("/api/BoxFoxcon/DataBox_Qty", {
+                product: item,
+              })
+              .then(async (res) => {
+                if (res.data.length == 0) {
+                  setBoxQty(res.data[0].MAX_QTY);
+                } else {
+                  await axios
+                    .post("/api/BoxFoxcon/DataPPL_QTYfoxConn", {
+                      product: item,
+                    })
+                    .then((res) => {
+                      setBoxQty(res.data[0].PPI_QTY);
+                    });
+                }
+              });
+          }
           setProductNew(response.data[0].ITEM);
           setdis_boxqty(false);
           setdis_packlabel(false);
@@ -411,29 +669,30 @@ function fn_BoxFoxcon() {
       (sum, item) => sum + (item.QTY || 0),
       0
     );
-    const totalQtyText = totalQty.toLocaleString();
-    showLoading("Processing...");
+    const totalQtyText = Number(totalQty.toLocaleString().replace(/,/g, ""));
+    showLoading("กำลังบันทึก....");
+
     if (BoxQty !== totalQtyText) {
       Swal.fire({
         icon: "error",
-        text: "Qty from scan packing not same box qty!!",
+        text: "Total Pack ไม่เท่ากับ Box Qty /Qty from scan packing not same box qty!!",
       });
       hideLoading();
       return;
     } else {
-      console.log("Qty from scan packing same box qty!!");
-      showLoading("Processing...");
+      showLoading("กำลังบันทึก....");
       let id_box = "";
       const Prd_id = await axios.post("/api/BoxFoxcon/GetProductName", {
         dataList: { fac: Fac, product: ProductNew.trim() || "" },
       });
       if (Prd_id.data.length > 0) {
         id_box = Prd_id.data[0].ITEM;
+
         const boxResponse = await axios.post("/api/BoxFoxcon/GetBoxNo", {
           dataList: { fac: Fac, product: Prd_id.data[0].ITEM.trim() || "" },
         });
         if (boxResponse.data.length > 0) {
-          const parsedBoxQty = Number(BoxQty.replace(/,/g, ""));
+          // const parsedBoxQty = Number(BoxQty.replace(/,/g, ""));
           setBoxNo(boxResponse.data[0]);
           await axios
             .post("/api/BoxFoxcon/InsertBoxMSTR", {
@@ -441,15 +700,15 @@ function fn_BoxFoxcon() {
                 item: id_box,
                 boxno: boxResponse.data[0],
                 fac1: Fac,
-                box_qty: parsedBoxQty,
-                box_max_qty: parsedBoxQty,
+                box_qty: BoxQty,
+                box_max_qty: BoxQty,
                 packingBy: PackBy,
                 fac2: Fac,
+                datepack: BoxDate == "" ? today : BoxDate,
               },
             })
             .then((res) => {
               if (res.status === 200) {
-                console.log("InsertBoxMSTR success:", res.data);
               } else {
                 Swal.fire({
                   icon: "error",
@@ -476,14 +735,16 @@ function fn_BoxFoxcon() {
                   boxno: boxResponse.data[0],
                   lot: DataPackLabel[i].LOT,
                   lot_qty: DataPackLabel[i].QTY,
+                  packdate: BoxDate == "" ? today : BoxDate,
+                  bin_no: DataPackLabel[i].BIN,
+                  binqty: DataPackLabel[i].QTY,
+                  packdate_bin: BoxDate == "" ? today : BoxDate,
+                  packid: DataPackLabel[i].PACK_ID,
                 },
               })
               .then((res) => {
                 if (res.status === 200) {
-                  console.log(
-                    `InsertBoxDet success for LOT ${DataPackLabel[i].LOT}:`,
-                    res.data
-                  );
+               
                 } else {
                   Swal.fire({
                     icon: "error",
@@ -503,49 +764,57 @@ function fn_BoxFoxcon() {
                 });
                 return;
               });
+            await axios.post("/api/BoxFoxcon/UpdateAddReject", {
+              dataList: {
+                item: id_box,
+                lot: DataPackLabel[0].LOT,
+              },
+            });
           }
 
           // ตรวจสอบและดำเนินการในลูปที่สอง
-          for (let i = 0; i < DataPackLabel.length; i++) {
-            await axios
-              .post("/api/BoxFoxcon/InsertBoxDetail", {
-                dataList: {
-                  item_id: id_box,
-                  box_no: boxResponse.data[0],
-                  lot_no: DataPackLabel[i].LOT,
-                  lotbin: DataPackLabel[i].BIN,
-                  qty: DataPackLabel[i].QTY,
-                  pack_id: DataPackLabel[i].PACK_ID,
-                },
-              })
-              .then((res) => {
-                if (res.status === 200) {
-                  console.log(
-                    `InsertBoxDetail success for LOT ${DataPackLabel[i].LOT}:`,
-                    res.data
-                  );
-                } else {
-                  Swal.fire({
-                    icon: "error",
-                    text: `Error inserting BoxDetail for LOT ${DataPackLabel[i].LOT}!`,
-                  });
-                  return;
-                }
-              })
-              .catch((error) => {
-                console.error(
-                  `InsertBoxDetail error for LOT ${DataPackLabel[i].LOT}:`,
-                  error
-                );
-                Swal.fire({
-                  icon: "error",
-                  text: `เกิดข้อผิดพลาดในการบันทึกข้อมูล BoxDetail สำหรับ LOT ${DataPackLabel[i].LOT}`,
-                });
-                return;
-              });
-          }
+          // for (let i = 0; i < DataPackLabel.length; i++) {
+          //   await axios
+          //     .post("/api/BoxFoxcon/InsertBoxDetail", {
+          //       dataList: {
+          //         item_id: id_box,
+          //         box_no: boxResponse.data[0],
+          //         lot_no: DataPackLabel[i].LOT,
+          //         lotbin: DataPackLabel[i].BIN,
+          //         qty: DataPackLabel[i].QTY,
+          //         pack_id: DataPackLabel[i].PACK_ID,
+          //         packdate: BoxDate == "" ? today : BoxDate,
+          //       },
+          //     })
+          //     .then((res) => {
+          //       if (res.status === 200) {
+          //         console.log(
+          //           `InsertBoxDetail success for LOT ${DataPackLabel[i].LOT}:`,
+          //           res.data
+          //         );
+          //       } else {
+          //         Swal.fire({
+          //           icon: "error",
+          //           text: `Error inserting BoxDetail for LOT ${DataPackLabel[i].LOT}!`,
+          //         });
+          //         return;
+          //       }
+          //     })
+          //     .catch((error) => {
+          //       console.error(
+          //         `InsertBoxDetail error for LOT ${DataPackLabel[i].LOT}:`,
+          //         error
+          //       );
+          //       Swal.fire({
+          //         icon: "error",
+          //         text: `เกิดข้อผิดพลาดในการบันทึกข้อมูล BoxDetail สำหรับ LOT ${DataPackLabel[i].LOT}`,
+          //       });
+          //       return;
+          //     });
+          // }
           setdis_genbox(true);
           setdis_print(false);
+          setsts_page("GEN_SUCCESS");
         }
         hideLoading();
         Swal.fire({
@@ -563,7 +832,7 @@ function fn_BoxFoxcon() {
     hideLoading();
   };
 
-  const showModal = (page) => {
+  const showModal = () => {
     setTimeout(() => {
       fcPackBy.current.focus();
     }, 300);
@@ -581,12 +850,17 @@ function fn_BoxFoxcon() {
     setDataPackLabel([]);
     setdis_genbox(false);
     setdis_print(true);
+    setsts_page("");
+    setBoxDate(date);
   };
   const GetPackLabel = async () => {
-    console.log(Packlabel.length, "Packlabel.length", Packlabel, BoxQty.length);
-    
+    const currentTime = new Date().toLocaleString();
+    console.log(`[${currentTime}] Response data:เข้าแล้ววว`);
+    const totalQty = DataPackLabel.reduce((sum, item) => sum + (item.QTY || 0), 0);
+    const totalQtyText = totalQty.toLocaleString();
+    const parsedTotal = Number(totalQtyText.replace(/,/g, ""));
+    const parsedBoxQty = Number(String(BoxQty).replace(/,/g, ""));
     if (Number(BoxQty) == 0 || BoxQty.length == 0) {
-      console.log("Please enter box qty !!");
       Swal.fire({
         icon: "error",
         text: "Please enter box qty !!",
@@ -595,18 +869,7 @@ function fn_BoxFoxcon() {
           fcPacklabel.current.focus();
         }, 0);
       });
-    } else if (Packlabel.length == 0) {
-      console.log("Please enter packing label !!");
-      Swal.fire({
-        icon: "error",
-        text: "Please enter packing label !!",
-      }).then(() => {
-        setTimeout(() => {
-          fcPacklabel.current.focus();
-        }, 0);
-      });
-    }
-     else {
+    } else {
       try {
         const response = await axios.post("/api/BoxFoxcon/GetproductScan", {
           packid: Packlabel.trim() || "",
@@ -640,8 +903,8 @@ function fn_BoxFoxcon() {
                     packid: Packlabel.trim() || "",
                   })
                   .then((res) => {
-                    console.log(res.data, "DATA_SCAn");
                     if (res.data.length > 0) {
+                    
                       if (res.data[0].ITEM !== ProductNew) {
                         Swal.fire({
                           text: "Product not match",
@@ -652,15 +915,35 @@ function fn_BoxFoxcon() {
                         }, 200);
                         return;
                       }
+                      console.log(`[${currentTime}] Response data:1 `, res.data);
                       setDataPackLabel((prevData) => {
-                        // กรองข้อมูลใหม่ที่ไม่มี Pack ID ซ้ำ
-                        const newData = res.data.filter(
-                          (newItem) =>
-                            !prevData.some(
-                              (existingItem) =>
-                                existingItem.PACK_ID === newItem.PACK_ID
-                            )
+                     
+                        const newData = res.data.filter((newItem) => {
+                          const isDuplicate = prevData.some(
+                            (existingItem) =>
+                              existingItem.PACK_ID === newItem.PACK_ID
+                          );
+                          return !isDuplicate; s
+                        });
+
+                        // คำนวณผลรวม QTY ของ newData
+                        const totalNewDataQty = newData.reduce(
+                          (sum, item) => sum + (item.QTY || 0),
+                          0
                         );
+
+                        // ตรวจสอบว่าผลรวม QTY ของ newData มากกว่า parsedBoxQty หรือไม่
+                        if (totalNewDataQty + parsedTotal > parsedBoxQty) {
+                          Swal.fire({
+                            icon: "error",
+                            text: "จำนวน QTY pack มากกว่าจำนวน Box Qty ",
+                          }).then(() => {
+                            setTimeout(() => {
+                              fcPacklabel.current.focus();
+                            }, 0);
+                          });
+                          return prevData; // คืนค่าข้อมูลเดิมโดยไม่เพิ่ม newData
+                        }
 
                         // รวมข้อมูลใหม่กับข้อมูลเดิม
                         const updatedData = [...prevData, ...newData];
@@ -692,17 +975,26 @@ function fn_BoxFoxcon() {
       }
     }
   };
-  const GetBoxQty = async () => {
+  const GetBoxQty = async (selectProduct, BoxSearch) => {
     setTimeout(() => {
       fcPacklabel.current.focus();
     }, 0);
   };
   const Search = async () => {
-    console.log(packDateFrom, "packDateFrom");
-    console.log(packDateTo, "packDateTo");
-    console.log(selectProduct, "ProductSeacrh");
-    console.log(LotSearch, "LotSearch");
-    console.log(BoxSearch, "BoxSearch");
+    if(ProductSeacrh == "" &&
+      LotSearch == "" && 
+      packDateFrom == "" &&
+      packDateTo == ""&&
+      BoxSearch == ""
+    ){
+      Swal.fire({
+        icon: "error",
+        text: "กรอกข้อมูลอย่างน้อย 1 ช่อง",
+      });
+      hideLoading()
+      return;
+    }
+    showLoading("...กำลังค้นหาข้อมูล");
     await axios
       .post("/api/BoxFoxcon/SearchBoxFoxConn", {
         dataList: {
@@ -714,35 +1006,132 @@ function fn_BoxFoxcon() {
         },
       })
       .then((res) => {
-        console.log(res.data, "res.data");
         setDataSource(res.data);
+        hideLoading();
       });
   };
   const handleProduct = async (data) => {
-    console.log(data.label, "selectProduct");
     setSelectProduct(data.label);
     await axios
       .post("/api/BoxFoxcon/ddlProduct", {
         product: data.label,
       })
       .then((res) => {
-        console.log(res.data, "res.data55");
         setProductSeacrh(res.data);
       });
   };
+  const SaveBox = async () => {
+    const totalQty = DataPackLabel.reduce(
+      (sum, item) => sum + (item.QTY || 0),
+      0
+    );
+    const totalQtyText = Number(totalQty.toLocaleString().replace(/,/g, ""));
 
-  // const GetddlProduct = async () => {
-  //   // console.log(data.label, "GetddlProduct");
-  //   // setSelectProduct(data.label);
-  //   await axios
-  //   .post("/api/BoxFoxcon/GetddlProduct", {
-  //     // product:data.label
-  //   })
-  //   .then((res) => {
-  //     console.log(res.data, "GetddlProduct");
-  //     setProductSeacrh(res.data)
-  //    });
-  // };
+    showLoading("กำลังบันทึก....");
+    if (BoxQty !== totalQtyText) {
+      Swal.fire({
+        icon: "error",
+        text: "Total Pack ไม่เท่ากับ Box Qty /Qty from scan packing not same box qty!!",
+      });
+      hideLoading();
+      return;
+    } else {
+      await axios
+        .post("/api/BoxFoxcon/Update_BoxMSTR", {
+          dataList: {
+            item: item_box,
+            boxno: BoxNo,
+            maxqty: BoxQty,
+            boxqty: BoxQty,
+            packing_By: PackBy,
+            datepack: BoxDate == "" ? today : BoxDate,
+          },
+        })
+        .then((res) => {
+          if (res.status === 200) {
+          } else {
+            Swal.fire({
+              icon: "error",
+              text: "Error Update BoxMSTR!",
+            });
+            return;
+          }
+        });
+      for (let i = 0; i < DataPackLabel.length; i++) {
+        await axios
+          .post("/api/BoxFoxcon/UpdateBoxDet", {
+            dataList: {
+              item: item_box,
+              boxNo: BoxNo,
+              lotno: DataPackLabel[i].LOT,
+              binqty: DataPackLabel[i].QTY,
+              packdate: BoxDate == "" ? today : BoxDate,
+              seq: DataPackLabel[i].SEQ,
+              bin_no: DataPackLabel[i].BIN,
+              binqty: DataPackLabel[i].QTY,
+              pack_bin: BoxDate == "" ? today : BoxDate,
+              packid: DataPackLabel[i].PACK_ID,
+            },
+          })
+          .then((res) => {
+            if (res.status === 200) {
+            } else {
+              Swal.fire({
+                icon: "error",
+                text: "Error UpdateBoxDet",
+              });
+              return;
+            }
+          })
+          .catch((error) => {
+            console.error("UpdateBoxMSTR error:", error);
+            Swal.fire({
+              icon: "error",
+              text: "เกิดข้อผิดพลาดในการบันทึกข้อมูล BoxMSTR",
+            });
+            return;
+          });
+
+        // await axios
+        //   .post("/api/BoxFoxcon/UpdateBoxDetDetail", {
+        //     dataList: {
+        //       item: item_box,
+        //       boxNo: BoxNo,
+        //       lotno: DataPackLabel[i].LOT,
+        //       binlot: DataPackLabel[i].BIN,
+        //       binqty: DataPackLabel[i].QTY,
+        //       packdate: BoxDate == "" ? today : BoxDate,
+        //       packid: DataPackLabel[i].PACK_ID,
+        //     },
+        //   })
+        //   .then((res) => {
+        //     if (res.status === 200) {
+        //       console.log("UpdateBoxMSTR success:", res.data);
+        //     } else {
+        //       Swal.fire({
+        //         icon: "error",
+        //         text: "Error Update BoxMSTR!",
+        //       });
+        //       return;
+        //     }
+        //   })
+        //   .catch((error) => {
+        //     console.error("UpdateBoxMSTR error:", error);
+        //     Swal.fire({
+        //       icon: "error",
+        //       text: "เกิดข้อผิดพลาดในการบันทึกข้อมูล BoxMSTR",
+        //     });
+        //     return;
+        //   });
+      }
+      setdis_print(false);
+      hideLoading();
+      Swal.fire({
+        icon: "success",
+        text: "Save Success",
+      });
+    }
+  };
 
   return {
     handleGoToNextPage,
@@ -797,6 +1186,9 @@ function fn_BoxFoxcon() {
     selectProduct,
     setSelectProduct,
     handleProduct,
+    sts_page,
+    setBoxDate,
+    SaveBox,
   };
 }
 

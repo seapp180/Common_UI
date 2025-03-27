@@ -11,8 +11,8 @@
   .TBFox .ant-table-tbody > tr > td {
     font-family: "Varela Round", sans-serif;
     font-size: 14px;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
   }
   .TitleNew_h2{
     background-color: #ca965c;

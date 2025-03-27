@@ -65,6 +65,8 @@ function BoxFoxcon() {
     selectProduct,
     setSelectProduct,
     handleProduct,
+    sts_page,
+    SaveBox,
   } = fn_BoxFoxcon();
   return (
     <Content>
@@ -92,7 +94,7 @@ function BoxFoxcon() {
                   }}
                   placeholder="Input Product."
                 /> */}
-                
+
                 <Select
                   showSearch
                   value={selectProduct}
@@ -107,10 +109,9 @@ function BoxFoxcon() {
                   }}
                   placeholder="Item"
                   optionFilterProp="children"
-                  filterOption={(input, option) =>
-                    (option?.label ?? "")
-                    .toLowerCase()
-                      // .includes(input.toLowerCase())
+                  filterOption={
+                    (input, option) => (option?.label ?? "").toLowerCase()
+                    // .includes(input.toLowerCase())
                   }
                   options={ProductSeacrh}
                 />
@@ -394,7 +395,7 @@ function BoxFoxcon() {
                 <label style={{ marginRight: 8, width: "100px" }}>
                   Box Qty :
                 </label>
-                <Input
+                {/* <Input
                   ref={fcBoxqty}
                   disabled={dis_boxqty}
                   value={BoxQty}
@@ -410,6 +411,20 @@ function BoxFoxcon() {
                       GetBoxQty(e.target.value);
                     }
                   }}
+                /> */}
+                <Input
+                  ref={fcBoxqty}
+                  disabled={dis_boxqty}
+                  value={BoxQty.toLocaleString()} // แสดงค่าพร้อมลูกน้ำ
+                  onChange={(e) => {
+                    const input = e.target.value.replace(/[^0-9]/g, ""); // กรองเฉพาะตัวเลข
+                    setBoxQty(input === "" ? 0 : Number(input)); // เก็บเป็น number
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      GetBoxQty(BoxQty); // ส่งค่าเป็น number
+                    }
+                  }}
                 />
               </div>
               <div
@@ -422,7 +437,11 @@ function BoxFoxcon() {
                 <label style={{ marginRight: 8, width: "100px" }}>
                   Box date :
                 </label>
-                <Input value={BoxDate} disabled />
+                <Input
+                  type="date"
+                  value={BoxDate}
+                  onChange={(e) => setBoxDate(e.target.value)}
+                />
               </div>
             </div>
           </div>
@@ -467,7 +486,6 @@ function BoxFoxcon() {
               </div> */}
             </div>
           </div>
-          {console.log(DataPackLabel, "DataPackLabel")}
           {/* Table Section */}
           <Table
             dataSource={DataPackLabel}
@@ -502,13 +520,20 @@ function BoxFoxcon() {
 
           {/* Buttons */}
           <Space style={{ marginTop: 16 }}>
-            <Button
-              disabled={dis_genbox}
-              type="primary"
-              onClick={() => GenBoxNo("GEN")}
-            >
-              Gen Box No.
-            </Button>
+            {(sts_page === "" ||sts_page === "GEN_SUCCESS") && (
+              <Button
+                disabled={dis_genbox}
+                type="primary"
+                onClick={() => GenBoxNo("GEN")}
+              >
+                Gen Box No.
+              </Button>
+            )}
+            {sts_page === "UPDATE" && (
+              <Button disabled={dis_genbox} type="primary" onClick={SaveBox}>
+                Save Box No.
+              </Button>
+            )}
             <Button
               style={{ backgroundColor: "#FF3131", color: "white" }}
               onClick={() => Reset("Cancel")}

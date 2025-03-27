@@ -8,8 +8,6 @@ import Swal from "sweetalert2";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { Checkbox } from "antd";
-import { set } from "date-fns";
-import { es } from "date-fns/locale";
 
 function fn_Box_Search() {
   const today = new Date().toISOString().split("T")[0];
@@ -1549,6 +1547,10 @@ function fn_Box_Search() {
         setdis_show(true);
         return;
       } else {
+        Swal.fire({
+          icon: "success",
+          text: "บันทึกข้อมูลสำเร็จ",
+        });
         await GetDataLotPacking(selectddlProductNew, BoxNo);
         await DataManual(selectddlProductNew, BoxNo);
         await GetDataPacking(selectddlProductNew);
@@ -1556,10 +1558,7 @@ function fn_Box_Search() {
         setPack_qtyLot(0);
         setRemain_qty("");
         setdis_show(false);
-        Swal.fire({
-          icon: "success",
-          text: "บันทึกข้อมูลสำเร็จ",
-        });
+       
         await DataHeader(selectddlProductNew, BoxNo);
       }
     }
@@ -1613,7 +1612,7 @@ function fn_Box_Search() {
           },
         })
         .then(async (response) => {
-          if (response.data.length > 0) {
+          if (response.data[0].REMAIN_QTY > 0) {
             Remain_QTY = response.data[0].REMAIN_QTY;
 
             await Swal.fire({
@@ -2282,7 +2281,7 @@ function fn_Box_Search() {
                 })
                 .then(async (response) => {
                   hideLoading();
-                  if (response.data.length > 0) {
+                  if (response.data[0].REMAIN_QTY > 0) {
                     Remain_QTY = response.data[0].REMAIN_QTY;
                     const result = await Swal.fire({
                       icon: "warning",
@@ -2303,6 +2302,7 @@ function fn_Box_Search() {
 
                       if (result2.isConfirmed) {
                         showLoading("กำลังบันทึกข้อมูล...");
+                        check = 1;
                         await axios
                           .post("/api/BoxCapacity/DataLOT_AUTO", {
                             dataList: {
@@ -2343,7 +2343,6 @@ function fn_Box_Search() {
                                 Data = response.data;
                                 let goodQtyArray = [];
                                 let lotNoArray = [];
-
                                 Data.forEach((item) => {
                                   goodQtyArray.push(item.GOOD_QTY);
                                   lotNoArray.push(item.LOT_NO);
@@ -2511,6 +2510,7 @@ function fn_Box_Search() {
                         },
                       })
                       .then(async (response) => {
+                        check = 1;
                         let LOT = response.data;
                         if (response.data.length > 0) {
                           await axios
@@ -2690,10 +2690,10 @@ function fn_Box_Search() {
                       await GetDataPacking(selectddlProductNew);
                       await GetDataLotPacking(selectddlProductNew, Box_NO);
                       await Search();
-                      await Swal.fire({
-                        icon: "success",
-                        text: "บันทึกข้อมูลสำเร็จ",
-                      });
+                      // await Swal.fire({
+                      //   icon: "success",
+                      //   text: "บันทึกข้อมูลสำเร็จ",
+                      // });
                     }
                     // await GetDataPacking(selectddlProductNew);
                     // await Search();
@@ -2903,10 +2903,10 @@ function fn_Box_Search() {
                   setdis_show(false);
                   await GetDataPacking(selectddlProductNew);
                   await GetDataLotPacking(selectddlProductNew, Box_NO);
-                  await Swal.fire({
-                    icon: "success",
-                    text: "บันทึกข้อมูลสำเร็จ",
-                  });
+                  // await Swal.fire({
+                  //   icon: "success",
+                  //   text: "บันทึกข้อมูลสำเร็จ",
+                  // });
                   hideLoading();
                 }
                 hideLoading();
@@ -2925,6 +2925,10 @@ function fn_Box_Search() {
       }
     }
     hideLoading();
+    await Swal.fire({
+      icon: "success",
+      text: "บันทึกข้อมูลสำเร็จ",
+    });
     await GetDataLotPacking1(selectddlProductNew, DataBox);
   };
   const exportToExcel = async (data, namefile) => {
