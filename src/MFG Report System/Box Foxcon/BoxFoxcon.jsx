@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Button, Table, Modal, Input, Space, Select } from "antd";
+import { Layout, Button, Table, Modal, Input, Space, Select, } from "antd";
 import {
   SearchOutlined,
   PlusOutlined,
@@ -38,7 +38,7 @@ function BoxFoxcon() {
     GetProductKey,
     fcPackBy,
     fcProduct,
-    fcBoxqty,
+    // fcBoxqty,
     GetPackLabel,
     dis_product,
     dis_boxqty,
@@ -67,6 +67,7 @@ function BoxFoxcon() {
     handleProduct,
     sts_page,
     SaveBox,
+    handleDeleteSelected,selectedRows
   } = fn_BoxFoxcon();
   return (
     <Content>
@@ -303,17 +304,19 @@ function BoxFoxcon() {
                   Pack By :
                 </label>
                 <Input
-                  value={PackBy}
-                  ref={fcPackBy}
-                  onChange={(e) => setPackBy(e.target.value)}
-                  // onBlur={handleUser}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleUser(e.target.value);
-                    }
-                  }}
-                  suffix={<ScanOutlined style={{ color: "gray" }} />}
-                />
+  value={PackBy}
+  ref={fcPackBy}
+  onChange={(e) => {
+    const numericValue = e.target.value.replace(/[^0-9]/g, ""); // กรองเฉพาะตัวเลข
+    setPackBy(numericValue);
+  }}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      handleUser(e.target.value);
+    }
+  }}
+  suffix={<ScanOutlined style={{ color: "gray" }} />}
+/>
               </div>
               <div
                 style={{
@@ -413,18 +416,19 @@ function BoxFoxcon() {
                   }}
                 /> */}
                 <Input
-                  ref={fcBoxqty}
-                  disabled={dis_boxqty}
+                  // ref={fcBoxqty}
+                  // disabled={dis_boxqty}
+                  disabled
                   value={BoxQty.toLocaleString()} // แสดงค่าพร้อมลูกน้ำ
-                  onChange={(e) => {
-                    const input = e.target.value.replace(/[^0-9]/g, ""); // กรองเฉพาะตัวเลข
-                    setBoxQty(input === "" ? 0 : Number(input)); // เก็บเป็น number
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      GetBoxQty(BoxQty); // ส่งค่าเป็น number
-                    }
-                  }}
+                  // onChange={(e) => {
+                  //   const input = e.target.value.replace(/[^0-9]/g, ""); // กรองเฉพาะตัวเลข
+                  //   setBoxQty(input === "" ? 0 : Number(input)); // เก็บเป็น number
+                  // }}
+                  // onKeyDown={(e) => {
+                  //   if (e.key === "Enter") {
+                  //     GetBoxQty(BoxQty); // ส่งค่าเป็น number
+                  //   }
+                  // }}
                 />
               </div>
               <div
@@ -487,6 +491,18 @@ function BoxFoxcon() {
             </div>
           </div>
           {/* Table Section */}
+      
+          <Button
+  type="primary"
+  danger
+  onClick={handleDeleteSelected}
+  disabled={selectedRows.length === 0}
+       className="TableNew"
+  style={{ float: "right" ,marginBottom:'5px'}} // ✅ ดันปุ่มไปขวา
+>
+  Delete
+</Button>
+
           <Table
             dataSource={DataPackLabel}
             columns={columns}
