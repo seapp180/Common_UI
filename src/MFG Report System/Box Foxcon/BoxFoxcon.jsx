@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Layout, Button, Table, Modal, Input, Space, Select, } from "antd";
+import { Layout, Button, Table, Modal, Input, Space, Select } from "antd";
 import {
   SearchOutlined,
   PlusOutlined,
   PrinterOutlined,
   ScanOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
 const { Content } = Layout;
 import "../Box Foxcon/BoxFoxcon.css";
@@ -13,7 +14,6 @@ import "../Box Foxcon/BoxFoxcon.css";
 import { fn_BoxFoxcon } from "./fn_BoxFoxcon";
 function BoxFoxcon() {
   const {
-    handleGoToNextPage,
     showModal,
     handleOk,
     handleCancel,
@@ -25,9 +25,7 @@ function BoxFoxcon() {
     ProductNew,
     setProductNew,
     BoxNo,
-    setBoxNo,
     BoxQty,
-    setBoxQty,
     BoxDate,
     setBoxDate,
     Packlabel,
@@ -38,15 +36,11 @@ function BoxFoxcon() {
     GetProductKey,
     fcPackBy,
     fcProduct,
-    // fcBoxqty,
     GetPackLabel,
     dis_product,
-    dis_boxqty,
     dis_packlabel,
-    GetBoxQty,
     fcPacklabel,
     ProductSeacrh,
-    setProductSeacrh,
     LotSearch,
     setLotSearch,
     packDateFrom,
@@ -63,12 +57,21 @@ function BoxFoxcon() {
     DataSearch,
     DataSource,
     selectProduct,
-    setSelectProduct,
     handleProduct,
     sts_page,
     SaveBox,
-    handleDeleteSelected,selectedRows
+    handleDeleteSelected,
+    selectedRows,
+    GetLink,
+    handleShipTo,
+    selectShipTo,
+    setselectShipTo,
+    DataShipTo,
+    handleLinkShipTo,
   } = fn_BoxFoxcon();
+  // const PathSmartFac = () => {
+  //   window.location.href = import.meta.env.VITE_TEST_PATH // เปลี่ยนหน้าไปยัง URL ที่กำหนด
+  // };
   return (
     <Content>
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -304,19 +307,20 @@ function BoxFoxcon() {
                   Pack By :
                 </label>
                 <Input
-  value={PackBy}
-  ref={fcPackBy}
-  onChange={(e) => {
-    const numericValue = e.target.value.replace(/[^0-9]/g, ""); // กรองเฉพาะตัวเลข
-    setPackBy(numericValue);
-  }}
-  onKeyDown={(e) => {
-    if (e.key === "Enter") {
-      handleUser(e.target.value);
-    }
-  }}
-  suffix={<ScanOutlined style={{ color: "gray" }} />}
-/>
+                  value={PackBy}
+                  ref={fcPackBy}
+                  // onChange={(e) => {
+                  //   const numericValue = e.target.value.replace(/[^0-9]/g, ""); // กรองเฉพาะตัวเลข
+                  //   setPackBy(numericValue);
+                  // }}
+                  onChange={(e) => setPackBy(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleUser(e.target.value);
+                    }
+                  }}
+                  suffix={<ScanOutlined style={{ color: "gray" }} />}
+                />
               </div>
               <div
                 style={{
@@ -364,8 +368,9 @@ function BoxFoxcon() {
                   Product :
                 </label>
                 <Input
-                  ref={fcProduct}
-                  disabled={dis_product}
+                  // ref={fcProduct}
+                  // disabled={dis_product}
+                  disabled
                   value={ProductNew}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
@@ -449,59 +454,42 @@ function BoxFoxcon() {
               </div>
             </div>
           </div>
-          <div layout="inline" style={{ marginBottom: 16 }}>
-            <div style={{ display: "flex" }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  width: "50%",
+
+          <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
+            {/* Pack Label */}
+            <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
+              <label style={{ width: 100 }}>Pack Label :</label>
+              <Input
+                style={{ width: "700px" }}
+                value={Packlabel}
+                disabled={dis_packlabel}
+                ref={fcPacklabel}
+                onChange={(e) => setPacklabel(e.target.value)}
+                suffix={<ScanOutlined style={{ color: "gray" }} />}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    GetPackLabel();
+                  }
                 }}
-              >
-                <label style={{ marginRight: 8, width: "100px" }}>
-                  Pack Label :
-                </label>
-                <Input
-                  value={Packlabel}
-                  disabled={dis_packlabel}
-                  ref={fcPacklabel}
-                  onChange={(e) => setPacklabel(e.target.value)}
-                  suffix={<ScanOutlined style={{ color: "gray" }} />}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      GetPackLabel();
-                    }
-                  }}
-                  // onBlur={(e) => {GetPackLabel(e.target.value);}}
-                />
-              </div>
-              {/* <div>
-                <Button
-                  style={{
-                    marginLeft: "10px",
-                    backgroundColor: "#A9A9A9",
-                    color: "white",
-                  }}
-                  type="default"
-                >
-                  Reset
-                </Button>
-              </div> */}
+              />
             </div>
+
+            {/* Ship Code */}
           </div>
+
           {/* Table Section */}
-      
+
           <Button
-  type="primary"
-  danger
-  onClick={handleDeleteSelected}
-  disabled={selectedRows.length === 0}
-       className="TableNew"
-  style={{ float: "right" ,marginBottom:'5px'}} // ✅ ดันปุ่มไปขวา
->
-  Delete
-</Button>
+            type="primary"
+            danger
+            onClick={handleDeleteSelected}
+            disabled={selectedRows.length === 0}
+            className="TableNew"
+            style={{ float: "right", marginBottom: "5px" }} // ✅ ดันปุ่มไปขวา
+          >
+            Delete
+          </Button>
 
           <Table
             dataSource={DataPackLabel}
@@ -534,9 +522,36 @@ function BoxFoxcon() {
             }}
           />
 
+          <div style={{ display: "flex", gap: 16, marginBottom: 16 ,marginTop: 16}}>
+            {/* Pack Label */}
+
+            {/* Ship Code */}
+            <div style={{ display: "flex", alignItems: "center", flex: 1 }}>
+              <label style={{ width: 100 }}>Ship Code :</label>
+              <Select
+                showSearch
+                value={selectShipTo}
+                onChange={(value) => {
+                  setselectShipTo(value);
+                }}
+                style={{
+                  width: "700px", // ให้เต็มความกว้างของ flex item
+                  textAlign: "left",
+                }}
+                placeholder="Ship Code"
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+                }
+                options={DataShipTo}
+              />
+            </div>
+          </div>
           {/* Buttons */}
-          <Space style={{ marginTop: 16 }}>
-            {(sts_page === "" ||sts_page === "GEN_SUCCESS") && (
+          <Space style={{ marginTop: 0 }}>
+            {(sts_page === "" || sts_page === "GEN_SUCCESS") && (
               <Button
                 disabled={dis_genbox}
                 type="primary"
@@ -550,19 +565,33 @@ function BoxFoxcon() {
                 Save Box No.
               </Button>
             )}
-            <Button
-              style={{ backgroundColor: "#FF3131", color: "white" }}
-              onClick={() => Reset("Cancel")}
-            >
-              Cancel
-            </Button>
+
+            {sts_page !== "UPDATE" && (
+              <Button
+                style={{ backgroundColor: "#FF3131", color: "white" }}
+                onClick={() => Reset("Cancel")}
+              >
+                Cancel
+              </Button>
+            )}
             <Button
               type="primary"
               disabled={dis_print}
               icon={<PrinterOutlined />}
+              onClick={handleLinkShipTo}
               style={{ background: "green", borderColor: "green" }}
             >
               Print WH Label
+            </Button>
+
+            <Button
+              type="primary"
+              // disabled={dis_print}
+              icon={<LogoutOutlined />}
+              onClick={GetLink}
+              style={{ background: "#dbac49", borderColor: "#dbac49" }}
+            >
+              Smart Factory
             </Button>
           </Space>
 
