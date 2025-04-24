@@ -168,7 +168,6 @@ function fn_BoxFoxcon() {
           }
           disabled={sts_page === "GEN_SUCCESS"}
         >
-          Select All
         </Checkbox>
       ),
       key: "select",
