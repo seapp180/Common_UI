@@ -102,7 +102,8 @@ function Box_Search() {
     checkradio,
     rowSelection,
     CheckStatus,
-    dis_show
+    dis_show,
+    SaveEdit,
   } = fn_Box_Search();
   return (
     <Content>
@@ -805,81 +806,118 @@ function Box_Search() {
                         <span style={{ fontSize: "14px" }}></span>
                       </div>
                     </td>
-                    <td>
-                      <div>
-                        {radioselect == "Manual" && (
-                          <>
-                            {(CheckStatus == "ACTIVE" || CheckStatus == "") && (
-                              <>
+                    <td colSpan={2}>
+                      {/* <div> */}
+                      {radioselect == "Manual" && (
+                        <>
+                          {(CheckStatus == "ACTIVE" || CheckStatus == "") && (
+                            <>
+                              {PageInsert === "UPDATE" && (
                                 <Button
                                   id="genPackButton"
-                                  icon={<MedicineBoxOutlined />}
+                                  icon={<SaveOutlined />}
                                   type="primary"
                                   style={{
-                                    background: "#3498db",
+                                    background: "#49db71",
                                     color: "#fff",
                                     marginLeft: "10px",
                                   }}
                                   disabled={dis_show}
-                                  onClick={() => GenPack("ManaulPack")}
+                                  onClick={SaveEdit}
                                 >
-                                  Manual
+                                  Save Edit
                                 </Button>
-                                <Button
-                                  id="genPackButton"
-                                  icon={<MedicineBoxOutlined />}
-                                  disabled={dis_show}
-                                  type="primary"
-                                  style={{
-                                    marginLeft: "10px",
-                                    backgroundColor: "#f4d03f",
-                                  }}
-                                  onClick={() => GenPack("AutoPack")}
-                                >
-                                  Auto Pack
-                                </Button>
-                              </>
-                            )}
-                          </>
-                        )}
-                        {radioselect == "Auto" && (
-                          <>
-                            {(CheckStatus == "ACTIVE" || CheckStatus == "") && (
-                              <>
-                                <Button
-                                  id="genPackButton"
-                                  icon={<MedicineBoxOutlined />}
-                                  type="primary"
-                                  style={{
-                                    marginLeft: "10px",
-                                    backgroundColor: "#f4d03f",
-                                  }}
-                                  disabled={dis_show}
-                                  onClick={() => GenPack("AutoGenerate")}
-                                >
-                                  Auto Generate
-                                </Button>
-                              </>
-                            )}
-                          </>
-                        )}
-                        {((CheckStatus == "ACTIVE" && PageInsert == "UPDATE") ||
-                          CheckStatus == "") && (
-                            <Button
+                              )}
+                              <Button
+                                id="genPackButton"
+                                icon={<MedicineBoxOutlined />}
+                                type="primary"
+                                style={{
+                                  background: "#3498db",
+                                  color: "#fff",
+                                  marginLeft: "10px",
+                                }}
+                                disabled={dis_show}
+                                onClick={() => GenPack("ManaulPack")}
+                              >
+                                Manual
+                              </Button>
+                              <Button
+                                id="genPackButton"
+                                icon={<MedicineBoxOutlined />}
+                                disabled={dis_show}
+                                type="primary"
+                                style={{
+                                  marginLeft: "10px",
+                                  backgroundColor: "#f4d03f",
+                                }}
+                                onClick={() => GenPack("AutoPack")}
+                              >
+                                Auto Pack
+                              </Button>
+                            </>
+                          )}
+                        </>
+                      )}
+                      {radioselect == "Auto" && (
+                        <>
+                          {(CheckStatus == "ACTIVE" || CheckStatus == "") && (
+                            <>
+                              <Button
+                                id="genPackButton"
+                                icon={<MedicineBoxOutlined />}
+                                type="primary"
+                                style={{
+                                  marginLeft: "10px",
+                                  backgroundColor: "#f4d03f",
+                                }}
+                                disabled={dis_show}
+                                onClick={() => GenPack("AutoGenerate")}
+                              >
+                                Auto Generate
+                              </Button>
+                            </>
+                          )}
+                        </>
+                      )}
+                      {((CheckStatus === "ACTIVE" && PageInsert === "UPDATE") ||
+                        CheckStatus === "") &&
+                        radioselect !== "Auto" && (
+                          <Button
                             disabled={dis_show}
                             icon={<DeleteOutlined />}
                             type="primary"
                             danger
-                            style={{  marginLeft: "10px", marginTop: "1px" }}
+                            style={{ marginLeft: "10px", marginTop: "1px" }}
                             onClick={handleDelete}
                           >
                             Delete
                           </Button>
-                        
                         )}
-                      </div>
+                      {/* </div> */}
+                      {/* {radioselect === "Manual" && ( */}
+                      {((CheckStatus === "ACTIVE" && PageInsert !== "UPDATE") ||
+                        CheckStatus === "") && (
+                        <Button
+                          icon={<ReloadOutlined />}
+                          type="primary"
+                          danger
+                          style={{
+                            marginLeft: "10px",
+                            marginTop: "2px",
+                            backgroundColor: "#A9A9A9",
+                          }}
+                          onClick={() => Clear("ResetMaintain")}
+                          //setDataLotPacking1
+                          // onClick={() => Clear("AutoReset")}
+                        >
+                          Reset
+                        </Button>
+                      )}
+                      {/* )} */}
                     </td>
-                    {radioselect == "Manual" && (
+
+                    {/* {radioselect == "Auto" && (
                       <div
                         style={{ display: "flex", justifyContent: "flex-end" }}
                       >
@@ -893,13 +931,13 @@ function Box_Search() {
                             marginTop:'2px',
                             backgroundColor: "	#A9A9A9",
                           }}
-                          onClick={() => Clear("ResetMaintain")}
+                         
                         >
                           Reset
                         </Button>
                         )}
                       </div>
-                    )}
+                    )} */}
                   </tr>
                 </table>
               </Card>
@@ -1077,18 +1115,19 @@ function Box_Search() {
                   }}
                 >
                   <h3 className="BoxmainName">Lot Packing</h3>
-                  {((CheckStatus == "ACTIVE" || CheckStatus == "") && radioselect !=='Auto') && (
-                    <Button
-                      icon={<DeleteOutlined />}
-                      type="primary"
-                      size="small"
-                      danger
-                      disabled={dis_show}
-                      onClick={handleDeleteLot}
-                    >
-                      Delete
-                    </Button>
-                  )}
+                  {(CheckStatus == "ACTIVE" || CheckStatus == "") &&
+                    radioselect !== "Auto" && (
+                      <Button
+                        icon={<DeleteOutlined />}
+                        type="primary"
+                        size="small"
+                        danger
+                        disabled={dis_show}
+                        onClick={handleDeleteLot}
+                      >
+                        Delete
+                      </Button>
+                    )}
                 </div>
                 {radioselect == "Manual" && (
                   <Table

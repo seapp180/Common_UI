@@ -558,7 +558,7 @@ function fn_BoxFoxcon() {
               (sum, item) => sum + (item.QTY || 0),
               0
             );
-            setBoxQty(totalQty);
+            // setBoxQty(totalQty);
             return updatedData;
           });
           Swal.fire({
@@ -765,15 +765,15 @@ function fn_BoxFoxcon() {
     );
     const totalQtyText = Number(totalQty.toLocaleString().replace(/,/g, ""));
     showLoading("กำลังบันทึก....");
-
-    // if (BoxQty !== totalQtyText) {
-    //   Swal.fire({
-    //     icon: "error",
-    //     text: "Total Pack ไม่เท่ากับ Box Qty /Qty from scan packing not same box qty!!",
-    //   });
-    //   hideLoading();
-    //   return;
-    // } else {
+    if (BoxQty !== totalQtyText) {
+      Swal.fire({
+        icon: "error",
+        text: "Total Pack ไม่เท่ากับ Box Qty /Qty from scan packing not same box qty!!",
+      });
+      hideLoading();
+      return;
+    } 
+    // else {
     showLoading("กำลังบันทึก....");
     let id_box = "";
     const Prd_id = await axios.post("/api/BoxFoxcon/GetProductName", {
@@ -943,12 +943,14 @@ function fn_BoxFoxcon() {
   const GetPackLabel = async () => {
     let pack = Packlabel.trim();
     let packtData = pack.split(",");
+    showLoading("")
     if (packtData.length <= 5) {
       setPacklabel("");
       Swal.fire({
         icon: "error",
         text: "Not found data",
       });
+      hideLoading();
       return;
     }
     let packlabel = packtData[5].replace(/^S/, ""); //ตัด S ออก
@@ -965,6 +967,7 @@ function fn_BoxFoxcon() {
           icon: "error",
           text: "Product not match !!",
         });
+        hideLoading();
         return;
       }
     }
@@ -974,6 +977,7 @@ function fn_BoxFoxcon() {
     );
     const totalQtyText = totalQty.toLocaleString();
     const parsedTotal = Number(totalQtyText.replace(/,/g, ""));
+    
     try {
       const response = await axios.post("/api/BoxFoxcon/GetproductScan", {
         packid: packlabel.trim() || "",
@@ -996,13 +1000,13 @@ function fn_BoxFoxcon() {
           text: "This packing exist other box no!!",
           icon: "error",
         });
-        setTimeout(() => fcPacklabel.current.focus(), 200);
+        setTimeout(() => fcPacklabel.current.focus(), 0);
         hideLoading();
         return;
       }
       if (response.data[0].ITEM !== productnew) {
         Swal.fire({ text: "Product not match", icon: "error" });
-        setTimeout(() => fcPacklabel.current.focus(), 200);
+        setTimeout(() => fcPacklabel.current.focus(), 0);
         hideLoading();
         return;
       }
@@ -1026,7 +1030,8 @@ function fn_BoxFoxcon() {
           (sum, item) => sum + (item.QTY || 0),
           0
         );
-        setBoxQty(totalNewDataQty + parsedTotal);
+        // setBoxQty(totalNewDataQty + parsedTotal);
+        // setBoxQty(totalQty)
         // Data สำหรับ UpdateDetail
         const updatedData = [...prevData, ...newData].sort((a, b) =>
           a.LOT.localeCompare(b.LOT)
@@ -1053,6 +1058,7 @@ function fn_BoxFoxcon() {
                     icon: "error",
                     text: "Error UpdateBoxDet",
                   });
+                  hideLoading()
                 }
               } catch (error) {
                 console.error("UpdateBoxDet failed:", error);
@@ -1060,6 +1066,7 @@ function fn_BoxFoxcon() {
                   icon: "error",
                   text: "Error UpdateBoxDet",
                 });
+                hideLoading();
               }
             }
           }
@@ -1091,7 +1098,9 @@ function fn_BoxFoxcon() {
         return updatedData;
       });
       setPacklabel("");
+      hideLoading()
     } catch (error) {
+      hideLoading()
       console.error("Error fetching data:", error);
       Swal.fire({ icon: "error", text: "เกิดข้อผิดพลาดในการดึงข้อมูล" });
     }
@@ -1302,6 +1311,7 @@ function fn_BoxFoxcon() {
     setselectShipTo,
     DataShipTo,
     handleLinkShipTo,
+    setBoxQty
   };
 }
 

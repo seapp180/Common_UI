@@ -1125,6 +1125,7 @@ function fn_Box_Search() {
       setDataLotPacking([]);
       setDataPacking([]);
       setDataLotReceive([]);
+      setDataLotPacking1([]);
     } else if (Page == "ResetManual") {
       setselectddlLot("");
       setRemain_qty("");
@@ -1196,7 +1197,118 @@ function fn_Box_Search() {
     setRemain_qty(data.GOOD_QTY);
   };
   let LOT_STATUS = "";
+  // let isSaving = false;
+  // const SaveLotPacking = async (page) => {
+  //   let Page = page;
+  //   if (Page == "SaveManual") {
+  //     if (Pack_qtyLot == 0) {
+  //       Swal.fire({
+  //         icon: "error",
+  //         text: "กรุณากรอกจำนวนที่ Packing Qty",
+  //       });
+  //       return;
+  //     } else if (Pack_qtyLot > Remain_qty) {
+  //       Swal.fire({
+  //         icon: "error",
+  //         text: "จำนวนที่ Packing Qty มากกว่าจำนวนที่มี",
+  //       });
+  //       return;
+  //     } else if (DataHearder.PACK_QTY + Number(Pack_qtyLot) > FullBoxQty) {
+  //       Swal.fire({
+  //         icon: "error",
+  //         text: "Packing เกินจำนวน Full Box",
+  //       });
+  //       return;
+  //     } else {
+  //       await axios
+  //         .post("/api/BoxCapacity/UpdateBoxQty", {
+  //           dataList: {
+  //             item: selectddlProductNew,
+  //             boxno: BoxNo,
+  //             pack_qty: DataHearder.PACK_QTY + Number(Pack_qtyLot),
+  //           },
+  //         })
+  //         .then((res) => {});
+  //     }
+  //     showLoading("กำลังบันทึกข้อมูล...");
+  //     await axios
+  //       .post("/api/BoxCapacity/InsLotPacking", {
+  //         dataList: {
+  //           item: selectddlProductNew,
+  //           boxno: BoxNo,
+  //           lot: selectddlLot,
+  //           lot_qty: Pack_qtyLot,
+  //           packdate: Packdate == "" ? today : Packdate,
+  //         },
+  //       })
+  //       .then((res) => {});
+  //     await axios
+  //       .post("/api/BoxCapacity/DataStatus", {
+  //         dataList: {
+  //           product: selectddlProductNew,
+  //           boxno: BoxNo,
+  //         },
+  //       })
+  //       .then((res) => {
+  //         LOT_STATUS = res.data[0].STATUS;
+  //         setBoxstatus(LOT_STATUS);
+  //       });
+  //     await axios.post("/api/BoxCapacity/UpdataStatus", {
+  //       dataList: {
+  //         item: selectddlProductNew,
+  //         boxno: BoxNo,
+  //         status: LOT_STATUS,
+  //       },
+  //     });
+
+  //     if (Number(Remain_qty) == Number(Pack_qtyLot)) {
+  //       try {
+  //         const res = await axios.post("/api/BoxCapacity/UpdateManual", {
+  //           dataList: {
+  //             item: selectddlProductNew,
+  //             lot: selectddlLot,
+  //             boxno: BoxNo,
+  //           },
+  //         });
+  //       } catch (error) {
+  //         console.error("Error during UpdateManual:", error);
+  //       }
+  //     }
+  //     if (LOT_STATUS == "HOLD") {
+  //       Swal.fire({
+  //         icon: "error",
+  //         text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+  //       });
+  //       await GetDataLotPacking(selectddlProductNew, BoxNo);
+  //       await DataManual(selectddlProductNew, BoxNo);
+  //       await GetDataPacking(selectddlProductNew);
+  //       setdis_show(true);
+  //       hideLoading();
+  //       return;
+  //     } else {
+  //       Swal.fire({
+  //         icon: "success",
+  //         text: "บันทึกข้อมูลสำเร็จ",
+  //       });
+  //       await GetDataLotPacking(selectddlProductNew, BoxNo);
+  //       await DataManual(selectddlProductNew, BoxNo);
+  //       await GetDataPacking(selectddlProductNew);
+  //       setselectddlLot("");
+  //       setPack_qtyLot(0);
+  //       setRemain_qty("");
+  //       setdis_show(false);
+  //       hideLoading();
+  //       await DataHeader(selectddlProductNew, BoxNo);
+  //     }
+  //   }
+  // };
+
+  let isSaving = false; // ตัวแปรภายนอกฟังก์ชัน หรือใน state ถ้าใช้ React
+
   const SaveLotPacking = async (page) => {
+    if (isSaving) return; // ป้องกันการเรียกซ้ำ
+    isSaving = true;
+
     let Page = page;
     if (Page == "SaveManual") {
       if (Pack_qtyLot == 0) {
@@ -1204,33 +1316,42 @@ function fn_Box_Search() {
           icon: "error",
           text: "กรุณากรอกจำนวนที่ Packing Qty",
         });
+        isSaving = false;
         return;
       } else if (Pack_qtyLot > Remain_qty) {
         Swal.fire({
           icon: "error",
           text: "จำนวนที่ Packing Qty มากกว่าจำนวนที่มี",
         });
+        isSaving = false;
         return;
       } else if (DataHearder.PACK_QTY + Number(Pack_qtyLot) > FullBoxQty) {
         Swal.fire({
           icon: "error",
           text: "Packing เกินจำนวน Full Box",
         });
+        isSaving = false;
         return;
       } else {
-        await axios
-          .post("/api/BoxCapacity/UpdateBoxQty", {
+        try {
+          await axios.post("/api/BoxCapacity/UpdateBoxQty", {
             dataList: {
               item: selectddlProductNew,
               boxno: BoxNo,
               pack_qty: DataHearder.PACK_QTY + Number(Pack_qtyLot),
             },
-          })
-          .then((res) => {});
+          });
+        } catch (error) {
+          console.error("Error UpdateBoxQty:", error);
+          isSaving = false;
+          return;
+        }
       }
+
       showLoading("กำลังบันทึกข้อมูล...");
-      await axios
-        .post("/api/BoxCapacity/InsLotPacking", {
+
+      try {
+        await axios.post("/api/BoxCapacity/InsLotPacking", {
           dataList: {
             item: selectddlProductNew,
             boxno: BoxNo,
@@ -1238,68 +1359,72 @@ function fn_Box_Search() {
             lot_qty: Pack_qtyLot,
             packdate: Packdate == "" ? today : Packdate,
           },
-        })
-        .then((res) => {});
-      await axios
-        .post("/api/BoxCapacity/DataStatus", {
+        });
+
+        const resStatus = await axios.post("/api/BoxCapacity/DataStatus", {
           dataList: {
             product: selectddlProductNew,
             boxno: BoxNo,
           },
-        })
-        .then((res) => {
-          LOT_STATUS = res.data[0].STATUS;
-          setBoxstatus(LOT_STATUS);
         });
-      await axios.post("/api/BoxCapacity/UpdataStatus", {
-        dataList: {
-          item: selectddlProductNew,
-          boxno: BoxNo,
-          status: LOT_STATUS,
-        },
-      });
 
-      if (Number(Remain_qty) == Number(Pack_qtyLot)) {
-        try {
-          const res = await axios.post("/api/BoxCapacity/UpdateManual", {
+        LOT_STATUS = resStatus.data[0].STATUS;
+        setBoxstatus(LOT_STATUS);
+
+        await axios.post("/api/BoxCapacity/UpdataStatus", {
+          dataList: {
+            item: selectddlProductNew,
+            boxno: BoxNo,
+            status: LOT_STATUS,
+          },
+        });
+
+        if (Number(Remain_qty) == Number(Pack_qtyLot)) {
+          await axios.post("/api/BoxCapacity/UpdateManual", {
             dataList: {
               item: selectddlProductNew,
               lot: selectddlLot,
               boxno: BoxNo,
             },
           });
-        } catch (error) {
-          console.error("Error during UpdateManual:", error);
         }
-      }
-      if (LOT_STATUS == "HOLD") {
-        Swal.fire({
-          icon: "error",
-          text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
-        });
-        await GetDataLotPacking(selectddlProductNew, BoxNo);
-        await DataManual(selectddlProductNew, BoxNo);
-        await GetDataPacking(selectddlProductNew);
-        setdis_show(true);
+
+        if (LOT_STATUS == "HOLD") {
+          Swal.fire({
+            icon: "error",
+            text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+          });
+          await GetDataLotPacking(selectddlProductNew, BoxNo);
+          await DataManual(selectddlProductNew, BoxNo);
+          await GetDataPacking(selectddlProductNew);
+          setdis_show(true);
+          hideLoading();
+          isSaving = false;
+          return;
+        } else {
+          Swal.fire({
+            icon: "success",
+            text: "บันทึกข้อมูลสำเร็จ",
+          });
+          await GetDataLotPacking(selectddlProductNew, BoxNo);
+          await DataManual(selectddlProductNew, BoxNo);
+          await GetDataPacking(selectddlProductNew);
+          setselectddlLot("");
+          setPack_qtyLot(0);
+          setRemain_qty("");
+          setdis_show(false);
+          hideLoading();
+          await DataHeader(selectddlProductNew, BoxNo);
+        }
+      } catch (error) {
+        console.error("Error during SaveLotPacking:", error);
         hideLoading();
-        return;
-      } else {
-        Swal.fire({
-          icon: "success",
-          text: "บันทึกข้อมูลสำเร็จ",
-        });
-        await GetDataLotPacking(selectddlProductNew, BoxNo);
-        await DataManual(selectddlProductNew, BoxNo);
-        await GetDataPacking(selectddlProductNew);
-        setselectddlLot("");
-        setPack_qtyLot(0);
-        setRemain_qty("");
-        setdis_show(false);
-        hideLoading();
-        await DataHeader(selectddlProductNew, BoxNo);
       }
     }
+
+    isSaving = false; // รีเซ็ตสถานะหลังจากบันทึกเสร็จ
   };
+
   const GetDataLotPacking = async (selectddlProductNew, BoxNo) => {
     await axios
       .post("/api/BoxCapacity/DataLotPacking", {
@@ -1317,7 +1442,6 @@ function fn_Box_Search() {
       });
   };
   const GetDataLotPacking1 = async (selectddlProductNew, BoxNo) => {
-    console.log("GetDataLotPacking1", selectddlProductNew, BoxNo);
     await axios
       .post("/api/BoxCapacity/DataLotPackingAuto_Gen", {
         dataList: {
@@ -1326,7 +1450,6 @@ function fn_Box_Search() {
         },
       })
       .then((response) => {
-        console.log()
         if (response.data.length > 0) {
           setDataLotPacking1(response.data);
         } else {
@@ -1335,7 +1458,6 @@ function fn_Box_Search() {
       });
   };
   const GetDataRemainQTY_AUTO = async (selectddlProductNew, BoxNo) => {
-    console.log(selectddlProductNew, BoxNo,"Test")
     hideLoading();
     const parts = BoxNo.split("/");
     const running_box = parseInt(parts[1], 10);
@@ -2010,7 +2132,6 @@ function fn_Box_Search() {
     return BoxNo;
   };
   const QTY = async (selectddlProductNew, Box_no) => {
-    console.log(selectddlProductNew, Box_no,"QTY")
     let row;
     await axios
       .post("/api/BoxCapacity/DataRemainQTY_AUTO", {
@@ -2020,15 +2141,10 @@ function fn_Box_Search() {
         },
       })
       .then(async (response) => {
-        console.log("response", response.data);
         if (response.data[0] > 0) {
-          console.log("response1", response.data);
           row = response.data[0].REMAIN_QTY;
         } else {
-          console.log("ไม่พบข้อมูล");
         }
-
-        console.log("row", row);
       });
     return row;
   };
@@ -2071,7 +2187,6 @@ function fn_Box_Search() {
             dataList: allDataList,
           });
           if (boxNoList && boxNoList.length > 0) {
-            console.log(boxNoList,"boxNoList - 1")
             let Remain_QTY;
             const runningNumbers = boxNoList
               .map((boxNo) => {
@@ -2084,7 +2199,6 @@ function fn_Box_Search() {
               .filter((num) => num !== null);
             const maxRunning = Math.max(...runningNumbers);
             Remain_QTY = await QTY(selectddlProductNew, Box_no);
-           console.log(runningNumbers,"Box ที่")
             if (Remain_QTY > 0) {
               hideLoading();
               const result = await Swal.fire({
@@ -2104,12 +2218,10 @@ function fn_Box_Search() {
                   cancelButtonText: "Cancel",
                 });
                 if (result2.isConfirmed) {
-                  console.log("Auto calculate packing confirmed.");
                 }
               }
             } else {
               hideLoading();
-              console.log("ไม่มีค่า Remain_QTY หรือ Remain_QTY <= 0");
             }
             let LOT = [];
             let Data;
@@ -2144,271 +2256,43 @@ function fn_Box_Search() {
             }
             Remain_QTY = FullBoxQty - PackQty;
 
-
-            // ----------------------------------------- อันเก่า ----
-            //                           for (let j = 0; j < RequestTotal; j++) {
-
-            //                             await axios
-            //                             .post("/api/BoxCapacity/LotNo", {
-            //                                 dataList: {
-            //                                   product: selectddlProductNew,
-            //                                 },
-            //                               })
-            //                               .then(async (response) => {
-            //                                 console.log("BoxCapacity/LotNo", response.data);
-            //                                 Data = response.data;
-            //                               });
-            //                                 let goodQtyArray = [];
-            //                                 let lotNoArray = [];
-            //                                  Data.forEach((item) => {
-            //                                   goodQtyArray.push(item.GOOD_QTY);
-            //                                   lotNoArray.push(item.LOT_NO);
-            //                                 });
-            //                                 if(Data.length > 0) {
-
-            //                             console.log("RequestTotal",RequestTotal);
-            //                             const Box_NO = boxNoList[j];
-            //                             let remain_qty = Remain_QTY
-            //                             let rec;
-            //                             do {
-            //                               let qty = goodQtyArray.shift();
-            //                               let lot = lotNoArray.shift();
-            //                               console.log("qty", qty);
-
-            //                               await axios.post("/api/BoxCapacity/DataMAX_SEQ_AUTO", {
-            //                                 dataList: {
-            //                                   item: selectddlProductNew,
-            //                                   boxno: Box_NO,
-            //                                 },
-            //                               }).then(async (response) => {
-            //                                 rec = response.data[0].MAX_SEQ;
-            //                               });
-            //                               console.log(qty, " running > 1-1", remain_qty,j);
-            //                               if (qty > remain_qty) {
-            //                                 console.log(qty, " running > 1-1", remain_qty,j);
-            //                                 if (LOT_STATUS == "HOLD") {
-            //                                   Swal.fire({
-            //                                     icon: "error",
-            //                                     text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
-            //                                   });
-            //                                   setdis_show(true);
-            //                                   return;
-            //                                 } else {
-            //                                   await axios.post("/api/BoxCapacity/INS_UP_AUTO_PACK1", {
-            //                                     dataList: {
-            //                                       item: selectddlProductNew,
-            //                                       boxno: Box_NO,
-            //                                       maxseq: rec,
-            //                                       lot_no: lot,
-            //                                       remain_qty: remain_qty,
-            //                                       packdate: Packdate,
-            //                                     },
-            //                                   });
-            //                                   remain_qty = 0;
-            //                                 }
-
-            //                                 await axios.post("/api/BoxCapacity/DataStatus", {
-            //                                   dataList: {
-            //                                     product: selectddlProductNew,
-            //                                     boxno: Box_NO,
-            //                                   },
-            //                                 }).then((res) => {
-            //                                   LOT_STATUS = res.data[0].STATUS;
-            //                                   setBoxstatus(LOT_STATUS);
-            //                                 });
-
-            //                               } else {
-            //                                 if (qty !== undefined && qty !== null && qty !== "") {
-            //                                   console.log(qty, " running > 1-2", remain_qty ,j);
-            //                                   if (LOT_STATUS == "HOLD") {
-            //                                     Swal.fire({
-            //                                       icon: "error",
-            //                                       text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
-            //                                     });
-            //                                     setdis_show(true);
-            //                                     return;
-            //                                   } else {
-            //                                     await axios.post("/api/BoxCapacity/INS_UP_AUTO_PACK2", {
-            //                                       dataList: {
-            //                                         item: selectddlProductNew,
-            //                                         boxno: Box_NO,
-            //                                         maxseq: rec,
-            //                                         lot_no: lot,
-            //                                         qty_pack: qty,
-            //                                         packdate: Packdate,
-            //                                       },
-            //                                     });
-
-            //                                     remain_qty = remain_qty - qty;
-            //                                     rec = rec + 1;
-
-            //                                     await axios.post("/api/BoxCapacity/DataStatus", {
-            //                                       dataList: {
-            //                                         product: selectddlProductNew,
-            //                                         boxno: Box_NO,
-            //                                       },
-            //                                     }).then((res) => {
-            //                                       LOT_STATUS = res.data[0].STATUS;
-            //                                       setBoxstatus(LOT_STATUS);
-            //                                     });
-            //                                   }
-            //                                 } else {
-            //                                   break;
-            //                                 }
-            //                               }
-            //                             } while (remain_qty > 0);
-
-            //                             await axios.post("/api/BoxCapacity/UpdataStatus", {
-            //                               dataList: {
-            //                                 item: selectddlProductNew,
-            //                                 boxno: Box_NO,
-            //                                 status: LOT_STATUS,
-            //                               },
-            //                             });
-
-            //                             if (LOT_STATUS == "HOLD") {
-            //                               Swal.fire({
-            //                                 icon: "error",
-            //                                 text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
-            //                               });
-            //                               setdis_show(true);
-            //                               // await GetDataPacking(selectddlProductNew);
-            //                               // await GetDataLotPacking1(selectddlProductNew, Box_NO);
-            //                               hideLoading();
-            //                               return;
-            //                             } else {
-            //                               setdis_show(false);
-            //                               await GetDataPacking(selectddlProductNew);
-            //                               await GetDataLotPacking1(selectddlProductNew, [Box_NO]);
-            //                             }
-            // }
-            //                           }
-
-            // -- อาย
-            // ----------------------------------------
-
             let data = await GetDataPack("genauto", {
               product: selectddlProductNew,
               fullQtyperbox1: FullBoxQty,
               boxquantity: RequestTotal,
-              BoxNo: boxNoList
+              BoxNo: boxNoList,
             });
             let data2 = data.Alllot.filter((item) => item.GOOD_QTY > 0);
             setDataPacking(data2);
-            console.log(data,"Data Lot ทั้งหมด")
-            showLoading("กำลังบันทึก")
-            let holdBoxes = [];
-            for(let i = 0 ; i < data.boxes.length ;i++ ){
-                let boxNo = data.boxes[i].boxNumber;
-                let lotarray =data.boxes[i].lotsUsed;
-                holdBoxes.push(boxNo);
-                
-                for (let j =0; j<lotarray.length;j++){
-                  await axios.post( "/api/BoxCapacity/INS_UP_AUTO_PACK1",
-                  {
-                    dataList: {
-                      item: selectddlProductNew,
-                      boxno: boxNo,
-                      maxseq: j+1,
-                      lot_no: lotarray[j].LOT_NO,
-                      remain_qty: lotarray[j].USED_QTY ,
-                      packdate: Packdate,
-                    },
-                  });
-                  if(lotarray[j].AFTER_USED == 0){
-                    await axios.post("/api/BoxCapacity/UpdateManual", {
-                      dataList: {
-                        item: selectddlProductNew,
-                        lot: lotarray[j].AFTER_USED,
-                        boxno: boxNo,
-                      },
-                    });
-                    const resStatus = await axios.post("/api/BoxCapacity/DataStatus", {
-                      dataList: {
-                        product: selectddlProductNew,
-                        boxno: boxNo,
-                      },
-                    });
-              
-                    let LOT_STATUS = resStatus.data[0].STATUS;
-                    console.log(LOT_STATUS, "STS",boxNo);
-                    setBoxstatus(LOT_STATUS);
-                    await axios.post("/api/BoxCapacity/UpdataStatus", {
-                      dataList: {
-                        item: selectddlProductNew,
-                        boxno: boxNo,
-                        status: LOT_STATUS,
-                      },
-                    });
-                     if (LOT_STATUS === "HOLD") {
-                  console.log(LOT_STATUS,"ได้ HOLD")
-                  hideLoading();
-                  await Swal.fire({
-                    icon: "error",
-                    text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
-                  });
-           
-                  setdis_show(true);
-                  await GetDataLotPacking1(selectddlProductNew, holdBoxes);
-                  return; // ✅ จบ loop
-                      }
-                
-                      }
-                }
-                console.log(holdBoxes,"holdBoxes")
-                await GetDataLotPacking1(selectddlProductNew, holdBoxes);
-                setdis_show(false);
-       
+            showLoading("...กำลังบันทึกข้อมูล");
+            let status = await axios.post("/api/BoxCapacity/ADD_LOT", {
+              dataList: data.boxes,
+              product: selectddlProductNew,
+              packdate: Packdate,
+            });
+            if (status.data.Status == "HOLD") {
+              hideLoading();
+              await Swal.fire({
+                icon: "error",
+                text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+              });
+              setdis_show(true);
+              await GetDataLotPacking1(
+                selectddlProductNew,
+                status.data.BoxNumber
+              );
+              return;
+            } else {
+              await GetDataLotPacking1(
+                selectddlProductNew,
+                status.data.BoxNumber
+              );
+              setdis_show(false);
             }
-     
-
-            
-            // const insertBoxPromises = data.boxes.map((box) => {
-            //   const formattedLots = box.lotsUsed.map((lot, index) => ({
-            //     lot_no: lot.LOT_NO,
-            //     remain_qty: lot.USED_QTY,
-            //     packdate: Packdate,
-            //     seq: index + 1,
-            //   }));
-            //   return axios.post("/api/BoxCapacity/INS_UP_AUTO_PACKAUTO", {
-            //     dataList: {
-            //       item: selectddlProductNew,
-            //       boxno: box.boxNumber,
-            //       lots: formattedLots,
-            //     },
-            //   });
-            // });
-            
-            // await Promise.all(insertBoxPromises); 
-            
-            // // 🔁 UpdateManual แบบเร็วเช่นกัน
-            // const updateManualPromises = [];
-            // data.boxes.forEach((box) => {
-            //   box.lotsUsed.forEach((lot) => {
-            //     if (lot.AFTER_USED === 0) {
-            //       updateManualPromises.push(
-            //         axios.post("/api/BoxCapacity/UpdateManual", {
-            //           dataList: {
-            //             item: selectddlProductNew,
-            //             lot: lot.AFTER_USED,
-            //             boxno: box.boxNumber,
-            //           },
-            //         })
-            //       );
-            //     }
-            //   });
-            // });
-            
-            // await Promise.all(updateManualPromises);
-
             hideLoading();
-       
-
           } else {
-            console.warn("boxNoList ไม่มีข้อมูลหรือเป็นค่าว่าง");
           }
         }
-        console.log("Auto Generate Completed");
       }
     } catch (error) {
       console.error("Error in GetAutoGenerate:", error);
@@ -2422,15 +2306,54 @@ function fn_Box_Search() {
       const res = await axios.get(
         `/api/BoxCapacity/GenAutoBox?product=${params.product}&fullQtyperbox1=${params.fullQtyperbox1}&boxquantity=${params.boxquantity}&BoxNo=${params.BoxNo}`
       );
-      console.log("res", res);
       if (res.data.Alllot.length > 0) {
         data = res.data;
       }
     }
     return data;
   };
+  const SaveEdit = async () => {
+    showLoading("...กำลังบันทึก");
+    try {
+      const response = await axios.post("/api/BoxCapacity/InsBoxCapacity", {
+        dataList: {
+          Item: selectddlProductNew,
+          box_No: BoxNo,
+          fac1: Fac.value,
+          box_status: Boxstatus,
+          box_qty: PackQty,
+          box_max_qty: FullBoxQty,
+          sheet_qty: TotalSheetQty,
+          packingBy: PackBy,
+          remark: Remark,
+          packdate: Packdate == "" ? today : Packdate,
+          fac2: Fac.value,
+        },
+      });
+      if (DataLotPacking.length > 0) {
+        const response1 = await axios.post("/api/BoxCapacity/UpdateDateLot", {
+          dataList: {
+            item: selectddlProductNew,
+            boxno: BoxNo,
+            packdate: Packdate == "" ? today : Packdate,
+          },
+        });
+      }
 
-// อันเก่าสุดที่ช้า แต่ไม่พัง
+      // return { status: "success", data: response.data };
+    } catch (error) {
+      console.error("Error updating data:", error);
+      // return { status: "error", error: error };
+    }
+
+    hideLoading();
+    Swal.fire({
+      icon: "success",
+      text: "บันทึกข้อมูลสำเร็จ",
+    });
+  };
+
+  // อันเก่าสุดที่ช้า แต่ไม่พัง
   const GetAutoGenerateNew = async (
     selectddlProductNew,
     BoxNo,
@@ -2498,7 +2421,6 @@ function fn_Box_Search() {
                   hideLoading();
                   if (response.data[0].REMAIN_QTY > 0) {
                     Remain_QTY = response.data[0].REMAIN_QTY;
-                    console.log(Remain_QTY,"Remain_QTY")
                     const result = await Swal.fire({
                       icon: "warning",
                       text: "Previous box packed not full. Are you sure you want to packing in this box?",
@@ -2582,11 +2504,6 @@ function fn_Box_Search() {
                                         rec = response.data[0].MAX_SEQ;
                                       });
                                     if (qty > Remain_QTY) {
-                                      console.log(
-                                        qty,
-                                        " running > 1-1",
-                                        Remain_QTY
-                                      );
                                       if (LOT_STATUS == "HOLD") {
                                         // นี่จ้า
                                         Swal.fire({
@@ -2629,11 +2546,6 @@ function fn_Box_Search() {
                                         qty !== null &&
                                         qty !== ""
                                       ) {
-                                        console.log(
-                                          qty,
-                                          " running > 1-2",
-                                          Remain_QTY
-                                        );
                                         if (LOT_STATUS == "HOLD") {
                                           Swal.fire({
                                             icon: "error",
@@ -2780,11 +2692,6 @@ function fn_Box_Search() {
                                     rec = response.data[0].MAX_SEQ;
                                   });
                                 if (qty > Remain_QTY) {
-                                  console.log(
-                                    qty,
-                                    "running > 1 2-1",
-                                    Remain_QTY
-                                  );
                                   if (LOT_STATUS == "HOLD") {
                                     Swal.fire({
                                       icon: "error",
@@ -2826,11 +2733,6 @@ function fn_Box_Search() {
                                     qty !== null &&
                                     qty !== ""
                                   ) {
-                                    console.log(
-                                      qty,
-                                      "running > 1 2-2",
-                                      Remain_QTY
-                                    );
                                     if (LOT_STATUS == "HOLD") {
                                       Swal.fire({
                                         icon: "error",
@@ -3190,6 +3092,7 @@ function fn_Box_Search() {
     rowSelection,
     CheckStatus,
     dis_show,
+    SaveEdit,
   };
 }
 

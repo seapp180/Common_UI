@@ -68,6 +68,7 @@ function BoxFoxcon() {
     setselectShipTo,
     DataShipTo,
     handleLinkShipTo,
+    setBoxQty
   } = fn_BoxFoxcon();
   // const PathSmartFac = () => {
   //   window.location.href = import.meta.env.VITE_TEST_PATH // เปลี่ยนหน้าไปยัง URL ที่กำหนด
@@ -501,6 +502,7 @@ function BoxFoxcon() {
                 (sum, record) => sum + record.QTY,
                 0
               );
+              setBoxQty(totalQty)
               return (
                 <Table.Summary.Row>
                   <Table.Summary.Cell
