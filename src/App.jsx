@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from "axios";
 import "./StyleCommon.css";
 import { LoadingProvider } from "./component/loading/fn_loading";
-
 //import File
 import Header from "./Header/Header";
 import RDESMasterUpload from "./Condition System/RDESMasterUpload/RDESMasterUpload";
@@ -20,8 +19,9 @@ import T2D_BarCodeConfirm from "./Condition System/OQC/2D_BarCodeConfirm/T2D_Bar
 import T2D_BarcodeReport from "./Condition System/OQC/2D_BarCodeReport/T2D_BarcodeReport";
 import ExportSupplier from "./Common/Export Supplier Customer/ExportSupplierCustomer";
 import BoxFoncon from "./MFG Report System/Box Foxcon/BoxFoxcon";
-import NewBoxFoxcon from "./MFG Report System/Box Foxcon/NewBoxFoxcon";
+// import NewBoxFoxcon from "./MFG Report System/Box Foxcon/NewBoxFoxcon";
 import Qrscantest from "./Scantest/scantest";
+import BoxInvoice from "./MFG Report System/Box Selection By Invoice/BoxInv";
 const { Content } = Layout;
 // const backendUrl = import.meta.env.VITE_SERVICE_URL;
 // axios.defaults.baseURL = backendUrl;
@@ -62,7 +62,6 @@ const App = () => {
                     path="/CommonSystem/ExportSupplierCustomer"
                     element={<ExportSupplier />}
                   />
-                 
                   {/*--------------------CONDITION SYSTEM--------------------*/}
                   <Route
                     path="/CommonSystem/ConditionSystem/RDESMasterUpload"
@@ -105,9 +104,13 @@ const App = () => {
                     path="/CommonSystem/MFGReportSystem/BoxCapacityFoxcon"
                     element={<BoxFoncon />}
                   />
-                   <Route
+                   {/* <Route
                     path="/CommonSystem/MFGReportSystem/NewBoxFoxcon"
                     element={<NewBoxFoxcon />}
+                  /> */}
+                     <Route
+                    path="/CommonSystem/MFGReportSystem/BoxSelectionInvoice"
+                    element={<BoxInvoice />}
                   />
                   {/* --------------------------------------------------------- */}
                   <Route

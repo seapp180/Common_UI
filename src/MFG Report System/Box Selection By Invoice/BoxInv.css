@@ -1,0 +1,53 @@
+.TBInv .ant-table-thead > tr > th {
+  background-color: #919fee;
+  color: white;
+  padding: 0;
+  height: 35px;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  text-align: center;
+}
+
+.TBInv .ant-table-tbody > tr > td {
+  font-family: "Varela Round", sans-serif;
+  font-size: 14px;
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+}
+
+.TitleInv_h2 {
+  background-color: #9233e0;
+  border-radius: 25px;
+  color: #ffffff;
+  padding: 5px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* margin-left: 15px; */
+  width: 30%;
+  font-size: 16px;
+}
+
+.TableNewInv {
+  margin-top: 20px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.TBInv1 .ant-table-thead > tr > th {
+  background-color: #3de475;
+  color: white;
+  padding: 0;
+  height: 35px;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  text-align: center;
+}
+
+.TBInv1 .ant-table-tbody > tr > td {
+  font-family: "Varela Round", sans-serif;
+  font-size: 14px;
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+}

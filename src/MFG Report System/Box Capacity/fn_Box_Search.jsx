@@ -62,21 +62,28 @@ function fn_Box_Search() {
 
   //
   const [dis_show, setdis_show] = useState(false);
-  const onSelectChange = (key) => {
+  // const onSelectChange = (key) => {
+  //   setSelectedRowKeys((prevSelectedRowKeys) => {
+  //     if (prevSelectedRowKeys.includes(key)) {
+  //       return prevSelectedRowKeys.filter((selectedKey) => selectedKey !== key);
+  //     } else {
+  //       return [...prevSelectedRowKeys, key];
+  //     }
+  //   });
+  // };
+
+  const onSelectChange = (lotNo) => {
     setSelectedRowKeys((prevSelectedRowKeys) => {
-      if (prevSelectedRowKeys.includes(key)) {
-        return prevSelectedRowKeys.filter((selectedKey) => selectedKey !== key);
+      if (prevSelectedRowKeys.includes(lotNo)) {
+        return prevSelectedRowKeys.filter(
+          (selectedKey) => selectedKey !== lotNo
+        );
       } else {
-        return [...prevSelectedRowKeys, key];
+        return [...prevSelectedRowKeys, lotNo];
       }
     });
   };
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (newSelectedRowKeys) => {
-      setSelectedRowKeys(newSelectedRowKeys);
-    },
-  };
+
   let PackType = "";
   let pack_qty;
   const { showLoading, hideLoading } = useLoading();
@@ -127,6 +134,7 @@ function fn_Box_Search() {
             setdataProduct(response.data);
           }
         } catch (error) {
+          hideLoading();
           console.error("API Error at DDLItemProduct:", error);
         }
       }
@@ -144,6 +152,7 @@ function fn_Box_Search() {
             setdataNewProduct(response.data);
           }
         } catch (error) {
+          hideLoading();
           console.error("API Error at DDLItemProduct:", error);
         }
       }
@@ -201,6 +210,7 @@ function fn_Box_Search() {
           await GetDataPacking(data.label);
           await DataReceive(data.label);
         } catch (error) {
+          hideLoading();
           console.error("API Error:", error);
         }
       }
@@ -229,6 +239,7 @@ function fn_Box_Search() {
   };
 
   const NewBoxCapacity = async (page) => {
+    setSelectedRowKeys([]);
     setradioselect("Manual");
     setPageInsert(page);
     setcheckradio("visible");
@@ -449,23 +460,98 @@ function fn_Box_Search() {
       width: 40,
     },
   ];
+  // const LotPacking = [
+  //   {
+  //     dataIndex: "SEQ",
+  //     key: "seq",
+  //     align: "center",
+  //     render: (text, record, index) => {
+  //       return text;
+  //     },
+  //     width: 10,
+  //   },
+  //   {
+  //     title: "Packing Date",
+  //     dataIndex: "LOT_DATE",
+  //     key: "Packing Date",
+  //     render: (text, record, index) => {
+  //       return text;
+  //     },
+  //     align: "center",
+  //     width: 50,
+  //   },
+  //   {
+  //     title: "Lot No.",
+  //     dataIndex: "LOT_NO",
+  //     key: "Lot No.",
+  //     render: (text, record, index) => {
+  //       return text;
+  //     },
+  //     align: "center",
+  //     width: 40,
+  //   },
+  //   {
+  //     title: "Qty",
+  //     dataIndex: "LOT_QTY",
+  //     key: "Qty",
+  //     render: (text, record, index) => {
+  //       return text ? text.toLocaleString() : "0";
+  //     },
+  //     align: "center",
+  //     width: 40,
+  //   },
+  //   // เงื่อนไขสำหรับเพิ่ม Checkbox Column
+  //   ...(CheckStatus === "ACTIVE" || CheckStatus === ""
+  //     ? [
+  //         {
+  //           title: (
+  //             <Checkbox
+  //               checked={
+  //                 DataLotPacking.length > 0 &&
+  //                 selectedRowKeys.length === DataLotPacking.length
+  //               }
+  //               indeterminate={
+  //                 selectedRowKeys.length > 0 &&
+  //                 selectedRowKeys.length < DataLotPacking.length
+  //               }
+  //               onChange={(e) => {
+  //                 if (e.target.checked) {
+  //                   setSelectedRowKeys(DataLotPacking.map((item) => item));
+  //                 } else {
+  //                   setSelectedRowKeys([]);
+  //                 }
+  //               }}
+  //             />
+  //           ),
+  //           key: "select",
+  //           align: "center",
+  //           width: 20,
+  //           render: (text, record, index) => {
+  //             return (
+  //               <Checkbox
+  //                 checked={selectedRowKeys.includes(record)}
+  //                 onChange={() => onSelectChange(record)}
+  //               />
+  //             );
+  //           },
+  //         },
+  //       ]
+  //     : []), // ถ้า CheckStatus ไม่ใช่ ACTIVE หรือ "" จะไม่เพิ่มคอลัมน์ checkbox
+  // ];
+
   const LotPacking = [
     {
       dataIndex: "SEQ",
       key: "seq",
       align: "center",
-      render: (text, record, index) => {
-        return text;
-      },
+      render: (text) => text,
       width: 10,
     },
     {
       title: "Packing Date",
       dataIndex: "LOT_DATE",
       key: "Packing Date",
-      render: (text, record, index) => {
-        return text;
-      },
+      render: (text) => text,
       align: "center",
       width: 50,
     },
@@ -473,9 +559,7 @@ function fn_Box_Search() {
       title: "Lot No.",
       dataIndex: "LOT_NO",
       key: "Lot No.",
-      render: (text, record, index) => {
-        return text;
-      },
+      render: (text) => text,
       align: "center",
       width: 40,
     },
@@ -483,22 +567,28 @@ function fn_Box_Search() {
       title: "Qty",
       dataIndex: "LOT_QTY",
       key: "Qty",
-      render: (text, record, index) => {
-        return text ? text.toLocaleString() : "0";
-      },
+      render: (text) => (text ? text.toLocaleString() : "0"),
       align: "center",
       width: 40,
     },
-    // เงื่อนไขสำหรับเพิ่ม Checkbox Column
     ...(CheckStatus === "ACTIVE" || CheckStatus === ""
       ? [
           {
             title: (
               <Checkbox
-                checked={selectedRowKeys.length === DataLotPacking.length}
+                checked={
+                  DataLotPacking.length > 0 &&
+                  selectedRowKeys.length === DataLotPacking.length
+                }
+                indeterminate={
+                  selectedRowKeys.length > 0 &&
+                  selectedRowKeys.length < DataLotPacking.length
+                }
                 onChange={(e) => {
                   if (e.target.checked) {
-                    setSelectedRowKeys(DataLotPacking.map((item) => item));
+                    setSelectedRowKeys(
+                      DataLotPacking.map((item) => item.LOT_NO)
+                    );
                   } else {
                     setSelectedRowKeys([]);
                   }
@@ -508,17 +598,17 @@ function fn_Box_Search() {
             key: "select",
             align: "center",
             width: 20,
-            render: (text, record, index) => {
+            render: (text, record) => {
               return (
                 <Checkbox
-                  checked={selectedRowKeys.includes(record)}
-                  onChange={() => onSelectChange(record)}
+                  checked={selectedRowKeys.includes(record.LOT_NO)}
+                  onChange={() => onSelectChange(record.LOT_NO)}
                 />
               );
             },
           },
         ]
-      : []), // ถ้า CheckStatus ไม่ใช่ ACTIVE หรือ "" จะไม่เพิ่มคอลัมน์ checkbox
+      : []),
   ];
 
   const tableReceive = [
@@ -639,6 +729,96 @@ function fn_Box_Search() {
       await Search();
     }
   };
+  // const handleDeleteLot = async () => {
+  //   if (selectedRowKeys.length === 0) {
+  //     Swal.fire("Warning", "กรุณาเลือก Lot ที่ต้องการลบ", "warning");
+  //     return;
+  //   }
+
+  //   const result = await Swal.fire({
+  //     text: "ต้องการลบข้อมูลใช่หรือไม่",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#3085d6",
+  //     cancelButtonColor: "#d33",
+  //     confirmButtonText: "ใช่",
+  //     cancelButtonText: "ไม่ใช่",
+  //   });
+  //   showLoading("กำลังลบข้อมูล...");
+  //   if (result.isConfirmed) {
+  //     try {
+  //       await Promise.all(
+  //         selectedRowKeys.map(async (lot) => {
+  //           axios.post("/api/BoxCapacity/DeleteLotPacking", {
+  //             dataList: JSON.parse(
+  //               JSON.stringify({
+  //                 lot: lot.LOT_NO,
+  //                 item: lot.LOT_ITEM_CODE,
+  //                 boxno: lot.LOT_BOX_NO,
+  //                 seq: lot.SEQ,
+  //               })
+  //             ),
+  //           });
+
+  //           axios.post("/api/BoxCapacity/UpdateSeqLotPacking", {
+  //             dataList: {
+  //               lot: lot.LOT_NO,
+  //               item: lot.LOT_ITEM_CODE,
+  //               boxno: lot.LOT_BOX_NO,
+  //             },
+  //           });
+
+  //           axios.post("/api/BoxCapacity/UpdateBoxMaster", {
+  //             dataList: {
+  //               qty: lot.LOT_QTY,
+  //               item: lot.LOT_ITEM_CODE,
+  //               boxno: lot.LOT_BOX_NO,
+  //             },
+  //           });
+
+  //           axios.post("/api/BoxCapacity/updateReject", {
+  //             dataList: { lot: lot.LOT_NO },
+  //           });
+  //         })
+  //       );
+  //       hideLoading();
+  //       Swal.fire("Deleted!", "Lot ถูกลบเรียบร้อยแล้ว", "success");
+
+  //       await GetDataLotPacking(
+  //         selectedRowKeys[0].LOT_ITEM_CODE,
+  //         selectedRowKeys[0].LOT_BOX_NO
+  //       );
+  //       await DataManual(
+  //         selectedRowKeys[0].LOT_ITEM_CODE,
+  //         selectedRowKeys[0].LOT_BOX_NO
+  //       );
+  //       await DataReceive(selectedRowKeys[0].LOT_ITEM_CODE);
+  //       await axios
+  //         .post("/api/BoxCapacity/SearchBoxCapacity", {
+  //           datalist: {
+  //             Product: selectedRowKeys[0].LOT_ITEM_CODE,
+  //             LotFrom: LotFrom,
+  //             LotTo: LotTo,
+  //             PackingDateFrom: PackingDateFrom,
+  //             PackingDateTo: PackingDateTo,
+  //             BoxNoSeacrh: selectedRowKeys[0].LOT_BOX_NO,
+  //           },
+  //         })
+  //         .then((res) => {
+  //           setDataSearch(res.data);
+  //         });
+  //       setSelectedRowKeys([]);
+  //     } catch (error) {
+  //       hideLoading();
+  //       console.error("Error during deletion:", error);
+  //       Swal.fire("Error!", "เกิดข้อผิดพลาดในการลบ Lot", "error");
+  //     }
+  //   } else {
+  //     hideLoading();
+  //     Swal.fire("ยกเลิก", "การลบถูกยกเลิก", "error");
+  //   }
+  // };
+
   const handleDeleteLot = async () => {
     if (selectedRowKeys.length === 0) {
       Swal.fire("Warning", "กรุณาเลือก Lot ที่ต้องการลบ", "warning");
@@ -654,20 +834,24 @@ function fn_Box_Search() {
       confirmButtonText: "ใช่",
       cancelButtonText: "ไม่ใช่",
     });
-    showLoading("กำลังลบข้อมูล...");
+
     if (result.isConfirmed) {
+      showLoading("กำลังลบข้อมูล...");
+
       try {
+        const selectedLots = DataLotPacking.filter((item) =>
+          selectedRowKeys.includes(item.LOT_NO)
+        );
+
         await Promise.all(
-          selectedRowKeys.map(async (lot) => {
+          selectedLots.map(async (lot) => {
             await axios.post("/api/BoxCapacity/DeleteLotPacking", {
-              dataList: JSON.parse(
-                JSON.stringify({
-                  lot: lot.LOT_NO,
-                  item: lot.LOT_ITEM_CODE,
-                  boxno: lot.LOT_BOX_NO,
-                  seq: lot.SEQ,
-                })
-              ),
+              dataList: {
+                lot: lot.LOT_NO,
+                item: lot.LOT_ITEM_CODE,
+                boxno: lot.LOT_BOX_NO,
+                seq: lot.SEQ,
+              },
             });
 
             await axios.post("/api/BoxCapacity/UpdateSeqLotPacking", {
@@ -691,40 +875,21 @@ function fn_Box_Search() {
             });
           })
         );
+
+        // ดึงค่าอ้างอิงจาก lot แรกที่ถูกลบ
+        const firstLot = selectedLots[0];
         hideLoading();
         Swal.fire("Deleted!", "Lot ถูกลบเรียบร้อยแล้ว", "success");
-
-        await GetDataLotPacking(
-          selectedRowKeys[0].LOT_ITEM_CODE,
-          selectedRowKeys[0].LOT_BOX_NO
-        );
-        await DataManual(
-          selectedRowKeys[0].LOT_ITEM_CODE,
-          selectedRowKeys[0].LOT_BOX_NO
-        );
-        await DataReceive(selectedRowKeys[0].LOT_ITEM_CODE);
-        await axios
-          .post("/api/BoxCapacity/SearchBoxCapacity", {
-            datalist: {
-              Product: selectedRowKeys[0].LOT_ITEM_CODE,
-              LotFrom: LotFrom,
-              LotTo: LotTo,
-              PackingDateFrom: PackingDateFrom,
-              PackingDateTo: PackingDateTo,
-              BoxNoSeacrh: selectedRowKeys[0].LOT_BOX_NO,
-            },
-          })
-          .then((res) => {
-            setDataSearch(res.data);
-          });
         setSelectedRowKeys([]);
+        await GetDataLotPacking(firstLot.LOT_ITEM_CODE, firstLot.LOT_BOX_NO);
+        await DataManual(firstLot.LOT_ITEM_CODE, firstLot.LOT_BOX_NO);
+        await DataReceive(firstLot.LOT_ITEM_CODE);
       } catch (error) {
         hideLoading();
         console.error("Error during deletion:", error);
         Swal.fire("Error!", "เกิดข้อผิดพลาดในการลบ Lot", "error");
       }
     } else {
-      hideLoading();
       Swal.fire("ยกเลิก", "การลบถูกยกเลิก", "error");
     }
   };
@@ -742,6 +907,7 @@ function fn_Box_Search() {
     if (page === "UPDATE") {
       setcheckradio("hidden");
     }
+    setSelectedRowKeys([]);
     setdis_show(false);
     handleUser(packging_by, page);
     setPageInsert(page);
@@ -961,8 +1127,7 @@ function fn_Box_Search() {
           }
           return;
         }
-        // showLoading("กำลังค้นหาข้อมูล...");
-        showLoading("กำลังบันทึกข้อมูล...");
+        showLoading("กำลังค้นหาข้อมูล...");
         await DataReceive(selectddlProductNew);
         let datapacking = await GetDataPacking(selectddlProductNew);
         await GetAutoGenerate(selectddlProductNew, BoxNo, "NEW", datapacking);
@@ -1059,6 +1224,7 @@ function fn_Box_Search() {
         }
       })
       .catch((error) => {
+        hideLoading();
         console.error(error);
         Swal.fire({
           icon: "error",
@@ -1154,6 +1320,7 @@ function fn_Box_Search() {
         });
         // return { status: "success", data: response.data };
       } catch (error) {
+        hideLoading();
         console.error("Error inserting data:", error);
         setopenManual(false);
         // return { status: "error", error: error };
@@ -1187,6 +1354,7 @@ function fn_Box_Search() {
 
         // return { status: "success", data: response.data };
       } catch (error) {
+        hideLoading();
         console.error("Error updating data:", error);
         // return { status: "error", error: error };
       }
@@ -1342,6 +1510,7 @@ function fn_Box_Search() {
             },
           });
         } catch (error) {
+          hideLoading();
           console.error("Error UpdateBoxQty:", error);
           isSaving = false;
           return;
@@ -1457,7 +1626,7 @@ function fn_Box_Search() {
         }
       });
   };
-  const GetDataRemainQTY_AUTO = async (selectddlProductNew, BoxNo) => {
+  const GetDataRemainQTY_AUTO_OLD = async (selectddlProductNew, BoxNo) => {
     hideLoading();
     const parts = BoxNo.split("/");
     const running_box = parseInt(parts[1], 10);
@@ -2035,6 +2204,7 @@ function fn_Box_Search() {
     }
     await DataHeader(selectddlProductNew, BoxNo);
   };
+
   const exportToExcel = async (data, namefile) => {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet("Sheet 1");
@@ -2141,9 +2311,8 @@ function fn_Box_Search() {
         },
       })
       .then(async (response) => {
-        if (response.data[0] > 0) {
+        if (response.data[0] !== undefined && response.data[0].REMAIN_QTY > 0) {
           row = response.data[0].REMAIN_QTY;
-        } else {
         }
       });
     return row;
@@ -2342,6 +2511,7 @@ function fn_Box_Search() {
 
       // return { status: "success", data: response.data };
     } catch (error) {
+      hideLoading();
       console.error("Error updating data:", error);
       // return { status: "error", error: error };
     }
@@ -3002,6 +3172,721 @@ function fn_Box_Search() {
     }
   };
 
+  const GetDataRemainQTY_AUTO = async (selectddlProductNew, Box_No) => {
+    hideLoading();
+    const parts = Box_No.split("/");
+    const running_box = parseInt(parts[1], 10);
+    let Max_DATE;
+    let Remain_QTY;
+
+    Remain_QTY = await QTY(selectddlProductNew, Box_No);
+    if (Remain_QTY > 0) {
+      hideLoading();
+      const result = await Swal.fire({
+        icon: "warning",
+        text: "Previous box packed not full. Are you sure you want to packing in this box?",
+        showCancelButton: true,
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+      });
+      if (result.isConfirmed) {
+        hideLoading();
+        const result2 = await Swal.fire({
+          icon: "warning",
+          text: "Are you sure you want to auto calculate packing?",
+          showCancelButton: true,
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+        });
+        if (result2.isConfirmed) {
+        }
+      }
+    } else {
+      hideLoading();
+    }
+    let LOT = [];
+    let Data;
+    await axios
+      .post("/api/BoxCapacity/DataLOT_AUTO", {
+        dataList: {
+          boxno: Box_No,
+          item: selectddlProductNew,
+        },
+      })
+      .then(async (response) => {
+        LOT = response.data;
+      });
+    if (LOT.length > 0) {
+      await axios
+        .post("/api/BoxCapacity/DataMAX_DATE_AUTO", {
+          dataList: {
+            lotno: LOT || "",
+            item: selectddlProductNew,
+          },
+        })
+        .then((response) => {
+          Max_DATE = response.data;
+          if (Max_DATE.length > 0) {
+            Max_DATE = "";
+          } else {
+            Max_DATE = Max_DATE;
+          }
+        });
+    } else {
+      Max_DATE = "";
+    }
+    let data
+    if (PackQty == 0) {
+       data = await GetDataPack("genauto", {
+        product: selectddlProductNew,
+        fullQtyperbox1: FullBoxQty,
+        boxquantity: 1,
+        BoxNo: Box_No,
+      });
+    }else{
+      data = await GetDataPack("genauto", {
+        product: selectddlProductNew,
+        fullQtyperbox1: FullBoxQty - PackQty,
+        boxquantity: 1,
+        BoxNo: Box_No,
+      });
+    }
+
+    let data2 = data.Alllot.filter((item) => item.GOOD_QTY > 0);
+    setDataPacking(data2);
+    showLoading("...กำลังบันทึกข้อมูล");
+
+    try {
+      let status = await axios.post("/api/BoxCapacity/ADD_LOT", {
+        dataList: data.boxes,
+        product: selectddlProductNew,
+        packdate: Packdate,
+      });
+
+      if (status.data.Status === "HOLD") {
+        setBoxstatus("HOLD");
+        hideLoading();
+        await Swal.fire({
+          icon: "error",
+          text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+        });
+        setdis_show(true);
+        await DataHeader(selectddlProductNew, Box_No);
+        await GetDataLotPacking(selectddlProductNew, Box_No);
+        return;
+      } else {
+        Swal.fire({
+                  icon: "success",
+                  text: "บันทึกข้อมูลสำเร็จ",
+                });
+        await DataHeader(selectddlProductNew, Box_No);
+        await GetDataLotPacking(selectddlProductNew, Box_No);
+        setdis_show(false);
+        hideLoading();
+      }
+    } catch (error) {
+      console.error("Error in ADD_LOT:", error);
+      hideLoading();
+      await Swal.fire({
+        icon: "error",
+        text: "เกิดข้อผิดพลาดในการบันทึกข้อมูล / An error occurred while saving data.",
+      });
+    }
+
+    ////////-------------------////////////////
+
+    // let status = await axios.post("/api/BoxCapacity/ADD_LOT", {
+    //   dataList: data.boxes,
+    //   product: selectddlProductNew,
+    //   packdate: Packdate,
+    // });
+    // if (status.data.Status == "HOLD"  ) {
+    //   setBoxstatus("HOLD")
+    //   hideLoading();
+    //   await Swal.fire({
+    //     icon: "error",
+    //     text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+    //   });
+    //   setdis_show(true);
+    //   await DataHeader(selectddlProductNew, Box_No);
+    //   await GetDataLotPacking(selectddlProductNew, Box_No);
+    //   return;
+    // } else {
+    //    await DataHeader(selectddlProductNew, Box_No);
+    //    await GetDataLotPacking(selectddlProductNew, Box_No);
+    //   setdis_show(false);
+    // }
+
+    // if (running_box > 1) {
+    //   await axios
+    //     .post("/api/BoxCapacity/DataRemainQTY_AUTO", {
+    //       dataList: {
+    //         boxno: BoxNo,
+    //         item: selectddlProductNew,
+    //       },
+    //     })
+    //     .then(async (response) => {
+    //       if (response.data[0].REMAIN_QTY > 0) {
+    //         Remain_QTY = response.data[0].REMAIN_QTY;
+
+    //         await Swal.fire({
+    //           icon: "warning",
+    //           text: "Previous box packed not full. Are you sure you want to packing in this box?",
+    //           showCancelButton: true,
+    //           confirmButtonText: "OK",
+    //           cancelButtonText: "Cancel",
+    //         }).then(async (result) => {
+    //           if (result.isConfirmed) {
+    //             await Swal.fire({
+    //               icon: "warning",
+    //               text: "Are you sure you want to auto calculate packing ?",
+    //               showCancelButton: true,
+    //               confirmButtonText: "OK",
+    //               cancelButtonText: "Cancel",
+    //             }).then(async (result) => {
+    //               if (result.isConfirmed) {
+    //                 showLoading("กำลังบันทึกข้อมูล...");
+    //                 await axios
+    //                   .post("/api/BoxCapacity/DataLOT_AUTO", {
+    //                     dataList: {
+    //                       boxno: BoxNo,
+    //                       item: selectddlProductNew,
+    //                     },
+    //                   })
+    //                   .then(async (response) => {
+    //                     let LOT = response.data;
+    //                     if (response.data.length > 0) {
+    //                       await axios
+    //                         .post("/api/BoxCapacity/DataMAX_DATE_AUTO", {
+    //                           dataList: {
+    //                             lotno: LOT || "",
+    //                             item: selectddlProductNew,
+    //                           },
+    //                         })
+    //                         .then((response) => {
+    //                           Max_DATE = response.data;
+    //                           if (Max_DATE.length > 0) {
+    //                             Max_DATE = "";
+    //                           } else {
+    //                             Max_DATE = Max_DATE;
+    //                           }
+    //                         });
+    //                     } else {
+    //                       Max_DATE = "";
+    //                     }
+    //                     Remain_QTY = FullBoxQty - PackQty;
+
+    //                     await axios
+    //                       .post("/api/BoxCapacity/LotNo", {
+    //                         dataList: {
+    //                           product: selectddlProductNew,
+    //                         },
+    //                       })
+    //                       .then(async (response) => {
+    //                         Data = response.data;
+    //                         let goodQtyArray = [];
+    //                         let lotNoArray = [];
+
+    //                         Data.forEach((item) => {
+    //                           goodQtyArray.push(item.GOOD_QTY);
+    //                           lotNoArray.push(item.LOT_NO);
+    //                         });
+    //                         if (Data.length > 0) {
+    //                           showLoading("กำลังบันทึกข้อมูล...");
+    //                           let rec;
+    //                           do {
+    //                             let qty = goodQtyArray.shift();
+    //                             let lot = lotNoArray.shift();
+    //                             await axios
+    //                               .post("/api/BoxCapacity/DataMAX_SEQ_AUTO", {
+    //                                 dataList: {
+    //                                   item: selectddlProductNew,
+    //                                   boxno: BoxNo,
+    //                                 },
+    //                               })
+    //                               .then(async (response) => {
+    //                                 rec = response.data[0].MAX_SEQ;
+    //                               });
+    //                             if (qty > Remain_QTY) {
+    //                               if (LOT_STATUS == "HOLD") {
+    //                                 Swal.fire({
+    //                                   icon: "error",
+    //                                   text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+    //                                 });
+    //                                 setdis_show(true);
+    //                                 hideLoading();
+    //                                 return;
+    //                               } else {
+    //                                 await axios.post(
+    //                                   "/api/BoxCapacity/INS_UP_AUTO_PACK1",
+    //                                   {
+    //                                     dataList: {
+    //                                       item: selectddlProductNew,
+    //                                       boxno: BoxNo,
+    //                                       maxseq: rec,
+    //                                       lot_no: lot,
+    //                                       remain_qty: Remain_QTY,
+    //                                       packdate: Packdate,
+    //                                     },
+    //                                   }
+    //                                 );
+    //                                 Remain_QTY = 0;
+    //                               }
+    //                               await axios
+    //                                 .post("/api/BoxCapacity/DataStatus", {
+    //                                   dataList: {
+    //                                     product: selectddlProductNew,
+    //                                     boxno: BoxNo,
+    //                                   },
+    //                                 })
+    //                                 .then((res) => {
+    //                                   LOT_STATUS = res.data[0].STATUS;
+    //                                   setBoxstatus(LOT_STATUS);
+    //                                 });
+    //                             } else {
+    //                               if (
+    //                                 qty !== undefined &&
+    //                                 qty !== null &&
+    //                                 qty !== ""
+    //                               ) {
+    //                                 if (LOT_STATUS == "HOLD") {
+    //                                   Swal.fire({
+    //                                     icon: "error",
+    //                                     text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+    //                                   });
+    //                                   setdis_show(true);
+    //                                   hideLoading();
+    //                                   return;
+    //                                 } else {
+    //                                   await axios.post(
+    //                                     "/api/BoxCapacity/INS_UP_AUTO_PACK2",
+    //                                     {
+    //                                       dataList: {
+    //                                         item: selectddlProductNew,
+    //                                         boxno: BoxNo,
+    //                                         maxseq: rec,
+    //                                         lot_no: lot,
+    //                                         qty_pack: qty,
+    //                                         packdate: Packdate,
+    //                                       },
+    //                                     }
+    //                                   );
+    //                                   Remain_QTY = Remain_QTY - qty;
+    //                                   rec = rec + 1;
+    //                                 }
+    //                               } else {
+    //                                 break;
+    //                               }
+    //                               await axios
+    //                                 .post("/api/BoxCapacity/DataStatus", {
+    //                                   dataList: {
+    //                                     product: selectddlProductNew,
+    //                                     boxno: BoxNo,
+    //                                   },
+    //                                 })
+    //                                 .then((res) => {
+    //                                   LOT_STATUS = res.data[0].STATUS;
+    //                                   setBoxstatus(LOT_STATUS);
+    //                                 });
+    //                             }
+    //                           } while (Remain_QTY > 0);
+    //                           hideLoading();
+    //                         }
+    //                       });
+    //                     setPackQty(Remain_QTY);
+    //                   });
+
+    //                 await axios.post("/api/BoxCapacity/UpdataStatus", {
+    //                   dataList: {
+    //                     item: selectddlProductNew,
+    //                     boxno: BoxNo,
+    //                     status: LOT_STATUS,
+    //                   },
+    //                 });
+    //                 if (LOT_STATUS == "HOLD") {
+    //                   setdis_show(true);
+    //                   await GetDataPacking(selectddlProductNew);
+    //                   await GetDataLotPacking(selectddlProductNew, BoxNo);
+    //                   return;
+    //                 } else {
+    //                   Swal.fire({
+    //                     icon: "success",
+    //                     text: "บันทึกข้อมูลสำเร็จ",
+    //                   });
+    //                   await GetDataPacking(selectddlProductNew);
+    //                   await GetDataLotPacking(selectddlProductNew, BoxNo);
+    //                   setdis_show(false);
+    //                 }
+    //               } else if (result.isDismissed) {
+    //                 return;
+    //               }
+    //             });
+    //           } else if (result.isDismissed) {
+    //             return;
+    //           }
+    //           await Search();
+    //         });
+    //       } else {
+    //         await axios
+    //           .post("/api/BoxCapacity/DataLOT_AUTO", {
+    //             dataList: {
+    //               boxno: BoxNo,
+    //               item: selectddlProductNew,
+    //             },
+    //           })
+    //           .then(async (response) => {
+    //             let LOT = response.data;
+    //             if (response.data.length > 0) {
+    //               await axios
+    //                 .post("/api/BoxCapacity/DataMAX_DATE_AUTO", {
+    //                   dataList: {
+    //                     lotno: LOT || "",
+    //                     item: selectddlProductNew,
+    //                   },
+    //                 })
+    //                 .then((response) => {
+    //                   Max_DATE = response.data;
+    //                   if (Max_DATE.length > 0) {
+    //                     Max_DATE = "";
+    //                   } else {
+    //                     Max_DATE = Max_DATE;
+    //                   }
+    //                 });
+    //             } else {
+    //               Max_DATE = "";
+    //             }
+    //             Remain_QTY = FullBoxQty - PackQty;
+    //             await axios
+    //               .post("/api/BoxCapacity/LotNo", {
+    //                 dataList: {
+    //                   product: selectddlProductNew,
+    //                 },
+    //               })
+    //               .then(async (response) => {
+    //                 Data = response.data;
+    //                 let goodQtyArray = [];
+    //                 let lotNoArray = [];
+
+    //                 Data.forEach((item) => {
+    //                   goodQtyArray.push(item.GOOD_QTY);
+    //                   lotNoArray.push(item.LOT_NO);
+    //                 });
+    //                 if (Data.length > 0) {
+    //                   showLoading("กำลังบันทึกข้อมูล...");
+    //                   let rec;
+    //                   do {
+    //                     let qty = goodQtyArray.shift(); // เก็บค่าของ qty
+    //                     let lot = lotNoArray.shift(); // เก็บค่าของ lotno
+    //                     await axios
+    //                       .post("/api/BoxCapacity/DataMAX_SEQ_AUTO", {
+    //                         dataList: {
+    //                           item: selectddlProductNew,
+    //                           boxno: BoxNo,
+    //                         },
+    //                       })
+    //                       .then(async (response) => {
+    //                         rec = response.data[0].MAX_SEQ;
+    //                       });
+    //                     if (qty > Remain_QTY) {
+    //                       if (LOT_STATUS == "HOLD") {
+    //                         Swal.fire({
+    //                           icon: "error",
+    //                           text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+    //                         });
+    //                         setdis_show(true);
+    //                         return;
+    //                       } else {
+    //                         await axios.post(
+    //                           "/api/BoxCapacity/INS_UP_AUTO_PACK1",
+    //                           {
+    //                             dataList: {
+    //                               item: selectddlProductNew,
+    //                               boxno: BoxNo,
+    //                               maxseq: rec,
+    //                               lot_no: lot,
+    //                               remain_qty: Remain_QTY,
+    //                               packdate: Packdate,
+    //                             },
+    //                           }
+    //                         );
+    //                         Remain_QTY = 0;
+    //                       }
+    //                       await axios
+    //                         .post("/api/BoxCapacity/DataStatus", {
+    //                           dataList: {
+    //                             product: selectddlProductNew,
+    //                             boxno: BoxNo,
+    //                           },
+    //                         })
+    //                         .then((res) => {
+    //                           LOT_STATUS = res.data[0].STATUS;
+    //                           setBoxstatus(LOT_STATUS);
+    //                         });
+    //                     } else {
+    //                       if (qty !== undefined && qty !== null && qty !== "") {
+    //                         if (LOT_STATUS == "HOLD") {
+    //                           Swal.fire({
+    //                             icon: "error",
+    //                             text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+    //                           });
+    //                           setdis_show(true);
+    //                           hideLoading();
+    //                           return;
+    //                         } else {
+    //                           await axios.post(
+    //                             "/api/BoxCapacity/INS_UP_AUTO_PACK2",
+    //                             {
+    //                               dataList: {
+    //                                 item: selectddlProductNew,
+    //                                 boxno: BoxNo,
+    //                                 maxseq: rec,
+    //                                 lot_no: lot,
+    //                                 qty_pack: qty,
+    //                                 packdate: Packdate,
+    //                               },
+    //                             }
+    //                           );
+    //                           Remain_QTY = Remain_QTY - qty;
+    //                           rec = rec + 1;
+    //                         }
+
+    //                         await axios
+    //                           .post("/api/BoxCapacity/DataStatus", {
+    //                             dataList: {
+    //                               product: selectddlProductNew,
+    //                               boxno: BoxNo,
+    //                             },
+    //                           })
+    //                           .then((res) => {
+    //                             LOT_STATUS = res.data[0].STATUS;
+    //                             setBoxstatus(LOT_STATUS);
+    //                           });
+    //                       } else {
+    //                         break;
+    //                       }
+    //                     }
+    //                   } while (Remain_QTY > 0);
+    //                   hideLoading();
+    //                 }
+    //               });
+    //             setPackQty(Remain_QTY);
+    //           });
+    //         // await axios
+    //         //   .post("/api/BoxCapacity/UpdateAutoSts", {
+    //         //     dataList: {
+    //         //       item: selectddlProductNew,
+    //         //       date: Max_DATE,
+    //         //     },
+    //         //   })
+    //         //   .then(async (response) => {});
+
+    //         await axios.post("/api/BoxCapacity/UpdataStatus", {
+    //           dataList: {
+    //             item: selectddlProductNew,
+    //             boxno: BoxNo,
+    //             status: LOT_STATUS,
+    //           },
+    //         });
+    //         if (LOT_STATUS == "HOLD") {
+    //           // Swal.fire({
+    //           //   icon: "error",
+    //           //   text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+    //           // });
+    //           setdis_show(true);
+    //           hideLoading();
+    //           return;
+    //         } else {
+    //           Swal.fire({
+    //             icon: "success",
+    //             text: "บันทึกข้อมูลสำเร็จ",
+    //           });
+    //           setdis_show(false);
+    //           await GetDataPacking(selectddlProductNew);
+    //           await GetDataLotPacking(selectddlProductNew, BoxNo);
+    //           await Search();
+    //         }
+    //       }
+    //     });
+
+    //   hideLoading();
+    // } else {
+    //   const result = await Swal.fire({
+    //     icon: "warning",
+    //     text: "Are you sure you want to auto calculate packing?",
+    //     showCancelButton: true,
+    //     confirmButtonText: "OK",
+    //     cancelButtonText: "Cancel",
+    //   });
+    //   if (result.isConfirmed) {
+    //     showLoading("กำลังบันทึกข้อมูล...");
+    //     await axios
+    //       .post("/api/BoxCapacity/DataLOT_AUTO", {
+    //         dataList: {
+    //           boxno: BoxNo,
+    //           item: selectddlProductNew,
+    //         },
+    //       })
+    //       .then(async (response) => {
+    //         let LOT = response.data;
+    //         if (response.data.length > 0) {
+    //           await axios
+    //             .post("/api/BoxCapacity/DataMAX_DATE_AUTO", {
+    //               dataList: {
+    //                 lotno: LOT || "",
+    //                 item: selectddlProductNew,
+    //               },
+    //             })
+    //             .then((response) => {
+    //               Max_DATE = response.data;
+    //               if (Max_DATE.length > 0) {
+    //                 Max_DATE = "";
+    //               } else {
+    //                 Max_DATE = Max_DATE;
+    //               }
+    //             });
+    //         } else {
+    //           Max_DATE = "";
+    //         }
+    //         Remain_QTY = FullBoxQty - PackQty;
+    //         await axios
+    //           .post("/api/BoxCapacity/GetDataGOOD_QTY_FOR_AUTO", {
+    //             dataList: {
+    //               item: selectddlProductNew,
+    //               date: Max_DATE,
+    //             },
+    //           })
+    //           .then(async (response) => {
+    //             Data = response.data;
+    //             let goodQtyArray = [];
+    //             let lotNoArray = [];
+
+    //             Data.forEach((item) => {
+    //               goodQtyArray.push(item.GOOD_QTY);
+    //               lotNoArray.push(item.LOT_NO);
+    //             });
+    //             if (Data.length > 0) {
+    //               let rec;
+    //               do {
+    //                 let qty = goodQtyArray.shift(); // เก็บค่าของ qty
+    //                 let lot = lotNoArray.shift(); // เก็บค่าของ lotno
+    //                 await axios
+    //                   .post("/api/BoxCapacity/DataMAX_SEQ_AUTO", {
+    //                     dataList: {
+    //                       item: selectddlProductNew,
+    //                       boxno: BoxNo,
+    //                     },
+    //                   })
+    //                   .then(async (response) => {
+    //                     rec = response.data[0].MAX_SEQ;
+    //                   });
+    //                 if (qty > Remain_QTY) {
+    //                   if (LOT_STATUS == "HOLD") {
+    //                     Swal.fire({
+    //                       icon: "error",
+    //                       text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+    //                     });
+    //                     setdis_show(true);
+    //                     return;
+    //                   } else {
+    //                     await axios.post("/api/BoxCapacity/INS_UP_AUTO_PACK1", {
+    //                       dataList: {
+    //                         item: selectddlProductNew,
+    //                         boxno: BoxNo,
+    //                         maxseq: rec,
+    //                         lot_no: lot,
+    //                         remain_qty: Remain_QTY,
+    //                         packdate: Packdate,
+    //                       },
+    //                     });
+    //                     Remain_QTY = 0;
+    //                   }
+    //                   await axios
+    //                     .post("/api/BoxCapacity/DataStatus", {
+    //                       dataList: {
+    //                         product: selectddlProductNew,
+    //                         boxno: BoxNo,
+    //                       },
+    //                     })
+    //                     .then((res) => {
+    //                       LOT_STATUS = res.data[0].STATUS;
+    //                       setBoxstatus(LOT_STATUS);
+    //                     });
+    //                   setdis_show(false);
+    //                 } else {
+    //                   if (qty !== undefined && qty !== null && qty !== "") {
+    //                     if (LOT_STATUS == "HOLD") {
+    //                       Swal.fire({
+    //                         icon: "error",
+    //                         text: "บาง Lot No. ไม่ได้รับอนุญาตให้แพค / Some lot is holding shipment.",
+    //                       });
+    //                       setdis_show(true);
+    //                       return;
+    //                     } else {
+    //                       await axios.post(
+    //                         "/api/BoxCapacity/INS_UP_AUTO_PACK2",
+    //                         {
+    //                           dataList: {
+    //                             item: selectddlProductNew,
+    //                             boxno: BoxNo,
+    //                             maxseq: rec,
+    //                             lot_no: lot,
+    //                             qty_pack: qty,
+    //                             packdate: Packdate,
+    //                           },
+    //                         }
+    //                       );
+    //                       Remain_QTY = Remain_QTY - qty;
+    //                       rec = rec + 1;
+    //                     }
+    //                     await axios
+    //                       .post("/api/BoxCapacity/DataStatus", {
+    //                         dataList: {
+    //                           product: selectddlProductNew,
+    //                           boxno: BoxNo,
+    //                         },
+    //                       })
+    //                       .then((res) => {
+    //                         LOT_STATUS = res.data[0].STATUS;
+    //                         setBoxstatus(LOT_STATUS);
+    //                       });
+    //                     setdis_show(false);
+    //                   } else {
+    //                     break;
+    //                   }
+    //                 }
+    //               } while (Remain_QTY > 0);
+    //             }
+    //           });
+    //         setPackQty(Remain_QTY);
+    //       });
+    //     await axios.post("/api/BoxCapacity/UpdataStatus", {
+    //       dataList: {
+    //         item: selectddlProductNew,
+    //         boxno: BoxNo,
+    //         status: LOT_STATUS,
+    //       },
+    //     });
+    //     if (LOT_STATUS == "HOLD") {
+    //       setdis_show(true);
+    //       await GetDataPacking(selectddlProductNew);
+    //       await GetDataLotPacking(selectddlProductNew, BoxNo);
+    //       hideLoading();
+    //       return;
+    //     } else {
+    //       Swal.fire({
+    //         icon: "success",
+    //         text: "บันทึกข้อมูลสำเร็จ",
+    //       });
+    //       setdis_show(false);
+    //       await GetDataPacking(selectddlProductNew);
+    //       await GetDataLotPacking(selectddlProductNew, BoxNo);
+    //       await Search();
+    //     }
+    //   }
+    //   hideLoading();
+    // }
+  };
+
   return {
     columns,
     NewBoxCapacity,
@@ -3089,7 +3974,6 @@ function fn_Box_Search() {
     setProductShow,
     handleDeleteLot,
     checkradio,
-    rowSelection,
     CheckStatus,
     dis_show,
     SaveEdit,

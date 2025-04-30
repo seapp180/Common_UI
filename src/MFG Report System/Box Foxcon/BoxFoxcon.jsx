@@ -281,7 +281,6 @@ function BoxFoxcon() {
       ></Table>
       <div>
         <Modal
-          bo
           width="95%"
           open={isModalOpen}
           onOk={handleOk}
