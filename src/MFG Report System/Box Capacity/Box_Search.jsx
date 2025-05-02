@@ -12,6 +12,8 @@ const { Content } = Layout;
 import "./BoxCapacity.css";
 import { fn_Box_Search } from "./fn_Box_Search";
 import ImgExcel from "../../assets/excel.png";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
 function Box_Search() {
   const {
     columns,
@@ -104,7 +106,11 @@ function Box_Search() {
     CheckStatus,
     dis_show,
     SaveEdit,
+    onChangeDateFrom,
+    onChangeDateTo,
+    onChangePackDate
   } = fn_Box_Search();
+
   return (
     <Content>
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -230,7 +236,7 @@ function Box_Search() {
             </td>
             <td>
               <div>
-                <Input
+                {/* <Input
                   type="date"
                   showSearch
                   value={PackingDateFrom}
@@ -241,7 +247,18 @@ function Box_Search() {
                     marginTop: "5px",
                     marginLeft: "5px",
                   }}
-                  placeholder="Lot No From :"
+                  // placeholder="Lot No From :"
+                /> */}
+                <DatePicker
+                  format="DD/MM/YYYY"
+                  style={{
+                    width: "200px",
+                    display: "block",
+                    marginTop: "5px",
+                    marginLeft: "5px",
+                  }}
+                  value={PackingDateFrom}
+                  onChange={onChangeDateFrom}
                 />
               </div>
             </td>
@@ -252,7 +269,7 @@ function Box_Search() {
             </td>
             <td>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <Input
+                {/* <Input
                   type="date"
                   showSearch
                   value={PackingDateTo}
@@ -262,7 +279,17 @@ function Box_Search() {
                     marginTop: "5px",
                     marginLeft: "5px",
                   }}
-                  placeholder="Lot No To :"
+                  // placeholder="Lot No To :"
+                /> */}
+                <DatePicker
+                  style={{
+                    width: "200px",
+                    marginTop: "5px",
+                    marginLeft: "5px",
+                  }}
+                  format="DD/MM/YYYY"
+                  value={PackingDateTo}
+                  onChange={onChangeDateTo}
                 />
               </div>
             </td>
@@ -566,7 +593,7 @@ function Box_Search() {
                     <tr>
                       <td style={{ textAlign: "right" }}>Packing Date :</td>
                       <td>
-                        <Input
+                        {/* <Input
                           value={Packdate}
                           onChange={(e) => setPackdate(e.target.value)}
                           type="date"
@@ -576,6 +603,19 @@ function Box_Search() {
                             marginTop: "5px",
                             marginLeft: "5px",
                           }}
+                        /> */}
+                        <DatePicker
+                          style={{
+                            width: "200px",
+                            display: "block",
+                            marginTop: "5px",
+                            marginLeft: "5px",
+                          }}
+                          value={
+                            Packdate 
+                          }
+                          onChange={onChangePackDate}
+                          format="DD/MM/YYYY"
                         />
                       </td>
                       <td style={{ textAlign: "right" }}>Packing Qty :</td>
@@ -606,7 +646,7 @@ function Box_Search() {
                     <tr>
                       <td style={{ textAlign: "right" }}>Packing Date :</td>
                       <td>
-                        <Input
+                        {/* <Input
                           type="date"
                           value={Packdate}
                           onChange={(e) => setPackdate(e.target.value)}
@@ -616,6 +656,21 @@ function Box_Search() {
                             marginTop: "5px",
                             marginLeft: "5px",
                           }}
+                        /> */}
+                      <DatePicker
+                          style={{
+                            width: "200px",
+                            display: "block",
+                            marginTop: "5px",
+                            marginLeft: "5px",
+                          }}
+                          value={
+                            Packdate
+                          }
+                          onChange={(date, dateString) =>
+                            setPackdate(date )
+                          }
+                          format="DD/MM/YYYY"
                         />
                       </td>
                       <td style={{ textAlign: "right" }}>Full Box Qty :</td>

@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 const { Content } = Layout;
 import "../Box Selection By Invoice/BoxInv.css";
-import { fn_BoxINV } from "./fn_BoxINV";
+import { fn_BoxINV } from "./fn_BoxInv";
 function BoxINV() {
   const {
     TableSelectBox,
@@ -31,7 +31,10 @@ function BoxINV() {
     handleFactory,
     handleInvoice,
     handleProductItem,
-    DataBoxDetail
+    DataBoxDetail,
+    DataSelectBox,
+    Reset,
+    showGrid,
   } = fn_BoxINV();
   return (
     <Content>
@@ -77,7 +80,7 @@ function BoxINV() {
             </td>
             <td>
               <div>
-              <Select
+                <Select
                   showSearch
                   value={selectInvNo}
                   onChange={handleInvoice}
@@ -89,9 +92,10 @@ function BoxINV() {
                   }}
                   placeholder="Select InvNo"
                   optionFilterProp="children"
-                  filterOption={
-                    (input, option) => (option?.label ?? "").toLowerCase()
-                    .includes(input.toLowerCase())
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
                   }
                   options={InvNo}
                 />
@@ -126,7 +130,7 @@ function BoxINV() {
             </td>
             <td>
               <div>
-              <Select
+                <Select
                   showSearch
                   value={selectProductItem}
                   onChange={handleProductItem}
@@ -138,9 +142,10 @@ function BoxINV() {
                   }}
                   placeholder="Select Product Item"
                   optionFilterProp="children"
-                  filterOption={
-                    (input, option) => (option?.label ?? "").toLowerCase()
-                    .includes(input.toLowerCase())
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
                   }
                   options={ProductItem}
                 />
@@ -151,7 +156,7 @@ function BoxINV() {
                 <span style={{ fontSize: "14px" }}>Invoice Date :</span>
               </div>
             </td>
-            {console.log(Invdate,"Invdate")}
+            {console.log(Invdate, "Invdate")}
             <td>
               <div>
                 <Input
@@ -191,9 +196,7 @@ function BoxINV() {
                     color: "#fff",
                     marginLeft: "10px",
                   }}
-                  // onClick={() => {
-                  //   Search();
-                  // }}
+                  onClick={() => Reset("ResetHeader")}
                 >
                   Reset
                 </Button>
@@ -205,7 +208,7 @@ function BoxINV() {
                     color: "#fff",
                     marginLeft: "10px",
                   }}
-                  // onClick={() => handleGoToNextPage("NewBoxFoxcon")}
+
                   // onClick={showModal}
                 >
                   Export
@@ -216,91 +219,93 @@ function BoxINV() {
         </table>
         <div></div>
       </div>
-      <Card
-        style={{
-          marginTop: "10px",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.25)",
-        }}
-      >
-        <div
+      {showGrid == true && (
+        <Card
           style={{
-            display: "flex",
-            width: "100%",
-            gap: "20px",
+            marginTop: "10px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.25)",
           }}
         >
           <div
             style={{
-              flex: 1,
+              display: "flex",
+              width: "100%",
+              gap: "20px",
             }}
           >
-            <div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <h2 className="TitleInv_h2">Select Box no. </h2>
+            <div
+              style={{
+                flex: 1,
+              }}
+            >
+              <div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <h2 className="TitleInv_h2">Select Box no. </h2>
+                </div>
+                <Table
+                  columns={TableSelectBox}
+                  className="TBInv"
+                  dataSource={DataSelectBox}
+                  bordered
+                  pagination={true}
+                  // scroll={{ y: 500 }}
+                  // pagination=
+                ></Table>
               </div>
-              <Table
-                columns={TableSelectBox}
-                className="TBInv"
-                // dataSource={DataSource}
-                bordered
-                pagination={true}
-                // scroll={{ y: 500 }}
-                // pagination=
-              ></Table>
+            </div>
+            <div
+              style={{
+                flex: 1,
+              }}
+            >
+              <div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <h2 className="TitleInv_h2">Box no. Detail </h2>
+                </div>
+                <Table
+                  columns={TableBoxNoDetail}
+                  className="TBInv1"
+                  dataSource={DataBoxDetail}
+                  bordered
+                  pagination={true}
+                  // scroll={{ y: 500 }}
+                  // pagination=
+                ></Table>
+              </div>
             </div>
           </div>
-          <div
-            style={{
-              flex: 1,
-            }}
-          >
-            <div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <h2 className="TitleInv_h2">Box no. Detail </h2>
-              </div>
-              <Table
-                columns={TableBoxNoDetail}
-                className="TBInv1"
-                dataSource={DataBoxDetail}
-                bordered
-                pagination={true}
-                // scroll={{ y: 500 }}
-                // pagination=
-              ></Table>
-            </div>
+          <br></br>
+          <div>
+            <Button
+              type="primary"
+              icon={<SaveOutlined />}
+              style={{
+                background: " #3498db ",
+                color: "#fff",
+                marginLeft: "10px",
+              }}
+              // onClick={() => {
+              //   Search();
+              // }}
+            >
+              Save
+            </Button>
+            <Button
+              icon={<ClearOutlined />}
+              type="primary"
+              style={{
+                background: "#abb2b9",
+                color: "#fff",
+                marginLeft: "10px",
+              }}
+              // onClick={() => handleGoToNextPage("NewBoxFoxcon")}
+              // onClick={showModal}
+            >
+              Cancel
+            </Button>
           </div>
-        </div>
-        <br></br>
-        <div>
-          <Button
-            type="primary"
-            icon={<SaveOutlined />}
-            style={{
-              background: " #3498db ",
-              color: "#fff",
-              marginLeft: "10px",
-            }}
-            // onClick={() => {
-            //   Search();
-            // }}
-          >
-            Save
-          </Button>
-          <Button
-            icon={<ClearOutlined />}
-            type="primary"
-            style={{
-              background: "#abb2b9",
-              color: "#fff",
-              marginLeft: "10px",
-            }}
-            // onClick={() => handleGoToNextPage("NewBoxFoxcon")}
-            // onClick={showModal}
-          >
-            Cancel
-          </Button>
-        </div>
-      </Card>
+        </Card>
+      )}
     </Content>
   );
 }

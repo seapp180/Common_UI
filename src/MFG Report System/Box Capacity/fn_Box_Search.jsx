@@ -8,9 +8,10 @@ import Swal from "sweetalert2";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { Checkbox } from "antd";
-
+import dayjs from "dayjs";
 function fn_Box_Search() {
-  const today = new Date().toISOString().split("T")[0];
+  const daynow = new Date().toISOString().split("T")[0]; // 2025-04-30
+  const today = dayjs(daynow, "YYYY-MM-DD"); // แปลงเป็น dayjs
   const [ddlItem, setddlItem] = useState("");
   const [ddlProduct, setddlProduct] = useState("");
   const [ddlNewProduct, setddlNewProduct] = useState("");
@@ -933,7 +934,7 @@ function fn_Box_Search() {
         setBoxNo(res.data[0].BOX_NO);
         box_no = res.data[0].BOX_NO;
         setBoxstatus(res.data[0].STATUS);
-        setPackdate(res.data[0].PACKING_DATE);
+        setPackdate(dayjs(res.data[0].PACKING_DATE, "YYYY-MM-DD"));
         setPackQty(res.data[0].MRTR_QTY);
         pack_qty = res.data[0].MRTR_QTY;
         setFullBoxQty(res.data[0].MAX_QTY);
@@ -1143,14 +1144,26 @@ function fn_Box_Search() {
       button.disabled = false;
     }
   };
+  const onChangeDateTo = (date, dateString) => {
+    setPackingDateTo(date);
+  };
+  const onChangeDateFrom = (date, dateString) => {
+    setPackingDateFrom(date);
+  };
+  const onChangePackDate = (date, dateString) => {
+    setPackdate(date);
+  }
   const Search = async () => {
+    let datefrom = PackingDateFrom ? PackingDateFrom.format("YYYY-MM-DD") : "";
+    let dateto = PackingDateTo ? PackingDateTo.format("YYYY-MM-DD") : "";
+
     if (PageInsert !== "NewBox" || PageInsert !== "UPDATE") {
       if (
         selectddlProduct == "" &&
         LotFrom == "" &&
         LotTo == "" &&
-        PackingDateFrom == "" &&
-        PackingDateTo == "" &&
+        datefrom == "" &&
+        dateto == "" &&
         BoxNoSeacrh == ""
       ) {
         Swal.fire({
@@ -1174,16 +1187,18 @@ function fn_Box_Search() {
           Product: selectddlProduct,
           LotFrom: LotFrom,
           LotTo: LotTo,
-          PackingDateFrom: PackingDateFrom,
-          PackingDateTo: PackingDateTo,
+          PackingDateFrom: datefrom,
+          PackingDateTo: dateto,
           BoxNoSeacrh: BoxNoSeacrh,
         },
       })
       .then((res) => {
         setDataSearch(res.data);
       });
+
     hideLoading();
   };
+
   const DataManual = async (itemname, boxno) => {
     await axios
       .post("/api/BoxCapacity/DataSeq", {
@@ -1291,9 +1306,9 @@ function fn_Box_Search() {
       setDataLotPacking([]);
       setDataPacking([]);
       setDataLotReceive([]);
-      setDataLotPacking1([]);
+      setDataLotPacking1([]);  
     } else if (Page == "ResetManual") {
-      setselectddlLot("");
+      setselectddlLot("");  
       setRemain_qty("");
       setPack_qtyLot(0);
       setName_User("");
@@ -1301,6 +1316,8 @@ function fn_Box_Search() {
     }
   };
   const SaveBoxMainTain = async (page) => {
+    let DatePack =  Packdate ? Packdate.format("YYYY-MM-DD") : "";
+    let datenow =  today ? today.format("YYYY-MM-DD") : "";
     if (page == "NEW") {
       try {
         const response = await axios.post("/api/BoxCapacity/InsBoxCapacity", {
@@ -1314,7 +1331,7 @@ function fn_Box_Search() {
             sheet_qty: TotalSheetQty,
             packingBy: PackBy,
             remark: Remark,
-            packdate: Packdate == "" ? today : Packdate,
+            packdate: DatePack == "" ? datenow : DatePack,
             fac2: Fac.value,
           },
         });
@@ -1338,7 +1355,7 @@ function fn_Box_Search() {
             sheet_qty: TotalSheetQty,
             packingBy: PackBy,
             remark: Remark,
-            packdate: Packdate == "" ? today : Packdate,
+            packdate: DatePack == "" ? datenow : DatePack,
             fac2: Fac.value,
           },
         });
@@ -1347,7 +1364,7 @@ function fn_Box_Search() {
             dataList: {
               item: selectddlProductNew,
               boxno: BoxNo,
-              packdate: Packdate == "" ? today : Packdate,
+              packdate: DatePack == "" ? datenow : DatePack,
             },
           });
         }
@@ -1474,6 +1491,8 @@ function fn_Box_Search() {
   let isSaving = false; // ตัวแปรภายนอกฟังก์ชัน หรือใน state ถ้าใช้ React
 
   const SaveLotPacking = async (page) => {
+    let DatePack =  Packdate ? Packdate.format("YYYY-MM-DD") : "";
+    let datenow =  today ? today.format("YYYY-MM-DD") : "";
     if (isSaving) return; // ป้องกันการเรียกซ้ำ
     isSaving = true;
 
@@ -1526,7 +1545,7 @@ function fn_Box_Search() {
             boxno: BoxNo,
             lot: selectddlLot,
             lot_qty: Pack_qtyLot,
-            packdate: Packdate == "" ? today : Packdate,
+            packdate: DatePack == "" ? datenow : DatePack,
           },
         });
 
@@ -2318,11 +2337,14 @@ function fn_Box_Search() {
     return row;
   };
   const GetAutoGenerate = async (
+    
     selectddlProductNew,
     BoxNo,
     page,
     DataPacking
   ) => {
+    let DatePack =  Packdate ? Packdate.format("YYYY-MM-DD") : "";
+    let datenow =  today ? today.format("YYYY-MM-DD") : "";
     try {
       if (DataPacking.length > 0) {
         let Box_NO;
@@ -2349,7 +2371,7 @@ function fn_Box_Search() {
             sheet_qty: TotalSheetQty,
             packingBy: PackBy,
             remark: Remark,
-            packdate: Packdate === "" ? today : Packdate,
+            packdate: DatePack === "" ? datenow : DatePack,
             fac2: Fac.value,
           }));
           await axios.post("/api/BoxCapacity/InsBoxCapacity1", {
@@ -2437,7 +2459,7 @@ function fn_Box_Search() {
             let status = await axios.post("/api/BoxCapacity/ADD_LOT", {
               dataList: data.boxes,
               product: selectddlProductNew,
-              packdate: Packdate,
+              packdate: DatePack === "" ? datenow : DatePack,
             });
             if (status.data.Status == "HOLD") {
               hideLoading();
@@ -2471,6 +2493,7 @@ function fn_Box_Search() {
 
   const GetDataPack = async (type, params) => {
     let data;
+    
     if (type == "genauto") {
       const res = await axios.get(
         `/api/BoxCapacity/GenAutoBox?product=${params.product}&fullQtyperbox1=${params.fullQtyperbox1}&boxquantity=${params.boxquantity}&BoxNo=${params.BoxNo}`
@@ -2482,6 +2505,8 @@ function fn_Box_Search() {
     return data;
   };
   const SaveEdit = async () => {
+    let DatePack =  Packdate ? Packdate.format("YYYY-MM-DD") : "";
+    let datenow =  today ? today.format("YYYY-MM-DD") : "";
     showLoading("...กำลังบันทึก");
     try {
       const response = await axios.post("/api/BoxCapacity/InsBoxCapacity", {
@@ -2495,7 +2520,7 @@ function fn_Box_Search() {
           sheet_qty: TotalSheetQty,
           packingBy: PackBy,
           remark: Remark,
-          packdate: Packdate == "" ? today : Packdate,
+          packdate: DatePack == "" ? datenow : DatePack,
           fac2: Fac.value,
         },
       });
@@ -2504,7 +2529,7 @@ function fn_Box_Search() {
           dataList: {
             item: selectddlProductNew,
             boxno: BoxNo,
-            packdate: Packdate == "" ? today : Packdate,
+            packdate: DatePack == "" ? datenow : DatePack,
           },
         });
       }
@@ -2522,6 +2547,7 @@ function fn_Box_Search() {
       text: "บันทึกข้อมูลสำเร็จ",
     });
   };
+
 
   // อันเก่าสุดที่ช้า แต่ไม่พัง
   const GetAutoGenerateNew = async (
@@ -3177,6 +3203,8 @@ function fn_Box_Search() {
     const parts = Box_No.split("/");
     const running_box = parseInt(parts[1], 10);
     let Max_DATE;
+    let DatePack =  Packdate ? Packdate.format("YYYY-MM-DD") : "";
+    let datenow =  today ? today.format("YYYY-MM-DD") : "";
     let Remain_QTY;
 
     Remain_QTY = await QTY(selectddlProductNew, Box_No);
@@ -3235,15 +3263,15 @@ function fn_Box_Search() {
     } else {
       Max_DATE = "";
     }
-    let data
+    let data;
     if (PackQty == 0) {
-       data = await GetDataPack("genauto", {
+      data = await GetDataPack("genauto", {
         product: selectddlProductNew,
         fullQtyperbox1: FullBoxQty,
         boxquantity: 1,
         BoxNo: Box_No,
       });
-    }else{
+    } else {
       data = await GetDataPack("genauto", {
         product: selectddlProductNew,
         fullQtyperbox1: FullBoxQty - PackQty,
@@ -3260,7 +3288,7 @@ function fn_Box_Search() {
       let status = await axios.post("/api/BoxCapacity/ADD_LOT", {
         dataList: data.boxes,
         product: selectddlProductNew,
-        packdate: Packdate,
+        packdate: DatePack,
       });
 
       if (status.data.Status === "HOLD") {
@@ -3276,9 +3304,9 @@ function fn_Box_Search() {
         return;
       } else {
         Swal.fire({
-                  icon: "success",
-                  text: "บันทึกข้อมูลสำเร็จ",
-                });
+          icon: "success",
+          text: "บันทึกข้อมูลสำเร็จ",
+        });
         await DataHeader(selectddlProductNew, Box_No);
         await GetDataLotPacking(selectddlProductNew, Box_No);
         setdis_show(false);
@@ -3977,6 +4005,9 @@ function fn_Box_Search() {
     CheckStatus,
     dis_show,
     SaveEdit,
+    onChangeDateFrom,
+    onChangeDateTo,
+    onChangePackDate
   };
 }
 

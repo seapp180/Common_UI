@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Checkbox } from "antd";
+import { Checkbox, Input } from "antd";
 import axios from "axios";
 import { useLoading } from "../../component/loading/fn_loading";
 
@@ -50,47 +50,64 @@ function fn_BoxINV() {
         //   disabled={sts_page === "GEN_SUCCESS"}
         />
       ),
+      align: "center",
     },
     {
       title: "Box No.",
-      // dataIndex: "key",
+      dataIndex: "BOX_NO",
       key: "key",
       render: (text, record, index) => {
-        return index + 1;
+        return text;
       },
+      align: "center",
     },
     {
       title: "Packing Date",
-      dataIndex: "ITEM",
+      dataIndex: "D_DATE",
       key: "product",
       render: (text, record, index) => {
         return text;
       },
+      align: "center",
     },
     {
       title: "Quantity",
-      dataIndex: "LOT",
+      dataIndex: "QTY",
       key: "lotNo",
       render: (text, record, index) => {
-        return text;
+        return text ? text.toLocaleString() : "0";
       },
+      align: "center",
     },
     {
       title: "Inv Box",
-      dataIndex: "BIN",
+      dataIndex: "INV_BOX",
       key: "bin",
+      align: "center",
       render: (text, record, index) => {
-        return text;
+        return (
+          <Input
+            type="text"
+            value={text}
+            style={{ width: "100px", height: "30px" }}
+            onChange={(e) => {
+              // แก้ไขค่าใน record หรือแจ้งไปยัง parent
+              record.INV_BOX = e.target.value;
+              // ถ้าคุณใช้ state ให้ update ผ่าน function ด้วย
+            }}
+          />
+        );
       },
     },
 
     {
       title: "Status",
-      dataIndex: "QTY",
+      dataIndex: "STATUS",
       key: "qty",
       render: (text, record, index) => {
         return text ? text.toLocaleString() : "0";
       },
+      align: "center",
     },
   ];
   const TableBoxNoDetail = [
@@ -101,6 +118,7 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text;
       },
+      align: "center",
     },
     {
       title: "Box No.",
@@ -109,6 +127,7 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text;
       },
+      align: "center",
     },
     {
       title: "Box Qty",
@@ -117,6 +136,7 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text ? text.toLocaleString() : "0";
       },
+      align: "center",
     },
     {
       title: "Inv Box",
@@ -125,6 +145,7 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text;
       },
+      align: "center",
     },
 
     {
@@ -134,6 +155,7 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text ? text.toLocaleString() : "0";
       },
+      align: "center",
     },
     {
       title: "Lot No.",
@@ -142,6 +164,7 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text ? text.toLocaleString() : "0";
       },
+      align: "center",
     },
     {
       title: "Lot Qty",
@@ -150,6 +173,7 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text ? text.toLocaleString() : "0";
       },
+      align: "center",
     },
   ];
   const GetFactory = () => {
@@ -171,7 +195,7 @@ function fn_BoxINV() {
     setInvdate(today);
     setDataSelectBox([]);
     setDataBoxDetail([]);
-    setshowGrid(false);
+    setshowGrid(true);
     GetInvoice(value);
   };
   const GetInvoice = (value) => {
@@ -190,6 +214,7 @@ function fn_BoxINV() {
       });
   };
   const handleInvoice = (value) => {
+    setshowGrid(true);
     setselectInvNo(value);
     setProductItem([]);
     setselectProductItem("");
@@ -197,9 +222,8 @@ function fn_BoxINV() {
     setInvdate(today);
     setDataSelectBox([]);
     setDataBoxDetail([]);
-    setshowGrid(false);
     GetProductItem(selectFactory, value);
-   
+    GetDataBoxDetail(value);
   };
   const GetProductItem = (selectFactory, Invoice) => {
     axios
@@ -217,14 +241,13 @@ function fn_BoxINV() {
       });
   };
   const handleProductItem = (value) => {
+    setshowGrid(true);
     setselectProductItem(value);
     setSeq("");
     setInvdate(today);
     setDataSelectBox([]);
-    setDataBoxDetail([]);
-    setshowGrid(false);
     GetSeqDate(selectFactory, selectInvNo, value);
-    GetDataBoxDetail(selectInvNo)
+    GetDataSelectBox(selectInvNo, value, Seq);
   };
   const GetSeqDate = (selectFactory, Invoice, product) => {
     axios
@@ -249,26 +272,38 @@ function fn_BoxINV() {
         inv: Invoice,
       })
       .then((res) => {
-        setDataBoxDetail(res.data)
+        setDataBoxDetail(res.data);
         console.log("Data", res.data);
       })
       .catch((error) => {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
       });
   };
-  const GetDataSelectBox = (Invoice) => {
+  const GetDataSelectBox = (selectInvNo, selectProductItem, Seq) => {
     axios
       .post("/api/BoxSelectInv/DataSelectBox", {
-        fac: selectFactory,
-        inv: Invoice,
+        invno: selectInvNo,
+        prd: selectProductItem,
+        seq: Seq,
       })
       .then((res) => {
-        setDataBoxDetail(res.data)
+        setDataSelectBox(res.data);
         console.log("Data", res.data);
       })
       .catch((error) => {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
       });
+  };
+  const Reset = (page) => {
+    console.log("Reset", page);
+    setselectFactory("");
+    setselectInvNo("");
+    setselectProductItem("");
+    setSeq("");
+    setInvdate(today);
+    setDataSelectBox([]);
+    setDataBoxDetail([]);
+    setshowGrid(false);
   };
 
   return {
@@ -292,7 +327,10 @@ function fn_BoxINV() {
     handleFactory,
     handleInvoice,
     handleProductItem,
-    DataBoxDetail
+    DataBoxDetail,
+    DataSelectBox,
+    Reset,
+    showGrid,
   };
 }
 
