@@ -7,6 +7,7 @@ import {
   ClearOutlined,
   SearchOutlined,
   FileExcelOutlined,
+  HighlightTwoTone,
 } from "@ant-design/icons";
 const { Content } = Layout;
 import "../Box Selection By Invoice/BoxInv.css";
@@ -47,6 +48,7 @@ function BoxINV() {
     status,
     Reset,
     BtnExport,
+    selectedRows
   } = fn_BoxINV();
   return (
     <Content>
@@ -270,7 +272,7 @@ function BoxINV() {
           style={{
             top: 20,
             maxHeight: "calc(100vh - 20px)",
-            // overflow: "hidden", // ย้ายจาก bodyStyle
+            overflow: "hidden", // ย้ายจาก bodyStyle
           }}
         >
           <div
@@ -426,19 +428,20 @@ function BoxINV() {
                 <td></td>
                 <td>
                   <div style={{ marginTop: "5px" }}>
-                  {(status == "NEW" &&
-                    <Button
-                      type="primary"
-                      icon={<ReloadOutlined />}
-                      style={{
-                        background: "#FF7043",
-                        color: "#fff",
-                        marginLeft: "10px",
-                      }}
-                      onClick={() => Reset("NEW")}
-                    >
-                      Reset
-                    </Button>)}
+                    {status == "NEW" && (
+                      <Button
+                        type="primary"
+                        icon={<ReloadOutlined />}
+                        style={{
+                          background: "#FF7043",
+                          color: "#fff",
+                          marginLeft: "10px",
+                        }}
+                        onClick={() => Reset("NEW")}
+                      >
+                        Reset
+                      </Button>
+                    )}
                     <Button
                       icon={<FileExcelOutlined />}
                       type="primary"
@@ -475,13 +478,95 @@ function BoxINV() {
                       <div style={{ display: "flex", alignItems: "center" }}>
                         <h2 className="TitleInv_h2">Select Box no. </h2>
                       </div>
-                      <Table
+                      {/* <Table
                         columns={TableSelectBox}
                         className="TBInv"
                         dataSource={DataSelectBox}
                         pagination={true}
+                        scroll={{ y: 300 }}
                         rowKey={(record) => record.BOX_NO}
-                      />
+                        summary={(pageData) => {
+                          let totalQty = pageData.reduce(
+                            (sum, record) => sum + record.QTY,
+                            0
+                          );
+                          return (
+                            <Table.Summary fixed="bottom">
+                     
+                              <Table.Summary.Row>
+                                <Table.Summary.Cell
+                                  index={0}
+                                  colSpan={3}
+                                  className="custom-summary-cell"
+                                  align="right"
+                                >
+                                  <b style={{ margin: 0 }}>Total</b>
+                                </Table.Summary.Cell>
+                                <Table.Summary.Cell
+                                  index={1}
+                                  className="custom-summary-cell"
+                                  align="center"
+                                  colSpan={1}
+                                >
+                                  <b>{totalQty.toLocaleString()}</b>
+                                </Table.Summary.Cell>
+                                <Table.Summary.Cell>
+                                </Table.Summary.Cell>
+                              </Table.Summary.Row>
+                            </Table.Summary>
+                          );
+                        }}
+                      /> */}
+                      <div>
+                      <Table
+                        columns={TableSelectBox}
+                        className="TBInv"
+                        dataSource={DataSelectBox}
+                        pagination={false}
+                        scroll={{ y: 300 }}
+                        rowKey={(record) => record.BOX_NO}
+                        summary={(pageData) => {
+                          // กรองเฉพาะรายการที่ถูกติ๊กเลือก
+                          const selectedData = pageData.filter((record) =>
+                            selectedRows.includes(record.BOX_NO)
+                          );
+
+                          // ถ้าไม่มีรายการที่ถูกเลือก จะไม่แสดง Summary
+                          if (selectedData.length === 0) {
+                            return null;
+                          }
+
+                          // คำนวณยอดรวมเฉพาะแถวที่ถูกเลือก
+                          let totalQty = selectedData.reduce(
+                            (sum, record) => sum + record.QTY,
+                            0
+                          );
+
+                          return (
+                            <Table.Summary fixed="bottom">
+                              <Table.Summary.Row>
+                                <Table.Summary.Cell
+                                  index={0}
+                                  colSpan={3}
+                                  className="custom-summary-cell"
+                                  align="right"
+                                >
+                                  <b>Total</b>
+                                </Table.Summary.Cell>
+                                <Table.Summary.Cell
+                                  index={1}
+                                  className="custom-summary-cell"
+                                  align="center"
+                                  colSpan={1}
+                                >
+                                  <b>{totalQty.toLocaleString()}</b>
+                                </Table.Summary.Cell>
+                                <Table.Summary.Cell colSpan={2} />
+                              </Table.Summary.Row>
+                            </Table.Summary>
+                          );
+                        }}
+                      /></div>
                     </div>
                   </div>
                   <div
@@ -499,8 +584,38 @@ function BoxINV() {
                           className="TBInv1"
                           dataSource={DataBoxDetail}
                           bordered
-                          pagination={true}
-                          scroll={{ y: 500 }}
+                          pagination={false}
+                          scroll={{ y: 300 }}
+                          summary={(pageData) => {
+                            let totalQty = pageData.reduce(
+                              (sum, record) => sum + record.LOT_QTY,
+                              0
+                            );
+                            return (
+                              <Table.Summary fixed="bottom">
+                                {" "}
+                                {/* ใช้ fixed="bottom" เพื่อทำให้แถว Total ติดอยู่ด้านล่าง */}
+                                <Table.Summary.Row>
+                                  <Table.Summary.Cell
+                                    index={0}
+                                    colSpan={6}
+                                    className="custom-summary-cell"
+                                    align="right"
+                                  >
+                                    <b style={{ margin: 0 }}>Total</b>
+                                  </Table.Summary.Cell>
+                                  <Table.Summary.Cell
+                                    index={1}
+                                    className="custom-summary-cell"
+                                    align="center"
+                                    colSpan={1}
+                                  >
+                                    <b>{totalQty.toLocaleString()}</b>
+                                  </Table.Summary.Cell>
+                                </Table.Summary.Row>
+                              </Table.Summary>
+                            );
+                          }}
                         ></Table>
                       </div>
                     </div>

@@ -178,7 +178,7 @@ function fn_BoxINV() {
           checked={selectedRows.includes(record.BOX_NO)}
         />
       ),
-      align: "center",
+      align: "center", width: "50px",
     },
     {
       title: "Box No.",
@@ -197,7 +197,7 @@ function fn_BoxINV() {
     {
       title: "Quantity",
       dataIndex: "QTY",
-      key: "lotNo",
+      key: "QTY",
       render: (text) => (text ? text.toLocaleString() : "0"),
       align: "center",
     },
@@ -743,6 +743,8 @@ function fn_BoxINV() {
           icon: "success",
           text: "บันทึกข้อมูลสำเร็จ",
         });
+        GetDataSelectBox(selectInvNew, selectProductItemNew, Seq, "EDIT", DataSelectBox[0].BOX_NO);
+        GetDataBoxDetail(selectInvNew);
       } else if (selectedItems.length > 0) {
         await axios.post("/api/BoxSelectInv/UpdataStatusEdit_Check", {
           dataList: DataSelectBox,
@@ -843,6 +845,7 @@ function fn_BoxINV() {
     status,
     Reset,
     BtnExport,
+    selectedRows
   };
 }
 

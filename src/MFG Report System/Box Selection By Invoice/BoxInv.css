@@ -81,3 +81,14 @@
   margin-left: 15px;
   width: 15%;
 }
+
+.custom-summary-cell {
+  font-family: "Varela Round", sans-serif;
+  padding: 0 !important; /* บังคับให้ padding เป็น 0 */
+  font-size: 14px; /* ตัวอย่างการปรับขนาดฟอนต์ */
+}
+
+.ant-table-summary .custom-summary-cell {
+  padding: 2px 5px 2px 5px !important; 
+  
+}
