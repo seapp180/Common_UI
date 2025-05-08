@@ -167,8 +167,7 @@ function fn_BoxFoxcon() {
             selectedRows.length < DataPackLabel.length
           }
           disabled={sts_page === "GEN_SUCCESS"}
-        >
-        </Checkbox>
+        ></Checkbox>
       ),
       key: "select",
       render: (_, record, index) => (
@@ -772,7 +771,7 @@ function fn_BoxFoxcon() {
       });
       hideLoading();
       return;
-    } 
+    }
     // else {
     showLoading("กำลังบันทึก....");
     let id_box = "";
@@ -781,7 +780,7 @@ function fn_BoxFoxcon() {
     });
     if (Prd_id.data.length > 0) {
       id_box = Prd_id.data[0].ITEM;
-      setItem(Prd_id.data[0].ITEM)
+      setItem(Prd_id.data[0].ITEM);
 
       const boxResponse = await axios.post("/api/BoxFoxcon/GetBoxNo", {
         dataList: { fac: Fac, product: Prd_id.data[0].ITEM.trim() || "" },
@@ -943,7 +942,7 @@ function fn_BoxFoxcon() {
   const GetPackLabel = async () => {
     let pack = Packlabel.trim();
     let packtData = pack.split(",");
-    showLoading("")
+    showLoading("");
     if (packtData.length <= 5) {
       setPacklabel("");
       Swal.fire({
@@ -977,7 +976,7 @@ function fn_BoxFoxcon() {
     );
     const totalQtyText = totalQty.toLocaleString();
     const parsedTotal = Number(totalQtyText.replace(/,/g, ""));
-    
+
     try {
       const response = await axios.post("/api/BoxFoxcon/GetproductScan", {
         packid: packlabel.trim() || "",
@@ -1058,7 +1057,7 @@ function fn_BoxFoxcon() {
                     icon: "error",
                     text: "Error UpdateBoxDet",
                   });
-                  hideLoading()
+                  hideLoading();
                 }
               } catch (error) {
                 console.error("UpdateBoxDet failed:", error);
@@ -1098,9 +1097,9 @@ function fn_BoxFoxcon() {
         return updatedData;
       });
       setPacklabel("");
-      hideLoading()
+      hideLoading();
     } catch (error) {
-      hideLoading()
+      hideLoading();
       console.error("Error fetching data:", error);
       Swal.fire({ icon: "error", text: "เกิดข้อผิดพลาดในการดึงข้อมูล" });
     }
@@ -1252,9 +1251,17 @@ function fn_BoxFoxcon() {
   };
   const handleLinkShipTo = async (data) => {
     await axios.post("/api/BoxFoxcon/GetLinkWH", {}).then((res) => {
-      window.location.href = res.data[0].LINK+`?prditem=${Item}&shipto=${selectShipTo}&box=${BoxNo}`;
+      window.location.href =
+        res.data[0].LINK +
+        `?prditem=${Item}&shipto=${selectShipTo}&box=${BoxNo}`;
     });
-   
+  };
+  const handleLinkLabel = async () => {
+    
+    await axios.post("/api/BoxFoxcon/GetLinkLabel", {}).then((res) => {
+      console.log(res.data[0].LINK);
+     // window.location.href = res.data[0].LINK + `?prditem=${Item}&shipto=${selectShipTo}&box=${BoxNo}`;
+    });
   };
   return {
     showModal,
@@ -1311,7 +1318,8 @@ function fn_BoxFoxcon() {
     setselectShipTo,
     DataShipTo,
     handleLinkShipTo,
-    setBoxQty
+    setBoxQty,
+    handleLinkLabel,
   };
 }
 

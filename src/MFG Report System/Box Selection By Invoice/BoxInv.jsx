@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { Layout, Button, Table, Modal, Input, Space, Select, Card } from "antd";
+import React from "react";
+import { Layout, Button, Table, Modal, Input, Select } from "antd";
 import {
   PlusOutlined,
   ReloadOutlined,
   SaveOutlined,
   ClearOutlined,
+  SearchOutlined,
+  FileExcelOutlined,
 } from "@ant-design/icons";
 const { Content } = Layout;
 import "../Box Selection By Invoice/BoxInv.css";
@@ -14,33 +16,44 @@ function BoxINV() {
     TableSelectBox,
     TableBoxNoDetail,
     Factory,
-    setFactory,
     selectFactory,
-    setselectFactory,
     InvNo,
-    setInvNo,
-    selectInvNo,
-    setselectInvNo,
+    selectInvNoFrom,
     ProductItem,
-    setProductItem,
     selectProductItem,
-    setselectProductItem,
     Seq,
-    Invdate,
-    setInvdate,
     handleFactory,
     handleInvoice,
     handleProductItem,
     DataBoxDetail,
     DataSelectBox,
-    Reset,
     showGrid,
+    DataSeachBox,
+    InvdateFrom,
+    setInvdateFrom,
+    Search,
+    TableSearch,
+    showModal,
+    isModalOpen,
+    handleOk,
+    handleCancel,
+    selectFactoryNew,
+    selectProductItemNew,
+    selectInvNoTo,
+    selectInvNew,
+    setInvdateNew,
+    InvdateNew,
+    Save,
+    status,
+    Reset,
+    BtnExport,
   } = fn_BoxINV();
   return (
     <Content>
       <div style={{ display: "flex", alignItems: "center" }}>
         <h2 className="TitlePage_h2">Box Selection By Invoice maintain </h2>
       </div>
+      {/* <Card> */}
       <div style={{ display: "flex", alignItems: "flex-start" }}>
         <table>
           <tr>
@@ -54,7 +67,7 @@ function BoxINV() {
                 <Select
                   showSearch
                   value={selectFactory}
-                  onChange={handleFactory}
+                  onChange={(value) => handleFactory(value, "Search")}
                   style={{
                     width: "200px",
                     display: "block",
@@ -63,27 +76,27 @@ function BoxINV() {
                   }}
                   placeholder="Select Factory"
                   optionFilterProp="children"
-                  filterOption={
-                    (input, option) => (option?.label ?? "").toLowerCase()
-                    // .includes(input.toLowerCase())
+                  filterOption={(input, option) =>
+                    (option?.label ?? "").toLowerCase()
                   }
                   options={Factory}
                 />
               </div>
             </td>
           </tr>
+
           <tr>
             <td>
               <div style={{ marginLeft: "30px", textAlign: "right" }}>
-                <span style={{ fontSize: "14px" }}>Invoice No :</span>
+                <span style={{ fontSize: "14px" }}>Invoice No From :</span>
               </div>
             </td>
             <td>
               <div>
                 <Select
                   showSearch
-                  value={selectInvNo}
-                  onChange={handleInvoice}
+                  value={selectInvNoFrom}
+                  onChange={(value) => handleInvoice(value, "From")}
                   style={{
                     width: "200px",
                     display: "block",
@@ -103,25 +116,33 @@ function BoxINV() {
             </td>
             <td>
               <div style={{ marginLeft: "30px", textAlign: "right" }}>
-                <span style={{ fontSize: "14px" }}>Seq :</span>
+                <span style={{ fontSize: "14px" }}>Invoice No. To :</span>
               </div>
             </td>
             <td>
               <div>
-                <Input
-                  disabled
-                  value={Seq}
+                <Select
+                  showSearch
+                  value={selectInvNoTo}
+                  onChange={(value) => handleInvoice(value, "To")}
                   style={{
-                    width: "80px",
+                    width: "200px",
                     display: "block",
                     marginTop: "5px",
                     marginLeft: "5px",
                   }}
+                  placeholder="Select InvNo"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                  options={InvNo}
                 />
               </div>
             </td>
           </tr>
-
           <tr>
             <td>
               <div style={{ marginLeft: "30px", textAlign: "right" }}>
@@ -133,7 +154,7 @@ function BoxINV() {
                 <Select
                   showSearch
                   value={selectProductItem}
-                  onChange={handleProductItem}
+                  onChange={(value) => handleProductItem(value, "Search")}
                   style={{
                     width: "200px",
                     display: "block",
@@ -156,29 +177,23 @@ function BoxINV() {
                 <span style={{ fontSize: "14px" }}>Invoice Date :</span>
               </div>
             </td>
-            {console.log(Invdate, "Invdate")}
             <td>
               <div>
                 <Input
                   type="date"
-                  value={Invdate}
-                  onChange={(e) => setInvdate(e.target.value)}
+                  value={InvdateFrom}
+                  onChange={(e) => setInvdateFrom(e.target.value)}
                   style={{
                     width: "200px",
                     display: "block",
                     marginTop: "5px",
                     marginLeft: "5px",
                   }}
-                  //  placeholder="Select ITem"
-                  // onKeyDown={(e) => {
-                  //   if (e.key === "Enter") {
-                  //     handleProduct("SearchItem");
-                  //   }
-                  // }}
                 />
               </div>
             </td>
           </tr>
+
           <br></br>
           <tr>
             <td>
@@ -190,28 +205,39 @@ function BoxINV() {
               <div>
                 <Button
                   type="primary"
-                  icon={<ReloadOutlined />}
+                  icon={<SearchOutlined />}
                   style={{
-                    background: "#ec7063",
+                    background: "#f4d03f",
                     color: "#fff",
                     marginLeft: "10px",
                   }}
-                  onClick={() => Reset("ResetHeader")}
+                  onClick={Search}
                 >
-                  Reset
+                  Search
                 </Button>
                 <Button
-                  icon={<PlusOutlined />}
                   type="primary"
+                  icon={<PlusOutlined />}
                   style={{
-                    background: "#28b463 ",
+                    background: "#3498db ",
                     color: "#fff",
                     marginLeft: "10px",
                   }}
-
-                  // onClick={showModal}
+                  onClick={showModal}
                 >
-                  Export
+                  New
+                </Button>
+                <Button
+                  type="primary"
+                  icon={<ReloadOutlined />}
+                  style={{
+                    background: "#FF7043",
+                    color: "#fff",
+                    marginLeft: "10px",
+                  }}
+                  onClick={() => Reset("SEARCH")}
+                >
+                  Reset
                 </Button>
               </div>
             </td>
@@ -219,93 +245,298 @@ function BoxINV() {
         </table>
         <div></div>
       </div>
-      {showGrid == true && (
-        <Card
+      {/* </Card> */}
+
+      <div>
+        <div
+          style={{ display: "flex", alignItems: "center", marginTop: "20px" }}
+        ></div>
+        <Table
+          columns={TableSearch}
+          className="TBInv1"
+          dataSource={DataSeachBox}
+          bordered
+          pagination={true}
+          scroll={{ y: 500 }}
+        ></Table>
+      </div>
+      <div>
+        <Modal
+          width="100%"
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={null}
           style={{
-            marginTop: "10px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.25)",
+            top: 20,
+            maxHeight: "calc(100vh - 20px)",
+            // overflow: "hidden", // ย้ายจาก bodyStyle
           }}
         >
           <div
             style={{
               display: "flex",
-              width: "100%",
-              gap: "20px",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              border: "0px solid red",
+              borderRadius: "5px",
+              padding: "10px",
+              backgroundColor: "#EFE6D9",
+              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)",
+              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)",
             }}
           >
-            <div
-              style={{
-                flex: 1,
-              }}
-            >
-              <div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <h2 className="TitleInv_h2">Select Box no. </h2>
-                </div>
-                <Table
-                  columns={TableSelectBox}
-                  className="TBInv"
-                  dataSource={DataSelectBox}
-                  bordered
-                  pagination={true}
-                  // scroll={{ y: 500 }}
-                  // pagination=
-                ></Table>
-              </div>
-            </div>
-            <div
-              style={{
-                flex: 1,
-              }}
-            >
-              <div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <h2 className="TitleInv_h2">Box no. Detail </h2>
-                </div>
-                <Table
-                  columns={TableBoxNoDetail}
-                  className="TBInv1"
-                  dataSource={DataBoxDetail}
-                  bordered
-                  pagination={true}
-                  // scroll={{ y: 500 }}
-                  // pagination=
-                ></Table>
-              </div>
-            </div>
+            <h3 className="TitleNew_h3">New Selection Invoice </h3>
+
+            <table>
+              <tr></tr>
+              <tr>
+                <td>
+                  <div style={{ marginLeft: "30px", textAlign: "right" }}>
+                    <span style={{ fontSize: "14px" }}>Factory :</span>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <Select
+                      showSearch
+                      value={selectFactoryNew}
+                      disabled={status === "EDIT"}
+                      onChange={(value) => handleFactory(value, "New")}
+                      style={{
+                        width: "200px",
+                        display: "block",
+                        marginTop: "5px",
+                        marginLeft: "5px",
+                      }}
+                      placeholder="Select Factory"
+                      optionFilterProp="children"
+                      filterOption={
+                        (input, option) => (option?.label ?? "").toLowerCase()
+                        // .includes(input.toLowerCase())
+                      }
+                      options={Factory}
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div style={{ marginLeft: "30px", textAlign: "right" }}>
+                    <span style={{ fontSize: "14px" }}>Invoice No :</span>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <Select
+                      showSearch
+                      value={selectInvNew}
+                      disabled={status === "EDIT"}
+                      onChange={(value) => handleInvoice(value, "New")}
+                      style={{
+                        width: "200px",
+                        display: "block",
+                        marginTop: "5px",
+                        marginLeft: "5px",
+                      }}
+                      placeholder="Select InvNo"
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={InvNo}
+                    />
+                  </div>
+                </td>
+
+                <td>
+                  <div style={{ marginLeft: "30px", textAlign: "right" }}>
+                    <span style={{ fontSize: "14px" }}>Product Item :</span>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <Select
+                      showSearch
+                      value={selectProductItemNew}
+                      disabled={status === "EDIT"}
+                      onChange={(value) => handleProductItem(value, "New")}
+                      style={{
+                        width: "200px",
+                        display: "block",
+                        marginTop: "5px",
+                        marginLeft: "5px",
+                      }}
+                      placeholder="Select Product Item"
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(input.toLowerCase())
+                      }
+                      options={ProductItem}
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div style={{ marginLeft: "30px", textAlign: "right" }}>
+                    <span style={{ fontSize: "14px" }}>Invoice Date :</span>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <Input
+                      type="date"
+                      value={InvdateNew}
+                      onChange={(e) => setInvdateNew(e.target.value)}
+                      style={{
+                        width: "200px",
+                        display: "block",
+                        marginTop: "5px",
+                        marginLeft: "5px",
+                      }}
+                    />
+                  </div>
+                </td>
+                <td>
+                  <div style={{ marginLeft: "30px", textAlign: "right" }}>
+                    <span style={{ fontSize: "14px" }}>Seq :</span>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <Input
+                      disabled
+                      readOnly
+                      value={Seq}
+                      style={{
+                        width: "80px",
+                        display: "block",
+                        marginTop: "5px",
+                        marginLeft: "5px",
+                        backgroundColor: "#C7C7BB",
+                        color: "black",
+                        pointerEvents: "none",
+                      }}
+                    />
+                  </div>
+                </td>
+              </tr>
+              <tr style={{ marginTop: "5px" }}>
+                <td></td>
+                <td>
+                  <div style={{ marginTop: "5px" }}>
+                  {(status == "NEW" &&
+                    <Button
+                      type="primary"
+                      icon={<ReloadOutlined />}
+                      style={{
+                        background: "#FF7043",
+                        color: "#fff",
+                        marginLeft: "10px",
+                      }}
+                      onClick={() => Reset("NEW")}
+                    >
+                      Reset
+                    </Button>)}
+                    <Button
+                      icon={<FileExcelOutlined />}
+                      type="primary"
+                      style={{
+                        background: "#388E3C",
+                        color: "#fff",
+                        marginLeft: "10px",
+                      }}
+                      onClick={BtnExport}
+                    >
+                      Export
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            </table>
           </div>
-          <br></br>
           <div>
-            <Button
-              type="primary"
-              icon={<SaveOutlined />}
-              style={{
-                background: " #3498db ",
-                color: "#fff",
-                marginLeft: "10px",
-              }}
-              // onClick={() => {
-              //   Search();
-              // }}
-            >
-              Save
-            </Button>
-            <Button
-              icon={<ClearOutlined />}
-              type="primary"
-              style={{
-                background: "#abb2b9",
-                color: "#fff",
-                marginLeft: "10px",
-              }}
-              // onClick={() => handleGoToNextPage("NewBoxFoxcon")}
-              // onClick={showModal}
-            >
-              Cancel
-            </Button>
+            {showGrid == true && (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    gap: "20px",
+                  }}
+                >
+                  <div
+                    style={{
+                      flex: 1,
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <h2 className="TitleInv_h2">Select Box no. </h2>
+                      </div>
+                      <Table
+                        columns={TableSelectBox}
+                        className="TBInv"
+                        dataSource={DataSelectBox}
+                        pagination={true}
+                        rowKey={(record) => record.BOX_NO}
+                      />
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      flex: 1,
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <h2 className="TitleInv_h2_v2">Box no. Detail </h2>
+                      </div>
+                      <div style={{ width: "100%" }}>
+                        <Table
+                          columns={TableBoxNoDetail}
+                          className="TBInv1"
+                          dataSource={DataBoxDetail}
+                          bordered
+                          pagination={true}
+                          scroll={{ y: 500 }}
+                        ></Table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div style={{ marginBottom: "20px" }}>
+                  <Button
+                    type="primary"
+                    icon={<SaveOutlined />}
+                    style={{
+                      background: "#1976D2",
+                      color: "#fff",
+                      marginLeft: "10px",
+                    }}
+                    onClick={Save}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    icon={<ClearOutlined />}
+                    type="primary"
+                    style={{
+                      background: "#9E9E9E",
+                      color: "#fff",
+                      marginLeft: "10px",
+                    }}
+                    onClick={() => Reset("Cancel")}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
-        </Card>
-      )}
+        </Modal>
+      </div>
     </Content>
   );
 }

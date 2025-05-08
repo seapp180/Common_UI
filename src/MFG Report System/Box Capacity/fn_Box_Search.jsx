@@ -184,6 +184,11 @@ function fn_Box_Search() {
             text:
               facResponse.data.length > 0 ? facResponse.data[0].FAC_DESC : "",
           });
+          if(FAC == '9') {
+            // ถ้า FAC เป็น '9' คือ P1
+            setTotalSheetQty("")
+          }
+         
 
           if (!fullBoxQty) {
             const pplResponse = await axios.post(
@@ -917,7 +922,7 @@ function fn_Box_Search() {
     setopenManual(false);
     setradioselect("Manual");
 
-    const itemsearch1 = itemsearch.split("/")[0];
+    const itemsearch1 = itemsearch.split(" / ")[0];
     setIsModalOpen(true);
     await axios
       .post("/api/BoxCapacity/GetDataBoxMainTain", {

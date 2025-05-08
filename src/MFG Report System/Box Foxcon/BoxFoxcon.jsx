@@ -68,7 +68,8 @@ function BoxFoxcon() {
     setselectShipTo,
     DataShipTo,
     handleLinkShipTo,
-    setBoxQty
+    setBoxQty,
+    handleLinkLabel
   } = fn_BoxFoxcon();
   // const PathSmartFac = () => {
   //   window.location.href = import.meta.env.VITE_TEST_PATH // เปลี่ยนหน้าไปยัง URL ที่กำหนด
@@ -585,6 +586,15 @@ function BoxFoxcon() {
               Print WH Label
             </Button>
 
+            <Button
+              type="primary"
+              // disabled={dis_print}
+              icon={<PrinterOutlined />}
+              onClick={handleLinkLabel}
+              style={{ background: "#ab8cf8", borderColor: "#ab8cf8" }}
+            >
+              Print Label
+            </Button>
             <Button
               type="primary"
               // disabled={dis_print}
