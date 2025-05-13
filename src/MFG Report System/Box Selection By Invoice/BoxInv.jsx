@@ -12,6 +12,7 @@ import {
 const { Content } = Layout;
 import "../Box Selection By Invoice/BoxInv.css";
 import { fn_BoxINV } from "./fn_BoxInv";
+import { DatePicker } from "antd";
 function BoxINV() {
   const {
     TableSelectBox,
@@ -48,7 +49,13 @@ function BoxINV() {
     status,
     Reset,
     BtnExport,
-    selectedRows
+    selectedRows,
+    onChangeDateFrom,
+    FactoryNew,
+    InvNoNew,
+    loadingTb1,
+    loadingTb2,
+    loadingTb3
   } = fn_BoxINV();
   return (
     <Content>
@@ -90,7 +97,7 @@ function BoxINV() {
           <tr>
             <td>
               <div style={{ marginLeft: "30px", textAlign: "right" }}>
-                <span style={{ fontSize: "14px" }}>Invoice No From :</span>
+                <span style={{ fontSize: "14px" }}>Invoice No  :</span>
               </div>
             </td>
             <td>
@@ -116,7 +123,7 @@ function BoxINV() {
                 />
               </div>
             </td>
-            <td>
+            {/* <td>
               <div style={{ marginLeft: "30px", textAlign: "right" }}>
                 <span style={{ fontSize: "14px" }}>Invoice No. To :</span>
               </div>
@@ -143,9 +150,39 @@ function BoxINV() {
                   options={InvNo}
                 />
               </div>
+            </td> */}
+              <td>
+              <div style={{ marginLeft: "30px", textAlign: "right" }}>
+                <span style={{ fontSize: "14px" }}>Invoice Date :</span>
+              </div>
+            </td>
+            <td>
+              <div>
+                {/* <Input
+                  type="date"
+                  value={InvdateFrom}
+                  onChange={(e) => setInvdateFrom(e.target.value)}
+                  style={{
+                    width: "200px",
+                    display: "block",
+                    marginTop: "5px",
+                    marginLeft: "5px",
+                  }}
+                /> */}
+                 <DatePicker
+                  style={{
+                    width: "200px",
+                    marginTop: "5px",
+                    marginLeft: "5px",
+                  }}
+                  format="DD/MM/YYYY"
+                  value={InvdateFrom}
+                  onChange={onChangeDateFrom}
+                />
+              </div>
             </td>
           </tr>
-          <tr>
+          {/* <tr>
             <td>
               <div style={{ marginLeft: "30px", textAlign: "right" }}>
                 <span style={{ fontSize: "14px" }}>Product Item :</span>
@@ -174,27 +211,8 @@ function BoxINV() {
                 />
               </div>
             </td>
-            <td>
-              <div style={{ marginLeft: "30px", textAlign: "right" }}>
-                <span style={{ fontSize: "14px" }}>Invoice Date :</span>
-              </div>
-            </td>
-            <td>
-              <div>
-                <Input
-                  type="date"
-                  value={InvdateFrom}
-                  onChange={(e) => setInvdateFrom(e.target.value)}
-                  style={{
-                    width: "200px",
-                    display: "block",
-                    marginTop: "5px",
-                    marginLeft: "5px",
-                  }}
-                />
-              </div>
-            </td>
-          </tr>
+          
+          </tr> */}
 
           <br></br>
           <tr>
@@ -254,6 +272,7 @@ function BoxINV() {
           style={{ display: "flex", alignItems: "center", marginTop: "20px" }}
         ></div>
         <Table
+          loading={loadingTb3}
           columns={TableSearch}
           className="TBInv1"
           dataSource={DataSeachBox}
@@ -317,7 +336,7 @@ function BoxINV() {
                         (input, option) => (option?.label ?? "").toLowerCase()
                         // .includes(input.toLowerCase())
                       }
-                      options={Factory}
+                      options={FactoryNew}
                     />
                   </div>
                 </td>
@@ -346,7 +365,7 @@ function BoxINV() {
                           .toLowerCase()
                           .includes(input.toLowerCase())
                       }
-                      options={InvNo}
+                      options={InvNoNew}
                     />
                   </div>
                 </td>
@@ -519,6 +538,7 @@ function BoxINV() {
                       /> */}
                       <div>
                       <Table
+                        loading={loadingTb2}
                         columns={TableSelectBox}
                         className="TBInv"
                         dataSource={DataSelectBox}
@@ -556,7 +576,8 @@ function BoxINV() {
                                 <Table.Summary.Cell
                                   index={1}
                                   className="custom-summary-cell"
-                                  align="center"
+                                  align="right"
+                                  // style={{}}
                                   colSpan={1}
                                 >
                                   <b>{totalQty.toLocaleString()}</b>
@@ -580,6 +601,7 @@ function BoxINV() {
                       </div>
                       <div style={{ width: "100%" }}>
                         <Table
+                         loading={loadingTb1}
                           columns={TableBoxNoDetail}
                           className="TBInv1"
                           dataSource={DataBoxDetail}

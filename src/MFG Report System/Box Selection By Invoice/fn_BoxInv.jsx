@@ -7,10 +7,12 @@ import "../Box Selection By Invoice/BoxInv.css";
 import Swal from "sweetalert2";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
-
+import dayjs from "dayjs";
+import { hi, tr } from "date-fns/locale";
 function fn_BoxINV() {
   const { showLoading, hideLoading } = useLoading();
-  const today = new Date().toISOString().split("T")[0];
+  const daynow = new Date().toISOString().split("T")[0];
+  const today = dayjs(daynow, "YYYY-MM-DD");
   // Page Search
   const [Factory, setFactory] = useState([]);
   const [selectFactory, setselectFactory] = useState("");
@@ -23,14 +25,19 @@ function fn_BoxINV() {
   const [BoxSearch, setBoxSearch] = useState("");
   const [DataSeachBox, setDataSeachBox] = useState([]);
   // Page New
+  const [FactoryNew, setFactoryNew] = useState([]);
   const [selectFactoryNew, setselectFactoryNew] = useState("");
   const [selectProductItemNew, setselectProductItemNew] = useState("");
   const [Seq, setSeq] = useState("");
+  const [InvNoNew, setInvNoNew] = useState([]);
   const [selectInvNew, setselectInvNew] = useState("");
   const [InvdateNew, setInvdateNew] = useState(today);
   const [DataSelectBox, setDataSelectBox] = useState([]);
   const [DataBoxDetail, setDataBoxDetail] = useState([]);
   const [Inv_No, setInv_No] = useState("");
+  const [loadingTb1, setloadingTb1] = useState(false);
+  const [loadingTb2, setloadingTb2] = useState(false);
+  const [loadingTb3, setloadingTb3] = useState(false);
 
   const [showGrid, setshowGrid] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,28 +48,40 @@ function fn_BoxINV() {
   useEffect(() => {
     showLoading("");
     GetFactory();
+    GetFactoryNew();
     hideLoading();
   }, []);
 
   const showModal = () => {
     setIsModalOpen(true);
     setshowGrid(false);
+
     setstatus("NEW");
     setselectFactoryNew("");
-    setDataSelectBox([]);
-    setDataBoxDetail([]);
     setselectInvNew("");
     setselectProductItemNew("");
     setInvdateNew("");
     setSeq("");
+    setDataSelectBox([]);
+    setDataBoxDetail([]);
+    hideLoading();
   };
 
   const handleOk = () => {
     setIsModalOpen(false);
   };
-
+  const onChangeDateFrom = (date, dateString) => {
+    setInvdateFrom(date);
+  };
   const handleCancel = () => {
     setIsModalOpen(false);
+    setselectFactoryNew("");
+    setselectInvNew("");
+    setselectProductItemNew("");
+    setInvdateNew("");
+    setDataBoxDetail([]);
+    setDataSelectBox([]);
+    setshowGrid(true);
   };
   const handleCheckboxChange = (checked, record) => {
     if (checked) {
@@ -71,6 +90,7 @@ function fn_BoxINV() {
       setSelectedRows((prev) => prev.filter((id) => id !== record.BOX_NO));
     }
   };
+
   // const TableSelectBox = [
   //   {
   //     title: (
@@ -178,14 +198,14 @@ function fn_BoxINV() {
           checked={selectedRows.includes(record.BOX_NO)}
         />
       ),
-      align: "center", width: "50px",
+      align: "center",
+      width: "50px",
     },
     {
       title: "Box No.",
       dataIndex: "BOX_NO",
       key: "key",
       render: (text) => text,
-      align: "center",
     },
     {
       title: "Packing Date",
@@ -198,7 +218,12 @@ function fn_BoxINV() {
       title: "Quantity",
       dataIndex: "QTY",
       key: "QTY",
-      render: (text) => (text ? text.toLocaleString() : "0"),
+      render: (text) => (
+        //  text,
+        <span style={{ textAlign: "right", display: "block" }}>
+          {text ? text.toLocaleString() : "0"}
+        </span>
+      ),
       align: "center",
     },
     {
@@ -240,7 +265,6 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text;
       },
-      align: "center",
       width: 130,
     },
     {
@@ -250,27 +274,27 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text;
       },
-      align: "center",
       width: 115,
     },
     {
       title: "Box Qty",
       dataIndex: "BOX_QTY",
       key: "lotNo",
-      render: (text, record, index) => {
-        return text ? text.toLocaleString() : "0";
-      },
+      render: (text, record, index) => (
+        <span style={{ textAlign: "right", display: "block" }}>
+          {text ? text.toLocaleString() : "0"}
+        </span>
+      ),
       align: "center",
       width: 70,
     },
     {
       title: "Inv Box",
       dataIndex: "INV_BOX",
-      key: "bin",
+      key: "",
       render: (text, record, index) => {
         return text;
       },
-      align: "center",
       width: 80,
     },
 
@@ -281,26 +305,26 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text ? text.toLocaleString() : "0";
       },
-      align: "center",
       width: 60,
     },
     {
       title: "Lot No.",
       dataIndex: "LOT_NO",
-      key: "qty",
+      key: "LOT_NO",
       render: (text, record, index) => {
         return text ? text.toLocaleString() : "0";
       },
-      align: "center",
       width: 100,
     },
     {
       title: "Lot Qty",
       dataIndex: "LOT_QTY",
       key: "qty",
-      render: (text, record, index) => {
-        return text ? text.toLocaleString() : "0";
-      },
+      render: (text, record, index) => (
+        <span style={{ textAlign: "right", display: "block" }}>
+          {text ? text.toLocaleString() : "0"}
+        </span>
+      ),
       align: "center",
       width: 100,
     },
@@ -369,7 +393,6 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text;
       },
-      align: "center",
       width: 100,
     },
     {
@@ -389,7 +412,6 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text;
       },
-      align: "center",
       width: 100,
     },
     {
@@ -399,8 +421,7 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text ? text.toLocaleString() : "0";
       },
-      align: "center",
-      width: 250,
+      width: 280,
     },
     {
       title: "Box No.",
@@ -409,7 +430,6 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text ? text.toLocaleString() : "0";
       },
-      align: "center",
       width: 150,
     },
     {
@@ -417,10 +437,10 @@ function fn_BoxINV() {
       dataIndex: "LOT_NO",
       key: "LOT_NO",
       render: (text, record, index) => {
-        return <div className="scrollable-columnInv">{text}</div>;
+        // return <div className="scrollable-columnInv">{text}</div>;
+        return text ? text.toLocaleString() : "0";
       },
-      align: "center",
-      width: 200,
+      width: 275,
     },
     {
       title: "Packing Date",
@@ -437,18 +457,19 @@ function fn_BoxINV() {
       dataIndex: "STATUS",
       key: "STATUS",
       render: (text, record, index) => {
-        return text ? text.toLocaleString() : "0";
+        return text;
       },
-      align: "center",
       width: 80,
     },
     {
       title: "Quantity",
       dataIndex: "QUANTITY",
       key: "QUANTITY",
-      render: (text, record, index) => {
-        return text ? text.toLocaleString() : "0";
-      },
+      render: (text, record, index) => (
+        <span style={{ textAlign: "right", display: "block" }}>
+          {text ? text.toLocaleString() : "0"}
+        </span>
+      ),
       align: "center",
       width: 100,
     },
@@ -459,8 +480,8 @@ function fn_BoxINV() {
       render: (text, record, index) => {
         return text ? text.toLocaleString() : "0";
       },
-      align: "center",
-      width: 100,
+      align: "",
+      width: 120,
     },
   ];
 
@@ -469,6 +490,18 @@ function fn_BoxINV() {
       .get("/api/BoxSelectInv/GetFac")
       .then((res) => {
         setFactory(res.data);
+        GetInvoice(res.data[0].value);
+      })
+      .catch((error) => {
+        console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
+      });
+  };
+  const GetFactoryNew = () => {
+    axios
+      .get("/api/BoxSelectInv/GetFac")
+      .then((res) => {
+        setFactoryNew(res.data);
+        GetInvoice(res.data[0].value, "New");
       })
       .catch((error) => {
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
@@ -482,33 +515,54 @@ function fn_BoxINV() {
       setselectInvNoFrom("");
       setSeq("");
       setInvdateFrom("");
+      setProductItem([]);
+      setselectProductItem("");
       setshowGrid(true);
       GetInvoice(value);
     } else if (type === "New") {
       setselectFactoryNew(value);
-      setInvNo([]);
+      setInvNoNew([]);
       setSeq("");
+      setProductItem([]);
+      setselectProductItemNew("");
       setDataSelectBox([]);
       setDataBoxDetail([]);
       setshowGrid(true);
-      GetInvoice(value);
+      GetInvoice(value, "New");
     }
   };
 
-  const GetInvoice = (value) => {
+  const GetInvoice = (value, page) => {
     showLoading("");
-    axios
-      .post("/api/BoxSelectInv/GetInv", {
-        fac: value,
-      })
-      .then((res) => {
-        hideLoading();
-        setInvNo(res.data);
-      })
-      .catch((error) => {
-        hideLoading();
-        console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
-      });
+    if (page == "New") {
+      axios
+        .post("/api/BoxSelectInv/GetInv", {
+          fac: value,
+        })
+        .then((res) => {
+          hideLoading();
+          setInvNoNew(res.data);
+          GetProductItem(value, res.data[0].value);
+        })
+        .catch((error) => {
+          hideLoading();
+          console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
+        });
+    } else {
+      axios
+        .post("/api/BoxSelectInv/GetInv", {
+          fac: value,
+        })
+        .then((res) => {
+          hideLoading();
+          setInvNo(res.data);
+          GetProductItem(value, res.data[0].value);
+        })
+        .catch((error) => {
+          hideLoading();
+          console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
+        });
+    }
   };
 
   const handleInvoice = (value, type) => {
@@ -536,7 +590,7 @@ function fn_BoxINV() {
     }
   };
 
-  const GetProductItem = (selectFactory, Invoice) => {
+  const GetProductItem = async (selectFactory, Invoice) => {
     axios
       .post("/api/BoxSelectInv/GetProduct", {
         fac: selectFactory,
@@ -580,21 +634,24 @@ function fn_BoxINV() {
       });
   };
 
-  const GetDataBoxDetail = (Invoice) => {
-    axios
+  const GetDataBoxDetail = async (Invoice) => {
+    setloadingTb1(true);
+    await axios
       .post("/api/BoxSelectInv/DataBoxDetail", {
         fac: selectFactory,
         inv: Invoice,
       })
       .then((res) => {
         setDataBoxDetail(res.data);
+        setloadingTb1(false);
       })
       .catch((error) => {
+        setloadingTb1(false);
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
       });
   };
 
-  const GetDataSelectBox = (
+  const GetDataSelectBox = async (
     selectInvNoFrom,
     selectProductItem,
     Seq,
@@ -602,7 +659,7 @@ function fn_BoxINV() {
     box_no
   ) => {
     if (page == "EDIT") {
-      axios
+      await axios
         .post("/api/BoxSelectInv/DataSelectBoxeEdit", {
           invno: selectInvNoFrom,
           prd: selectProductItem,
@@ -611,25 +668,31 @@ function fn_BoxINV() {
         })
         .then((res) => {
           setDataSelectBox(res.data);
+
           if (res.data.length > 0) {
             const allBoxNos = res.data.map((item) => item.BOX_NO);
             setSelectedRows(allBoxNos);
           }
+
+          setloadingTb2(false);
         })
         .catch((error) => {
+          setloadingTb2(false);
           console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
         });
     } else {
-      axios
+      await axios
         .post("/api/BoxSelectInv/DataSelectBoxNew", {
           invno: selectInvNoFrom,
           prd: selectProductItem,
           seq: Seq,
         })
         .then((res) => {
+          setloadingTb2(false);
           setDataSelectBox(res.data);
         })
         .catch((error) => {
+          setloadingTb2(false);
           console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
         });
     }
@@ -646,16 +709,14 @@ function fn_BoxINV() {
       setDataBoxDetail([]);
       setDataSeachBox([]);
       setshowGrid(false);
-    } 
-    else if(page == "Cancel") {
-     setSelectedRows([]);
-     setDataSelectBox((prev) =>
-      prev.map((item) => ({
-        ...item,
-        INV_BOX: "", // ตั้งค่า INV_BOX ให้เป็นค่าว่าง
-      }))
-    );
-    }else {
+    } else if (page == "Cancel") {
+      setDataSelectBox((prev) =>
+        prev.map((item) => ({
+          ...item,
+          INV_BOX: "", // ตั้งค่า INV_BOX ให้เป็นค่าว่าง
+        }))
+      );
+    } else {
       setselectFactoryNew("");
       setselectInvNoFrom("");
       setselectProductItemNew("");
@@ -664,38 +725,25 @@ function fn_BoxINV() {
       setselectInvNew("");
       setDataSelectBox([]);
       setDataBoxDetail([]);
-      setInvdateNew("")
+      setInvdateNew("");
     }
   };
-
-  const Search = () => {
-    if (
-      selectFactory == "" &&
-      selectInvNoFrom == "" &&
-      selectInvNoTo == "" &&
-      selectProductItem == "" &&
-      InvdateFrom == ""
-    ) {
-      Swal.fire({
-        icon: "error",
-        text: "กรุณากรอกข้อมูลที่ต้องการค้นหา",
-      });
-      return;
-    }
-    showLoading("...กำลังค้นหาข้อมูล");
-    axios
+  const Search = async () => {
+    setloadingTb3(true);
+    let date_from = InvdateFrom ? InvdateFrom.format("YYYY-MM-DD") : "";
+    await axios
       .post("/api/BoxSelectInv/Search", {
         prd: selectProductItem || "",
         invfrom: selectInvNoFrom || "",
         invto: selectInvNoTo || "",
-        datefrom: InvdateFrom || "",
+        datefrom: date_from || "",
       })
       .then((res) => {
         setDataSeachBox(res.data);
-        hideLoading();
+        setloadingTb3(false);
       })
       .catch((error) => {
-        hideLoading();
+        setloadingTb3(false);
         console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
       });
   };
@@ -743,7 +791,13 @@ function fn_BoxINV() {
           icon: "success",
           text: "บันทึกข้อมูลสำเร็จ",
         });
-        GetDataSelectBox(selectInvNew, selectProductItemNew, Seq, "EDIT", DataSelectBox[0].BOX_NO);
+        GetDataSelectBox(
+          selectInvNew,
+          selectProductItemNew,
+          Seq,
+          "EDIT",
+          DataSelectBox[0].BOX_NO
+        );
         GetDataBoxDetail(selectInvNew);
       } else if (selectedItems.length > 0) {
         await axios.post("/api/BoxSelectInv/UpdataStatusEdit_Check", {
@@ -758,16 +812,21 @@ function fn_BoxINV() {
         });
       }
     }
+    if (selectFactory != "" || selectInvNoFrom != "") {
+      await Search(selectFactory, InvdateFrom);
+    }
   };
 
   const handle_Edit = async (FAC, INV_NO, PRD, page, seq, date_inv, boxno) => {
     setIsModalOpen(true);
     setshowGrid(true);
-    GetDataSelectBox(INV_NO, PRD, seq, "EDIT", boxno);
     setSeq(seq);
     setInvdateNew(date_inv);
-    GetProductItem(FAC, INV_NO);
-    GetDataBoxDetail(INV_NO);
+    //  GetProductItem(FAC, INV_NO);
+    setloadingTb2(true);
+    setloadingTb1(true);
+    await GetDataBoxDetail(INV_NO);
+    await GetDataSelectBox(INV_NO, PRD, seq, "EDIT", boxno);
     setstatus(page);
     setselectFactoryNew(FAC);
     setselectInvNew(INV_NO);
@@ -845,7 +904,13 @@ function fn_BoxINV() {
     status,
     Reset,
     BtnExport,
-    selectedRows
+    selectedRows,
+    onChangeDateFrom,
+    FactoryNew,
+    InvNoNew,
+    loadingTb1,
+    loadingTb2,
+    loadingTb3,
   };
 }
 
