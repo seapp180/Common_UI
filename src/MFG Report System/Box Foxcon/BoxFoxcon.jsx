@@ -586,15 +586,16 @@ function BoxFoxcon() {
               Print WH Label
             </Button>
 
-            <Button
+            {/* <Button
               type="primary"
               // disabled={dis_print}
+              disabled
               icon={<PrinterOutlined />}
               onClick={handleLinkLabel}
               style={{ background: "#ab8cf8", borderColor: "#ab8cf8" }}
             >
               Print Label
-            </Button>
+            </Button> */}
             <Button
               type="primary"
               // disabled={dis_print}

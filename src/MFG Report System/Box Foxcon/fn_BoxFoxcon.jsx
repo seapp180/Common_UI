@@ -939,9 +939,11 @@ function fn_BoxFoxcon() {
     setselectShipTo("");
     setDataShipTo("");
   };
+
   const GetPackLabel = async () => {
     let pack = Packlabel.trim();
     let packtData = pack.split(",");
+    let DataLot ;
     showLoading("");
     if (packtData.length <= 5) {
       setPacklabel("");
@@ -954,8 +956,8 @@ function fn_BoxFoxcon() {
     }
     let packlabel = packtData[5].replace(/^S/, ""); //ตัด S ออก
     let productnew = packtData[2].replace(/^M/, ""); // ตัด M ออก เอาแค่ prdocut
-    setPacklabel(packtData[5].replace(/^S/, ""));
-
+    let Lot = packtData[4].replace(/^L/, "");
+     setPacklabel(packtData[5].replace(/^S/, ""));
     if (ProductNew == "") {
       setProductNew(packtData[2].replace(/^M/, "")); // set productnew ครั้งแรก
       handleShipTo(packtData[2].replace(/^M/, ""));
@@ -970,6 +972,18 @@ function fn_BoxFoxcon() {
         return;
       }
     }
+       DataLot = await GetScanShelf(Lot);
+    if (DataLot == 0) {
+       setPacklabel("");
+        Swal.fire({
+          icon: "error",
+            text: `Lot no. ${Lot} ยังไม่ได้สแกน shelf ของ WH`,
+        });
+        hideLoading();
+        return;
+    }
+    
+
     const totalQty = DataPackLabel.reduce(
       (sum, item) => sum + (item.QTY || 0),
       0
@@ -1110,6 +1124,7 @@ function fn_BoxFoxcon() {
       fcPacklabel.current.focus();
     }, 0);
   };
+
   const Search = async () => {
     if (
       ProductSeacrh == "" &&
@@ -1151,6 +1166,7 @@ function fn_BoxFoxcon() {
         setProductSeacrh(res.data);
       });
   };
+
   const SaveBox = async () => {
     const totalQty = DataPackLabel.reduce(
       (sum, item) => sum + (item.QTY || 0),
@@ -1194,6 +1210,7 @@ function fn_BoxFoxcon() {
       setSelectedRows((prev) => prev.filter((id) => id !== record.PACK_ID));
     }
   };
+
   const handleDeleteSelected = () => {
     // อัปเดตลำดับใหม่หลังจากลบ
     selectedRows.forEach((packId) => {
@@ -1225,6 +1242,7 @@ function fn_BoxFoxcon() {
       window.location.href = res.data[0].LINK;
     });
   };
+
   useEffect(() => {
     GetShipToAll();
   }, []);
@@ -1249,6 +1267,7 @@ function fn_BoxFoxcon() {
       GetShipToAll();
     }
   };
+
   const handleLinkShipTo = async (data) => {
     await axios.post("/api/BoxFoxcon/GetLinkWH", {}).then((res) => {
       window.location.href =
@@ -1256,13 +1275,25 @@ function fn_BoxFoxcon() {
         `?prditem=${Item}&shipto=${selectShipTo}&box=${BoxNo}`;
     });
   };
+
   const handleLinkLabel = async () => {
     
     await axios.post("/api/BoxFoxcon/GetLinkLabel", {}).then((res) => {
-      console.log(res.data[0].LINK);
      // window.location.href = res.data[0].LINK + `?prditem=${Item}&shipto=${selectShipTo}&box=${BoxNo}`;
     });
   };
+
+  const GetScanShelf = async (Lot) => {
+    let data ;
+    await axios
+      .post("/api/BoxFoxcon/GetScanShelf", {
+        LotNo : Lot
+      })
+      .then((res) => {
+       data = res.data[0].F_SHELF;
+      });
+      return data
+  }
   return {
     showModal,
     handleOk,
