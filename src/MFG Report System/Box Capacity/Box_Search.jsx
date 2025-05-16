@@ -13,7 +13,6 @@ import "./BoxCapacity.css";
 import { fn_Box_Search } from "./fn_Box_Search";
 import ImgExcel from "../../assets/excel.png";
 import { DatePicker } from "antd";
-import dayjs from "dayjs";
 function Box_Search() {
   const {
     columns,
@@ -593,17 +592,6 @@ function Box_Search() {
                     <tr>
                       <td style={{ textAlign: "right" }}>Packing Date :</td>
                       <td>
-                        {/* <Input
-                          value={Packdate}
-                          onChange={(e) => setPackdate(e.target.value)}
-                          type="date"
-                          style={{
-                            width: "200px",
-                            display: "block",
-                            marginTop: "5px",
-                            marginLeft: "5px",
-                          }}
-                        /> */}
                         <DatePicker
                           style={{
                             width: "200px",
@@ -646,17 +634,7 @@ function Box_Search() {
                     <tr>
                       <td style={{ textAlign: "right" }}>Packing Date :</td>
                       <td>
-                        {/* <Input
-                          type="date"
-                          value={Packdate}
-                          onChange={(e) => setPackdate(e.target.value)}
-                          style={{
-                            width: "200px",
-                            display: "block",
-                            marginTop: "5px",
-                            marginLeft: "5px",
-                          }}
-                        /> */}
+                      
                       <DatePicker
                           style={{
                             width: "200px",
