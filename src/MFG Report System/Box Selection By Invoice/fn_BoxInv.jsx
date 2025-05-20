@@ -27,7 +27,7 @@ function fn_BoxINV() {
   const [loadingTb2, setloadingTb2] = useState(false);
   // Pagination
   const [selectedRows, setSelectedRows] = useState([]);
-
+  const [isSelected, setIsSelected] = useState(false);
   useEffect(() => {
     showLoading("");
     GetFactoryNew();
@@ -144,7 +144,6 @@ function fn_BoxINV() {
       ],
       onFilter: (value, record) => record.STATUS === value,
     },
-    
   ];
 
   const TableBoxNoDetail = [
@@ -292,6 +291,28 @@ function fn_BoxINV() {
       });
   };
 
+  const CallAnotherAPI = (value) => {
+    if (value.length > 2) {
+      axios
+        .post("/api/BoxSelectInv/GetProduct_write", {
+          fac: selectFactoryNew,
+          prd: value,
+        })
+        .then((res) => {
+          hideLoading();
+          setProductItem(res.data);
+        })
+        .catch((error) => {
+          hideLoading();
+          console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
+        });
+    }else{
+      GetProductItem(selectFactoryNew,selectInvNew)
+    }
+
+    // เรียก API อื่นที่คุณต้องการตรงนี้
+  };
+
   const handleProductItem = (value) => {
     setselectProductItemNew(value);
     GetSeqDate(selectFactoryNew, selectInvNew, value);
@@ -306,15 +327,15 @@ function fn_BoxINV() {
         prd: product,
       })
       .then((res) => {
-        console.log(res.data.length, "DADADD");
         if (res.data.length == 0) {
           setSeq(1);
           GetDataSelectBox("", product, "");
-          setInvdateNew(datenow);
+          setInvdateNew(today);
         } else {
           setSeq(res.data[0].BOX_SEQ);
           GetDataSelectBox(Invoice, product, res.data[0].BOX_SEQ);
-          setInvdateNew(res.data[0].POST_DATE);
+          // setInvdateNew(res.data[0].POST_DATE);
+          setInvdateNew(dayjs(res.data[0].POST_DATE, "YYYY-MM-DD"));
         }
       })
       .catch((error) => {
@@ -339,11 +360,7 @@ function fn_BoxINV() {
       });
   };
 
-  const GetDataSelectBox = async (
-    selectInvNew,
-    selectProductItem,
-    Seq,
-  ) => {
+  const GetDataSelectBox = async (selectInvNew, selectProductItem, Seq) => {
     await axios
       .post("/api/BoxSelectInv/GetDataTest", {
         invno: selectInvNew,
@@ -379,6 +396,8 @@ function fn_BoxINV() {
   };
 
   const Save = async () => {
+    let Date = InvdateNew ? InvdateNew.format("YYYY-MM-DD") : "";
+
     const checkedStatus = DataSelectBox.map((item) => ({
       ...item,
       checked: selectedRows.includes(item.BOX_NO),
@@ -405,7 +424,7 @@ function fn_BoxINV() {
           await axios.post("/api/BoxSelectInv/UpdataStatusNew", {
             dataList: checkbox0CheckedTrue,
             inv_no: selectInvNew,
-            inv_date: InvdateNew,
+            inv_date: Date,
             seq_no: Seq,
           });
         } catch (error) {
@@ -439,7 +458,7 @@ function fn_BoxINV() {
             dataList: checkbox1CheckedTrue,
             inv_no: selectInvNew,
             seq_no: Seq,
-            date_inv: InvdateNew,
+            date_inv: Date,
           });
         } catch (error) {
           Swal.fire({
@@ -504,6 +523,10 @@ function fn_BoxINV() {
     saveAs(blob, `${namefile}.xlsx`);
   };
 
+  const onChangePackDate = (date, dateString) => {
+    setInvdateNew(date);
+  };
+
   return {
     TableSelectBox,
     TableBoxNoDetail,
@@ -527,6 +550,11 @@ function fn_BoxINV() {
     InvNoNew,
     loadingTb1,
     loadingTb2,
+    setselectProductItemNew,
+    isSelected,
+    setIsSelected,
+    CallAnotherAPI,
+    onChangePackDate,
   };
 }
 

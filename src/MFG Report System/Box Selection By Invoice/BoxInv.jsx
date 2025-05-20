@@ -33,6 +33,11 @@ function BoxINV() {
     InvNoNew,
     loadingTb1,
     loadingTb2,
+    setselectProductItemNew,
+    isSelected,
+    setIsSelected,
+    CallAnotherAPI,
+    onChangePackDate,
   } = fn_BoxINV();
   return (
     <>
@@ -102,7 +107,7 @@ function BoxINV() {
           </td>
           <td>
             <div>
-              <Select
+              {/* <Select
                 showSearch
                 value={selectProductItemNew}
                 onChange={(value) => handleProductItem(value)}
@@ -120,6 +125,51 @@ function BoxINV() {
                     .includes(input.toLowerCase())
                 }
                 options={ProductItem}
+              /> */}
+              {/* <AutoComplete
+                value={selectProductItemNew}
+                options={ProductItem}
+                style={{
+                  width: "200px",
+                  display: "block",
+                  marginTop: "5px",
+                  marginLeft: "5px",
+                }}
+                placeholder="Select or Input InvNo"
+                onChange={(value) => handleProductItem(value)}
+                filterOption={(inputValue, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(inputValue.toLowerCase())
+                }
+              /> */}
+              <AutoComplete
+                value={selectProductItemNew}
+                options={ProductItem}
+                style={{
+                  width: "200px",
+                  display: "block",
+                  marginTop: "5px",
+                  marginLeft: "5px",
+                }}
+                placeholder="Select or Input Product"
+                onChange={(value) => {
+                  setselectProductItemNew(value);
+                  if (!isSelected) {
+                    // ถ้ายังไม่ select จาก list ให้เรียก API อื่น
+                    CallAnotherAPI(value);
+                  }
+                  setIsSelected(false); // reset สำหรับรอบถัดไป
+                }}
+                onSelect={(value) => {
+                  setIsSelected(true); // กำหนดว่าเป็นการเลือกจาก list
+                  handleProductItem(value); // ใช้ API เดิม
+                }}
+                filterOption={(inputValue, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(inputValue.toLowerCase())
+                }
               />
             </div>
           </td>
@@ -130,7 +180,7 @@ function BoxINV() {
           </td>
           <td>
             <div>
-              <Input
+              {/* <Input
                 type="date"
                 value={InvdateNew}
                 onChange={(e) => setInvdateNew(e.target.value)}
@@ -140,6 +190,17 @@ function BoxINV() {
                   marginTop: "5px",
                   marginLeft: "5px",
                 }}
+              /> */}
+              <DatePicker
+                style={{
+                  width: "200px",
+                  display: "block",
+                  marginTop: "5px",
+                  marginLeft: "5px",
+                }}
+                value={InvdateNew}
+                onChange={onChangePackDate}
+                format="DD/MM/YYYY"
               />
             </div>
           </td>
