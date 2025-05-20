@@ -956,7 +956,7 @@ function fn_BoxFoxcon() {
     }
     let packlabel = packtData[5].replace(/^S/, ""); //ตัด S ออก
     let productnew = packtData[2].replace(/^M/, ""); // ตัด M ออก เอาแค่ prdocut
-    let Lot = packtData[4].replace(/^L/, "");
+    // let Lot = packtData[4].replace(/^L/, "");
      setPacklabel(packtData[5].replace(/^S/, ""));
     if (ProductNew == "") {
       setProductNew(packtData[2].replace(/^M/, "")); // set productnew ครั้งแรก
@@ -972,22 +972,23 @@ function fn_BoxFoxcon() {
         return;
       }
     }
-       DataLot = await GetScanShelf(Lot);
-    if (DataLot == 0) {
-       setPacklabel("");
-        Swal.fire({
-          icon: "error",
-            text: `Lot no. ${Lot} ยังไม่ได้สแกน shelf ของ WH`,
-        });
-        hideLoading();
-        return;
-    }
+    //    DataLot = await GetScanShelf(Lot);
+    // if (DataLot == 0) {
+    //    setPacklabel("");
+    //     Swal.fire({
+    //       icon: "error",
+    //         text: `Lot no. ${Lot} ยังไม่ได้สแกน shelf ของ WH`,
+    //     });
+    //     hideLoading();
+    //     return;
+    // }
     
 
     const totalQty = DataPackLabel.reduce(
       (sum, item) => sum + (item.QTY || 0),
       0
     );
+    
     const totalQtyText = totalQty.toLocaleString();
     const parsedTotal = Number(totalQtyText.replace(/,/g, ""));
 
