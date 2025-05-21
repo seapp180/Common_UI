@@ -194,8 +194,7 @@ function fn_BoxINV() {
   render: (text, record, index) => {
     if (
       index === 0 ||
-      record.BOX_QTY !== DataBoxDetail[index - 1]?.BOX_QTY
-    ) {
+  record.BOX_NO !== DataBoxDetail[index - 1]?.BOX_NO    ) {
       return (
         <span style={{ textAlign: "right", display: "block" }}>
           {text ? text.toLocaleString() : "0"}
@@ -215,6 +214,7 @@ function fn_BoxINV() {
         return text;
       },
       width: 80,
+      align: 'center'
     },
 
     {
@@ -225,6 +225,7 @@ function fn_BoxINV() {
         return text ? text.toLocaleString() : "0";
       },
       width: 60,
+      align: 'center'
     },
     {
       title: "Lot No.",
