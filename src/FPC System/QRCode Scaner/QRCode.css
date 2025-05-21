@@ -16,4 +16,13 @@
   min-width: fit-content;
   display: flex;
   justify-content: center;
+  align-items: center !important;
+  flex-direction: column !important;
+}
+.mainFrame{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
 }

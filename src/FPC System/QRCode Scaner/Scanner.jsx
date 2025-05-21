@@ -1,84 +1,99 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card, Button } from "antd";
-import { Html5QrcodeScanner } from "html5-qrcode";
 import "./QRCode.css";
 
 function Scanner() {
   const [scanResult, setScanResult] = useState(null);
-  const [scanner, setScanner] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
+  const popupRef = useRef(null);
+  const width = Math.min(window.innerWidth * 0.9, 400);
+  const height = Math.min(window.innerHeight * 0.9, 400);
+  const left = (window.innerWidth - width) / 2;
+  const top = (window.innerHeight - height) / 2;
 
-  const startScanner = () => {
-    const html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", {
-      fps: 60,
-      qrbox: 300,
-    });
-
-    html5QrcodeScanner.render(
-      (decodedText) => {
-        setScanResult(decodedText);
-        html5QrcodeScanner.clear();
-        setIsScanning(false);
-      },
-      (errorMessage) => {
-        console.warn("QR Code scan error:", errorMessage);
-      }
-    );
-
-    setScanner(html5QrcodeScanner);
-  };
-
-  useEffect(() => {
-    if (isScanning && !scanResult) {
-      startScanner();
-    }
-
-    return () => {
-      if (scanner) {
-        scanner.clear().catch((e) => console.warn("Clear scanner error:", e));
-      }
-    };
-  }, [isScanning]);
+  const cameraHost = `http://${window.location.hostname}:4005/camera.html`;
 
   const handleStartScan = () => {
     setScanResult(null);
     setIsScanning(true);
+
+    const popup = window.open(
+      cameraHost,
+      "CameraPopup",
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+    );
+    popupRef.current = popup;
+  };
+
+  const handleStopScan = () => {
+    setIsScanning(false);
+
+    // ปิด popup ถ้ายังเปิดอยู่
+    if (popupRef.current && !popupRef.current.closed) {
+      popupRef.current.close();
+      popupRef.current = null;
+    }
   };
 
   const handleScanAgain = () => {
     setScanResult(null);
-    setIsScanning(true);
+    handleStartScan();
   };
+
+  useEffect(() => {
+    function handleMessage(event) {
+      if (event.data?.type === "qr-scan-result") {
+        console.log("Scanned:", event.data.data);
+        setScanResult(event.data.data);
+        setIsScanning(false);
+
+        // ปิด popup เมื่อได้ผลลัพธ์
+        if (popupRef.current && !popupRef.current.closed) {
+          popupRef.current.close();
+          popupRef.current = null;
+        }
+      }
+    }
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   return (
     <>
-     <div style={{ display: "flex", alignItems: "center" }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <h2 className="TitlePage_h2">QR Code Scanner</h2>
       </div>
-      <div className="body">
-        <Card className="mainCard">
-          {!isScanning && !scanResult && (
-            <Button type="primary" onClick={handleStartScan}>
-              เริ่มสแกน QR Code
+      <br />
+      <Card className="mainCard">
+        <div className="mainFrame">
+          {isScanning && !scanResult && (
+            <Button onClick={handleStopScan} type="primary">
+              Scan อีกครั้ง
             </Button>
           )}
+        </div>
 
-          {isScanning && !scanResult && (
-            <div id="qr-reader" style={{ width: "100%" }}></div>
-          )}
-
-          {scanResult && (
-            <div>
-              <p>
-                <strong>ผลลัพธ์:</strong> {scanResult}
-              </p>
-              <Button onClick={handleScanAgain} type="primary" >
-                สแกนอีกครั้ง
-              </Button>
-            </div>
-          )}
-        </Card>
-      </div>
+        {!isScanning && !scanResult && (
+          <Button type="primary" onClick={handleStartScan}>
+            เริ่มสแกน QR Code
+          </Button>
+        )}
+        {scanResult && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <h1>ผลลัพธ์: {scanResult}</h1>
+            <Button onClick={handleScanAgain} type="primary">
+              สแกนอีกครั้ง
+            </Button>
+          </div>
+        )}
+      </Card>
     </>
   );
 }
