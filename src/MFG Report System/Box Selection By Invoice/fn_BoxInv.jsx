@@ -151,35 +151,62 @@ function fn_BoxINV() {
       title: "Item Code",
       dataIndex: "PRD_ITEM_CODE",
       key: "key",
-      render: (text, record, index) => {
+      // render: (text, record, index) => {
+      //   return text;
+      // },
+       render: (text, record, index) => {
+      // แสดงเฉพาะตัวแรก ถ้าซ้ำกับแถวก่อนหน้าให้ว่าง
+      if (
+        index === 0 ||
+        record.PRD_ITEM_CODE !== DataBoxDetail[index - 1]?.PRD_ITEM_CODE
+      ) {
         return text;
-      },
+      }
+      return "";
+    },
       width: 130,
     },
     {
       title: "Box No.",
       dataIndex: "BOX_NO",
       key: "product",
-      sorter: (a, b) => {
-        if (a.BOX_NO < b.BOX_NO) return -1;
-        if (a.BOX_NO > b.BOX_NO) return 1;
-        return 0;
-      },
-      sortDirections: ["descend", "ascend"],
-      width: 115,
-    },
-    {
-      title: "Box Qty",
-      dataIndex: "BOX_QTY",
-      key: "lotNo",
-      render: (text, record, index) => (
+      render: (text, record, index) => {
+    if (
+      index === 0 ||
+      record.BOX_NO !== DataBoxDetail[index - 1]?.BOX_NO
+    ) {
+      return text;
+    }
+    return "";
+  },
+  sorter: (a, b) => {
+    if (a.BOX_NO < b.BOX_NO) return -1;
+    if (a.BOX_NO > b.BOX_NO) return 1;
+    return 0;
+  },
+  sortDirections: ["descend", "ascend"],
+  width: 115,
+},
+{
+  title: "Box Qty",
+  dataIndex: "BOX_QTY",
+  key: "lotNo",
+  render: (text, record, index) => {
+    if (
+      index === 0 ||
+      record.BOX_QTY !== DataBoxDetail[index - 1]?.BOX_QTY
+    ) {
+      return (
         <span style={{ textAlign: "right", display: "block" }}>
           {text ? text.toLocaleString() : "0"}
         </span>
-      ),
-      align: "center",
-      width: 78,
-    },
+      );
+    }
+    return "";
+  },
+  align: "center",
+  width: 78,
+},
     {
       title: "Inv Box",
       dataIndex: "INV_BOX",
