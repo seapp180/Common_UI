@@ -22,6 +22,8 @@ import BoxFoncon from "./MFG Report System/Box Foxcon/BoxFoxcon";
 // import NewBoxFoxcon from "./MFG Report System/Box Foxcon/NewBoxFoxcon";
 import Qrscantest from "./Scantest/scantest";
 import BoxInvoice from "./MFG Report System/Box Selection By Invoice/BoxInv";
+import QRCodeScanner from "./FPC System/QRCode Scaner/Scanner";
+
 const { Content } = Layout;
 // const backendUrl = import.meta.env.VITE_SERVICE_URL;
 // axios.defaults.baseURL = backendUrl;
@@ -92,6 +94,10 @@ const App = () => {
                   <Route
                     path="/CommonSystem/FPCSystem/AnalysisFormulaMaster"
                     element={<AnalysisUpload />}
+                  />
+                  <Route
+                    path="/CommonSystem/FPCSystem/QRCodeScanner"
+                    element={<QRCodeScanner />}
                   />
                   
                   {/* --------------------MFG REPORT SYSTEM-------------------- */}
