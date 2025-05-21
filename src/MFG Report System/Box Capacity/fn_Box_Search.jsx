@@ -3908,6 +3908,13 @@ function fn_Box_Search() {
     //   hideLoading();
     // }
   };
+  const refresh = (pageData = []) => {
+    let totalQty = 0;
+    pageData.forEach(({ LOT_QTY }) => {
+      totalQty += Number(LOT_QTY) || 0;
+    });
+    setPackQty(totalQty);
+  };
 
   return {
     columns,
@@ -4002,6 +4009,7 @@ function fn_Box_Search() {
     onChangeDateFrom,
     onChangeDateTo,
     onChangePackDate,
+    refresh,
   };
 }
 

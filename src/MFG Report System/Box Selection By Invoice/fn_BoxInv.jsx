@@ -306,14 +306,15 @@ function fn_BoxINV() {
           hideLoading();
           console.error("เกิดข้อผิดพลาดในการดึงข้อมูล:", error);
         });
-    }else{
-      GetProductItem(selectFactoryNew,selectInvNew)
+    } else {
+      GetProductItem(selectFactoryNew, selectInvNew);
     }
 
     // เรียก API อื่นที่คุณต้องการตรงนี้
   };
 
   const handleProductItem = (value) => {
+    setloadingTb2(true);
     setselectProductItemNew(value);
     GetSeqDate(selectFactoryNew, selectInvNew, value);
   };

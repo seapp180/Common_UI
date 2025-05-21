@@ -107,7 +107,8 @@ function Box_Search() {
     SaveEdit,
     onChangeDateFrom,
     onChangeDateTo,
-    onChangePackDate
+    onChangePackDate,
+    refresh,
   } = fn_Box_Search();
 
   return (
@@ -599,9 +600,7 @@ function Box_Search() {
                             marginTop: "5px",
                             marginLeft: "5px",
                           }}
-                          value={
-                            Packdate 
-                          }
+                          value={Packdate}
                           onChange={onChangePackDate}
                           format="DD/MM/YYYY"
                         />
@@ -628,26 +627,33 @@ function Box_Search() {
                           placeholder=""
                         />
                       </td>
+                      <Button
+                        icon={<ReloadOutlined />}
+                        style={{
+                          display: "block",
+                          marginTop: "5px",
+                          marginLeft: "5px",
+                          backgroundColor: "#d9d6da",
+                        }}
+                        onClick={() => refresh(DataLotPacking)}
+                      >
+                        Reset
+                      </Button>
                     </tr>
                   )}
                   {radioselect == "Auto" && (
                     <tr>
                       <td style={{ textAlign: "right" }}>Packing Date :</td>
                       <td>
-                      
-                      <DatePicker
+                        <DatePicker
                           style={{
                             width: "200px",
                             display: "block",
                             marginTop: "5px",
                             marginLeft: "5px",
                           }}
-                          value={
-                            Packdate
-                          }
-                          onChange={(date, dateString) =>
-                            setPackdate(date )
-                          }
+                          value={Packdate}
+                          onChange={(date, dateString) => setPackdate(date)}
                           format="DD/MM/YYYY"
                         />
                       </td>
