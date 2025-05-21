@@ -109,6 +109,8 @@ function Box_Search() {
     onChangeDateTo,
     onChangePackDate,
     refresh,
+    BoxNoSeacrhTo,
+    setBoxNoSeacrhTo
   } = fn_Box_Search();
 
   return (
@@ -297,7 +299,7 @@ function Box_Search() {
           <tr>
             <td>
               <div style={{ marginLeft: "30px", textAlign: "right" }}>
-                <span style={{ fontSize: "14px" }}>Box No :</span>
+                <span style={{ fontSize: "14px" }}>Box No From :</span>
               </div>
             </td>
             <td>
@@ -311,12 +313,32 @@ function Box_Search() {
                     marginTop: "5px",
                     marginLeft: "5px",
                   }}
-                  placeholder="Box No :"
+                  placeholder="Box No From :"
                   onChange={(e) => setBoxNoSeacrh(e.target.value)}
                 />
               </div>
             </td>
-            <td></td>
+                <td>
+              <div style={{ marginLeft: "30px", textAlign: "right" }}>
+                <span style={{ fontSize: "14px" }}>Box No To :</span>
+              </div>
+            </td>
+            <td>
+              <div>
+                <Input
+                  showSearch
+                  value={BoxNoSeacrhTo}
+                  style={{
+                    width: "200px",
+                    display: "block",
+                    marginTop: "5px",
+                    marginLeft: "5px",
+                  }}
+                  placeholder="Box No To :"
+                  onChange={(e) => setBoxNoSeacrhTo(e.target.value)}
+                />
+              </div>
+            </td>
           </tr>
           <br></br>
           <tr>

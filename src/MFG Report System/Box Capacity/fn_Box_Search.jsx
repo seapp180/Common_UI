@@ -27,6 +27,7 @@ function fn_Box_Search() {
   const [PackingDateFrom, setPackingDateFrom] = useState("");
   const [PackingDateTo, setPackingDateTo] = useState("");
   const [BoxNoSeacrh, setBoxNoSeacrh] = useState("");
+  const [BoxNoSeacrhTo, setBoxNoSeacrhTo] = useState("");
   const [DataSearch, setDataSearch] = useState([]);
   const [ItemNew, setItemNew] = useState("");
   const [ProductShow, setProductShow] = useState("");
@@ -1151,7 +1152,6 @@ function fn_Box_Search() {
   const Search = async () => {
     let datefrom = PackingDateFrom ? PackingDateFrom.format("YYYY-MM-DD") : "";
     let dateto = PackingDateTo ? PackingDateTo.format("YYYY-MM-DD") : "";
-
     if (PageInsert !== "NewBox" || PageInsert !== "UPDATE") {
       if (
         selectddlProduct == "" &&
@@ -1159,14 +1159,15 @@ function fn_Box_Search() {
         LotTo == "" &&
         datefrom == "" &&
         dateto == "" &&
-        BoxNoSeacrh == ""
+        BoxNoSeacrh == "" &&
+        BoxNoSeacrhTo == ""
       ) {
         Swal.fire({
           icon: "error",
           text: "กรุณากรอกข้อมูลในช่องอย่างน้อย 1 ช่อง",
         });
         return;
-      } else if (BoxNoSeacrh != "" && selectddlProduct == "") {
+      } else if ((BoxNoSeacrh != "" || BoxNoSeacrhTo !== "") && selectddlProduct == "") {
         Swal.fire({
           icon: "error",
           text: "กรุณากรอกข้อมูล Item",
@@ -1185,6 +1186,8 @@ function fn_Box_Search() {
           PackingDateFrom: datefrom,
           PackingDateTo: dateto,
           BoxNoSeacrh: BoxNoSeacrh,
+          BoxNoSeacrhTo : BoxNoSeacrhTo
+
         },
       })
       .then((res) => {
@@ -1280,6 +1283,7 @@ function fn_Box_Search() {
       setPackingDateFrom("");
       setPackingDateTo("");
       setBoxNoSeacrh("");
+      setBoxNoSeacrhTo("");
       setDataSearch([]);
       setselectddlProduct([]);
     } else if (Page == "ResetMaintain") {
@@ -4010,6 +4014,8 @@ function fn_Box_Search() {
     onChangeDateTo,
     onChangePackDate,
     refresh,
+    BoxNoSeacrhTo,
+    setBoxNoSeacrhTo
   };
 }
 
