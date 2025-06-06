@@ -1310,8 +1310,6 @@ function fn_Box_Search() {
       setselectddlLot("");
       setRemain_qty("");
       setPack_qtyLot(0);
-      setName_User("");
-      setselectddlProductNew("");
     }
   };
   const SaveBoxMainTain = async (page) => {

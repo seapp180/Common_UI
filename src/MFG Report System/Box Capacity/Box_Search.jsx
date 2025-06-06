@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Layout, Button, Table, Select, Modal, Input, Card, Radio } from "antd";
+import {
+  Layout,
+  Button,
+  Table,
+  Select,
+  Modal,
+  Input,
+  Card,
+  Radio,
+  AutoComplete,
+} from "antd";
 import {
   SearchOutlined,
   SaveOutlined,
@@ -110,7 +120,7 @@ function Box_Search() {
     onChangePackDate,
     refresh,
     BoxNoSeacrhTo,
-    setBoxNoSeacrhTo
+    setBoxNoSeacrhTo,
   } = fn_Box_Search();
 
   return (
@@ -318,7 +328,7 @@ function Box_Search() {
                 />
               </div>
             </td>
-                <td>
+            <td>
               <div style={{ marginLeft: "30px", textAlign: "right" }}>
                 <span style={{ fontSize: "14px" }}>Box No To :</span>
               </div>
@@ -1042,7 +1052,7 @@ function Box_Search() {
                     >
                       Lot No :
                     </span>
-                    <Select
+                    {/* <Select
                       showSearch
                       value={selectddlLot}
                       onChange={(index, e) => handleLotNo(e)}
@@ -1059,6 +1069,23 @@ function Box_Search() {
                           .includes(input.toLowerCase())
                       }
                       options={ddlLot}
+                    /> */}
+                    <AutoComplete
+                      style={{
+                        width: "130px",
+                        marginLeft: "10px",
+                        textAlign: "left",
+                      }}
+                      value={selectddlLot}
+                      options={ddlLot}
+                      placeholder="เลือก Lot No"
+                      filterOption={(inputValue, option) =>
+                        (option?.label ?? "")
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase())
+                      }
+                      onSelect={(value, option) => handleLotNo(option)}
+                      onChange={(value) => handleLotNo({ value })}
                     />
                     <span
                       style={{

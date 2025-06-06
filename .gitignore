@@ -26,5 +26,6 @@ dockerfile
 Scantest
 ./dist
 dist
+deploy.sh
 
 # Box Selection By INV
