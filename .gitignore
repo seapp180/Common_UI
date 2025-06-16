@@ -23,7 +23,7 @@ dist-ssr
 *.sw?
 .env
 dockerfile
-Scantest
+# Scantest
 ./dist
 dist
 deploy.sh
