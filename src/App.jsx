@@ -23,6 +23,7 @@ import BoxFoncon from "./MFG Report System/Box Foxcon/BoxFoxcon";
 import Qrscantest from "./Scantest/scantest";
 import BoxInvoice from "./MFG Report System/Box Selection By Invoice/BoxInv";
 import QRCodeScanner from "./FPC System/QRCode Scaner/Scanner";
+import Traceability from "./Scantest/TeaceabilityGetdata";
 
 const { Content } = Layout;
 // const backendUrl = import.meta.env.VITE_SERVICE_URL;
@@ -48,10 +49,7 @@ const App = () => {
               >
                 <Routes>
                   {/* --------------------COMMON SYSTEM--------------------*/}
-                  <Route 
-                    path="/CommonSystem/zPO" 
-                    element={<ZPoReport />} 
-                  />
+                  <Route path="/CommonSystem/zPO" element={<ZPoReport />} />
                   <Route
                     path="/CommonSystem/UserListReport"
                     element={<UserListReport />}
@@ -60,7 +58,7 @@ const App = () => {
                     path="/CommonSystem/PoSummary"
                     element={<PoSummary />}
                   />
-                   <Route
+                  <Route
                     path="/CommonSystem/ExportSupplierCustomer"
                     element={<ExportSupplier />}
                   />
@@ -89,7 +87,6 @@ const App = () => {
                     path="/CommonSystem/ConditionSystem/OQC/2D_BarcodeReport"
                     element={<T2D_BarcodeReport />}
                   />
-                 
                   {/* --------------------FPC SYSTEM-------------------- */}
                   <Route
                     path="/CommonSystem/FPCSystem/AnalysisFormulaMaster"
@@ -99,7 +96,6 @@ const App = () => {
                     path="/CommonSystem/FPCSystem/QRCodeScanner"
                     element={<QRCodeScanner />}
                   />
-                  
                   {/* --------------------MFG REPORT SYSTEM-------------------- */}
                   <Route
                     path="/CommonSystem/MFGReportSystem/BoxCapacity"
@@ -110,11 +106,11 @@ const App = () => {
                     path="/CommonSystem/MFGReportSystem/BoxCapacityFoxcon"
                     element={<BoxFoncon />}
                   />
-                   {/* <Route
+                  {/* <Route
                     path="/CommonSystem/MFGReportSystem/NewBoxFoxcon"
                     element={<NewBoxFoxcon />}
                   /> */}
-                     <Route
+                  <Route
                     path="/CommonSystem/MFGReportSystem/BoxSelectionInvoice"
                     element={<BoxInvoice />}
                   />
@@ -122,6 +118,11 @@ const App = () => {
                   <Route
                     path="/CommonSystem/Scantest"
                     element={<Qrscantest />}
+                  />
+                  
+                  <Route
+                    path="/Traceability/getdatatest"
+                    element={<Traceability />}
                   />
                 </Routes>
               </div>
