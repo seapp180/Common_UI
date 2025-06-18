@@ -10,7 +10,7 @@ export default function LotForm() {
     { serial: "TEST2" },
     { serial: "TEST3" },
     { serial: "TEST4" },
-    { serial: "TEST5" },
+    { serial: "" },
   ]);
   // const [ngSerials, setNgSerials] = useState(
   //   Array(5).fill({ serial: "", result: "" })
@@ -23,6 +23,13 @@ export default function LotForm() {
     { serial: "", result: "" },
   ]);
 
+  const dropdownOptions = [
+    { value: "Lot1", label: "Lot1" },
+    { value: "Lot2", label: "Lot2" },
+    { value: "Lot3", label: "Lot3" },
+    { value: "Lot4", label: "Lot4" },
+    { value: "Lot5", label: "Lot5" },
+  ];
   const handleSerialChange = (index, value) => {
     const newSerials = [...serials];
     newSerials[index].serial = value;
@@ -35,7 +42,13 @@ export default function LotForm() {
   //   setSerials(newSerials);
   // };
   // -------------------------------------
-
+  window.setSerialValue = (index, value) => {
+    setSerials((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], serial: value };
+      return updated;
+    });
+  };
   const handleNgChange = (index, key, value) => {
     console.log(index, key, value, "TESTจ้า");
     const newNgSerials = [...ngSerials];
@@ -47,6 +60,10 @@ export default function LotForm() {
     console.log("Lot No:", lotNo);
     console.log("Serials:", serials);
     console.log("NG Serials:", ngSerials);
+
+    alert(lotNo);
+    alert(serials.map((s) => s.serial).join(", "));
+    alert(ngSerials.map((s) => `${s.serial} (${s.result})`).join(", "));
   };
 
   const serialColumns = [
@@ -139,11 +156,13 @@ export default function LotForm() {
         </Col>
         <Col span={8}>
           <Select
-            id="txtLotNo"
-            value={lotNo}
-            style={{width:'100%'}}
-            onChange={(e) => setLotNo(e.target.value)}
-            placeholder="Enter Lot Number"
+            id="idtxtListNo"
+            // value={lotNo}
+            style={{ width: "100%" }}
+            options={dropdownOptions}
+            onSelect={(value) => setLotNo(value)}
+            // onChange={(e) => setLotNo(e.target.value)}
+            // placeholder="Enter Lot Number"
           />
         </Col>
       </Row>

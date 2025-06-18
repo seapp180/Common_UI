@@ -28,4 +28,5 @@ dockerfile
 dist
 deploy.sh
 
+CICD.bat
 # Box Selection By INV
