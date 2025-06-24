@@ -1167,7 +1167,10 @@ function fn_Box_Search() {
           text: "กรุณากรอกข้อมูลในช่องอย่างน้อย 1 ช่อง",
         });
         return;
-      } else if ((BoxNoSeacrh != "" || BoxNoSeacrhTo !== "") && selectddlProduct == "") {
+      } else if (
+        (BoxNoSeacrh != "" || BoxNoSeacrhTo !== "") &&
+        selectddlProduct == ""
+      ) {
         Swal.fire({
           icon: "error",
           text: "กรุณากรอกข้อมูล Item",
@@ -1186,8 +1189,7 @@ function fn_Box_Search() {
           PackingDateFrom: datefrom,
           PackingDateTo: dateto,
           BoxNoSeacrh: BoxNoSeacrh,
-          BoxNoSeacrhTo : BoxNoSeacrhTo
-
+          BoxNoSeacrhTo: BoxNoSeacrhTo,
         },
       })
       .then((res) => {
@@ -1377,6 +1379,23 @@ function fn_Box_Search() {
   const handleLotNo = async (data) => {
     setselectddlLot(data.value);
     setRemain_qty(data.GOOD_QTY);
+    if (data.value.length === 9) {
+      const response1 = await axios.post("/api/BoxCapacity/CheckLot", {
+        lot: data.value,
+      });
+      if (response1.data.length == 1) {
+        if (response1.data[0].LOT !== selectddlProductNew) {
+          Swal.fire({
+            icon: "error",
+            text: "Lot No นี้ ไม่ตรงกับ Product Item " + selectddlProductNew,
+          });
+          setselectddlLot("");
+          return;
+        } else {
+          setselectddlLot(data.value);
+        }
+      }
+    }
   };
   let LOT_STATUS = "";
   // let isSaving = false;
@@ -1495,7 +1514,14 @@ function fn_Box_Search() {
 
     let Page = page;
     if (Page == "SaveManual") {
-      if (Pack_qtyLot == 0) {
+      if (selectddlLot == "") {
+        Swal.fire({
+          icon: "error",
+          text: "กรุณาเลือก  Lot No",
+        });
+        isSaving = false;
+        return;
+      } else if (Pack_qtyLot == 0) {
         Swal.fire({
           icon: "error",
           text: "กรุณากรอกจำนวนที่ Packing Qty",
@@ -4013,7 +4039,7 @@ function fn_Box_Search() {
     onChangePackDate,
     refresh,
     BoxNoSeacrhTo,
-    setBoxNoSeacrhTo
+    setBoxNoSeacrhTo,
   };
 }
 
