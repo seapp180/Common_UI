@@ -148,8 +148,9 @@ export default function LotForm() {
 
       <Row gutter={20}>
         <Col span={12}>
-          <Card id="serialTable" title="Serials" bordered>
+          <Card title="Serials" bordered>
             <Table
+              id="serialTable"
               pagination={false}
               dataSource={serials.map((_, i) => ({ key: i }))}
               columns={serialColumns}

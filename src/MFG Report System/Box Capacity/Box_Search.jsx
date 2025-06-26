@@ -346,6 +346,9 @@ function Box_Search() {
                   }}
                   placeholder="Box No To :"
                   onChange={(e) => setBoxNoSeacrhTo(e.target.value)}
+                  onFocus={() => {
+                    if (!BoxNoSeacrhTo) setBoxNoSeacrhTo(BoxNoSeacrh);
+                  }}
                 />
               </div>
             </td>
