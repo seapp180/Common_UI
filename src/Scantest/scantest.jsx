@@ -79,7 +79,6 @@ function Scantest() {
             formatsToSupport: ["QR_CODE", "CODE_128", "CODE_39", "EAN_13", "EAN_8", "UPC_A", "UPC_E", "ITF"],
           },
           (decodedText) => {
-            console.log("Scanned Result:", decodedText);
 
             if (selectBox === "Empcode") {
               setStrEmpcode(decodedText);

@@ -43,7 +43,6 @@ function Scanner() {
   useEffect(() => {
     function handleMessage(event) {
       if (event.data?.type === "qr-scan-result") {
-        console.log("Scanned:", event.data.data);
         setScanResult(event.data.data);
         setIsScanning(false);
 

@@ -24,7 +24,6 @@ function fn_T2D_BarCodeConfirm() {
         lotNo: selectedRows[i],
         LoginId: loginID,
       });
-      console.log(response, "response");
       if (response.message !== "Updated Success") {
         data.push(selectedRows[i]);
       }
@@ -229,7 +228,6 @@ function fn_T2D_BarCodeConfirm() {
 
     try {
       if (type == "getDtdata") {
-        console.log("getDtdata");
         showLoading("กำลังค้นหา กรุณารอสักครู่");
         const response = await axios.get(
           "/api/Oqc_barcode/getAlldtDataConfirm"
@@ -240,7 +238,6 @@ function fn_T2D_BarCodeConfirm() {
         const response = await axios.get(
           "/api/Oqc_barcode/getpopUpdataConfirm?strLotNo=" + params
         );
-        console.log(response.data);
         setPopUpdata(response.data);
       } else if (type == "UpdateConfirmData") {
         showLoading("กำลังบันทึก กรุณารอสักครู่");
