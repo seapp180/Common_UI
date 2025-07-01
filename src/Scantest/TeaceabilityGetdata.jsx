@@ -1,20 +1,54 @@
 import React, { useState } from "react";
-import { Table, Input, Button, Card, Row, Col } from "antd";
+import { Table, Input, Button, Card, Row, Col, Select } from "antd";
 import Title from "antd/es/skeleton/Title";
 
 export default function LotForm() {
   const [lotNo, setLotNo] = useState("");
-  const [serials, setSerials] = useState(Array(5).fill(""));
-  const [ngSerials, setNgSerials] = useState(
-    Array(5).fill({ serial: "", result: "" })
-  );
+  // const [serials, setSerials] = useState(Array(5).fill(""));
+  const [serials, setSerials] = useState([
+    { serial: "TEST1" },
+    { serial: "TEST2" },
+    { serial: "TEST3" },
+    { serial: "TEST4" },
+    { serial: "" },
+  ]);
+  // const [ngSerials, setNgSerials] = useState(
+  //   Array(5).fill({ serial: "", result: "" })
+  // );
+  const [ngSerials, setNgSerials] = useState([
+    { serial: "NG_TEST1", result: "NG1" },
+    { serial: "NG_TEST2", result: "NG2" },
+    { serial: "NG_TEST3", result: "NG3" },
+    { serial: "NG_TEST4", result: "NG4" },
+    { serial: "", result: "" },
+  ]);
 
+  const dropdownOptions = [
+    { value: "Lot1", label: "Lot1" },
+    { value: "Lot2", label: "Lot2" },
+    { value: "Lot3", label: "Lot3" },
+    { value: "Lot4", label: "Lot4" },
+    { value: "Lot5", label: "Lot5" },
+  ];
   const handleSerialChange = (index, value) => {
     const newSerials = [...serials];
     newSerials[index] = value;
     setSerials(newSerials);
   };
-
+  // -------------------------------------
+  // const handleSerialChange = (index, value) => {
+  //   const newSerials = [...serials];
+  //   newSerials[index] = value;
+  //   setSerials(newSerials);
+  // };
+  // -------------------------------------
+  window.setSerialValue = (index, value) => {
+    setSerials((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], serial: value };
+      return updated;
+    });
+  };
   const handleNgChange = (index, key, value) => {
     const newNgSerials = [...ngSerials];
     newNgSerials[index] = { ...newNgSerials[index], [key]: value };
@@ -22,12 +56,13 @@ export default function LotForm() {
   };
 
   const handleSave = () => {
-    alert(`Lot No : ${lotNo}`)
-    alert(`Serials : ${serials}`)
-    alert(`Serials : ${ngSerials.map(item => item.serial).join(', ')} Results : ${ngSerials.map(item => item.result).join(', ')}`)
     console.log("Lot No:", lotNo);
     console.log("Serials:", serials);
     console.log("NG Serials:", ngSerials);
+
+    alert(lotNo);
+    alert(serials.map((s) => s.serial).join(", "));
+    alert(ngSerials.map((s) => `${s.serial} (${s.result})`).join(", "));
   };
 
   const serialColumns = [
@@ -64,8 +99,7 @@ export default function LotForm() {
       key: "serial",
       render: (_, __, index) => (
         <Input
-             id={`txtserial${index}`}
-
+          id={`txtSerial${index}`}
           value={ngSerials[index].serial}
           onChange={(e) => handleNgChange(index, "serial", e.target.value)}
         />
@@ -107,7 +141,6 @@ export default function LotForm() {
         <Col span={12}>
           <Card title="Serials" bordered>
             <Table
-            id="grid1"
               pagination={false}
               dataSource={serials.map((_, i) => ({ key: i }))}
               columns={serialColumns}

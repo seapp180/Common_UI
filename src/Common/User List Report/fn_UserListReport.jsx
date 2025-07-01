@@ -471,7 +471,6 @@ function fn_UserListReport() {
         let data = res.data;
         if (data.length > 0) {
           setSearchData(data);
-          console.log(data);
           setTbSearch(true);
         } else {
           Swal.fire({

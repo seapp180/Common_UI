@@ -13,7 +13,6 @@ function fn_T2D_BarcodeReport() {
   const [popUpdata, setPopUpdata] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleSearch = async () => {
-    console.log(txtproduct, txtlotno, txtdatefrom, txtdateto);
     showLoading("กำลังค้นหา กรุณารอสักครู่");
     await getData("getAlldata", "");
     hideLoading();
@@ -55,7 +54,6 @@ function fn_T2D_BarcodeReport() {
         grade: element.grade,
       });
     });
-    console.log(workbook);
     const buf = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const url = window.URL.createObjectURL(blob);
@@ -291,7 +289,6 @@ function fn_T2D_BarcodeReport() {
         const response = await axios.get(
           "/api/Oqc_barcode/getpopUpdataConfirm?strLotNo=" + params
         );
-        console.log(response.data);
         setPopUpdata(response.data);
       }
       hideLoading();

@@ -72,7 +72,6 @@ function fn_AnalysisUpload() {
 
   const GetUnitPopUP = () => {
     axios.post("/api/Analysis_Formular/GetUnitPopup", {}).then((res) => {
-      console.log("UnitPop", res.data);
       setUnit((prevState) => ({...prevState,PopUp: res.data}));
     });
   };
@@ -84,7 +83,6 @@ function fn_AnalysisUpload() {
         PARAMETER_UNIT: unit,
       })
       .then((res) => {
-        console.log("ProcessPop", res.data);
         setProcess((prevState) => ({...prevState,PopUp: res.data}));
       });
   };
@@ -96,7 +94,6 @@ function fn_AnalysisUpload() {
         PARAMETER_PROCESS: process,
       })
       .then((res) => {
-        console.log("McPop", res.data);
         setMachine((prevState) => ({...prevState,PopUp: res.data}));
       });
   };
@@ -111,7 +108,6 @@ function fn_AnalysisUpload() {
 
   const GetUnit = () => {
     axios.post("/api/Analysis_Formular/GetUnit", {}).then((res) => {
-      console.log("Unit", res.data);
       setUnit((prevState) => ({...prevState,Search: res.data}));
       // setUnit(res.data);
     });
@@ -124,7 +120,6 @@ function fn_AnalysisUpload() {
         PARAMETER_UNIT: unit,
       })
       .then((res) => {
-        console.log("Process", res.data);
         setProcess((prevState) => ({...prevState,Search: res.data}));
       });
   };
@@ -136,7 +131,6 @@ function fn_AnalysisUpload() {
         PARAMETER_PROCESS: process,
       })
       .then((res) => {
-        console.log("Machine", res.data);
         setMachine((prevState) => ({...prevState,Search: res.data}));
       });
   };
@@ -148,7 +142,6 @@ function fn_AnalysisUpload() {
         PARAMETER_MC: machine,
       })
       .then((res) => {
-        console.log("Bath", res.data);
         setBath((prevState) => ({...prevState,Search: res.data}));
       });
   };
@@ -161,7 +154,6 @@ function fn_AnalysisUpload() {
         PARAMETER_BATH: bath,
       })
       .then((res) => {
-        console.log("Chh", res.data);
         setCh((prevState) => ({...prevState,Search: res.data}));
       });
   };
@@ -251,8 +243,6 @@ function fn_AnalysisUpload() {
         )
         .filter((row) => row.some((cell) => cell !== ""));
 
-      console.log(filteredData, "filteredData");
-
       const datajson = filteredData.slice(2).map((row) => ({
         // ข้าม 2 แถวแรก
         // UNIT : row[1] || "", // เริ่มจากคอลัมน์ B
@@ -280,7 +270,6 @@ function fn_AnalysisUpload() {
       // .filter((row) => row.PRODUCT !== "" || row.PROCESS !== "");
 
       setSelectedFiles(datajson);
-      console.log(datajson, "datajson");
     };
 
     reader.readAsArrayBuffer(file);
@@ -376,7 +365,6 @@ function fn_AnalysisUpload() {
       }
       //------------------------------------------------ข้อ11
       if(formula!=''){
-        console.log('เข้า formula',formula)
         if (!PatternFormula) {
           remark = "Fomat Formula ไม่ถูกต้อง "+formula;
         }
@@ -435,7 +423,6 @@ function fn_AnalysisUpload() {
       selectedFiles[i].REMARK = remark;
     }
     SetdataFile(selectedFiles)
-    console.log(selectedFiles, "selectedFiles");
   }
 
   const UploadFile = async () => {
@@ -462,7 +449,6 @@ function fn_AnalysisUpload() {
     );
 
     if (validFiles.length > 0) {
-      console.log("mamamamam", validFiles);
       setFileName(validFiles.map((file) => file.name));
       readExcelData(validFiles[0]);
     } else {
@@ -504,7 +490,6 @@ function fn_AnalysisUpload() {
         { responseType: "blob" }
       )
       .then((res) => {
-        console.log(res.data, "GetFileFormat");
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement("a");
         link.href = url;
@@ -631,7 +616,6 @@ function fn_AnalysisUpload() {
   };
 
   const Btn_Edit = (record,page) => {
-    console.log("OKKKK", record,page)
     if (page == 'edit'){
       setUnit((prevState) => ({...prevState,Edit: record.FAUM_UNIT_DESC,disabled:true}))
       setProcess((prevState) => ({...prevState,Edit: record.FAPM_PROCESS_DESC,disabled:true}))
@@ -680,7 +664,6 @@ function fn_AnalysisUpload() {
     
   };
   const handleOk = () => {
-    console.log(Unit2,"OKSAVE")
     setModalText('The modal will be closed after two seconds');
     setConfirmLoading(true);
     setTimeout(() => {
@@ -689,7 +672,6 @@ function fn_AnalysisUpload() {
     }, 2000);
   };
   const handleCancel = () => {
-    console.log('Clicked cancel button');
     setOpen(false);
   };
 
@@ -723,7 +705,6 @@ function fn_AnalysisUpload() {
     {
       align: "center",
       render: (text, record, index) => {
-        // console.log(record, "record");
         text = (
           <Button
             icon={<CloseOutlined style={{ color: "red" }} />}

@@ -129,6 +129,21 @@ function fn_BoxINV() {
               )
             );
           }}
+          onPressEnter={(e) => {
+            // หา input ทั้งหมดใน column นี้
+            const inputs = Array.from(
+              document.querySelectorAll('input[aria-label="inv-box-input"]')
+            );
+            // หา index ของ input ปัจจุบัน
+            const currentIndex = inputs.findIndex(
+              (input) => input === e.target
+            );
+            // โฟกัสตัวถัดไปถ้ามี
+            if (currentIndex > -1 && currentIndex < inputs.length - 1) {
+              inputs[currentIndex + 1].focus();
+            }
+          }}
+          aria-label="inv-box-input"
         />
       ),
     },
@@ -154,16 +169,16 @@ function fn_BoxINV() {
       // render: (text, record, index) => {
       //   return text;
       // },
-       render: (text, record, index) => {
-      // แสดงเฉพาะตัวแรก ถ้าซ้ำกับแถวก่อนหน้าให้ว่าง
-      if (
-        index === 0 ||
-        record.PRD_ITEM_CODE !== DataBoxDetail[index - 1]?.PRD_ITEM_CODE
-      ) {
-        return text;
-      }
-      return "";
-    },
+      render: (text, record, index) => {
+        // แสดงเฉพาะตัวแรก ถ้าซ้ำกับแถวก่อนหน้าให้ว่าง
+        if (
+          index === 0 ||
+          record.PRD_ITEM_CODE !== DataBoxDetail[index - 1]?.PRD_ITEM_CODE
+        ) {
+          return text;
+        }
+        return "";
+      },
       width: 130,
     },
     {
@@ -171,41 +186,36 @@ function fn_BoxINV() {
       dataIndex: "BOX_NO",
       key: "product",
       render: (text, record, index) => {
-    if (
-      index === 0 ||
-      record.BOX_NO !== DataBoxDetail[index - 1]?.BOX_NO
-    ) {
-      return text;
-    }
-    return "";
-  },
-  sorter: (a, b) => {
-    if (a.BOX_NO < b.BOX_NO) return -1;
-    if (a.BOX_NO > b.BOX_NO) return 1;
-    return 0;
-  },
-  sortDirections: ["descend", "ascend"],
-  width: 115,
-},
-{
-  title: "Box Qty",
-  dataIndex: "BOX_QTY",
-  key: "lotNo",
-  render: (text, record, index) => {
-    if (
-      index === 0 ||
-  record.BOX_NO !== DataBoxDetail[index - 1]?.BOX_NO    ) {
-      return (
-        <span style={{ textAlign: "right", display: "block" }}>
-          {text ? text.toLocaleString() : "0"}
-        </span>
-      );
-    }
-    return "";
-  },
-  align: "center",
-  width: 78,
-},
+        if (index === 0 || record.BOX_NO !== DataBoxDetail[index - 1]?.BOX_NO) {
+          return text;
+        }
+        return "";
+      },
+      sorter: (a, b) => {
+        if (a.BOX_NO < b.BOX_NO) return -1;
+        if (a.BOX_NO > b.BOX_NO) return 1;
+        return 0;
+      },
+      sortDirections: ["descend", "ascend"],
+      width: 115,
+    },
+    {
+      title: "Box Qty",
+      dataIndex: "BOX_QTY",
+      key: "lotNo",
+      render: (text, record, index) => {
+        if (index === 0 || record.BOX_NO !== DataBoxDetail[index - 1]?.BOX_NO) {
+          return (
+            <span style={{ textAlign: "right", display: "block" }}>
+              {text ? text.toLocaleString() : "0"}
+            </span>
+          );
+        }
+        return "";
+      },
+      align: "center",
+      width: 78,
+    },
     {
       title: "Inv Box",
       dataIndex: "INV_BOX",
@@ -214,7 +224,7 @@ function fn_BoxINV() {
         return text;
       },
       width: 80,
-      align: 'center'
+      align: "center",
     },
 
     {
@@ -225,7 +235,7 @@ function fn_BoxINV() {
         return text ? text.toLocaleString() : "0";
       },
       width: 60,
-      align: 'center'
+      align: "center",
     },
     {
       title: "Lot No.",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   Layout,
   Button,
@@ -346,6 +346,10 @@ function Box_Search() {
                   }}
                   placeholder="Box No To :"
                   onChange={(e) => setBoxNoSeacrhTo(e.target.value)}
+                  // onFocus={() => {
+                  //   if (!BoxNoSeacrhTo) setBoxNoSeacrhTo(BoxNoSeacrh);
+                  // }}
+                  onFocus={() => setBoxNoSeacrhTo(BoxNoSeacrh)}
                 />
               </div>
             </td>

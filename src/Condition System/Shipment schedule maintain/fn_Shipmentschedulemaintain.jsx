@@ -56,7 +56,6 @@ function fn_Shipmentschedulemaintain() {
     })
       .then((res) => {
         let data = res.data.flat();
-        console.log(data)
         setBuildData(data);
         setselBuild(data[0].build);
       });
@@ -64,7 +63,6 @@ function fn_Shipmentschedulemaintain() {
 
 
   const handleChangeBuild = async (value) => {
-    console.log(value)
     setselBuild(value.value);
     setLoading(true);
     showLoading('กำลังโหลด กรุณารอสักครู่');
@@ -90,7 +88,6 @@ function fn_Shipmentschedulemaintain() {
         .then((res) => {
           data = res.data;
         });
-      console.log(data)
       settxtLine(data.F_LINE);
       settxtLotNo(data.F_LOT);
       settxtFirtshipment(data.F_FIRST_DATE ? dayjs(data.F_FIRST_DATE).format('DD/MM/YYYY') : null);
@@ -101,7 +98,6 @@ function fn_Shipmentschedulemaintain() {
       }
       setbtsaveDisabled(false);
     } catch (error) {
-      console.log(error.message);
       setbtsaveDisabled(true);
     }
   };
@@ -115,7 +111,6 @@ function fn_Shipmentschedulemaintain() {
           strprdname: txtProduct,
           strbuild: selBuild
         });
-        console.log("บันทึกข้อมูลสำเร็จ =", res);
       }
 
       if (txtSecondshipment !== "") {
@@ -125,7 +120,6 @@ function fn_Shipmentschedulemaintain() {
           strprdname: txtProduct,
           strbuild: selBuild
         });
-        console.log("บันทึกข้อมูลสำเร็จ =", res2);
       }
       Swal.fire("Success", "Save completed", "success");
       settxtProduct("");
