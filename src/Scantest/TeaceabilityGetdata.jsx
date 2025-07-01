@@ -79,7 +79,7 @@ export default function LotForm() {
       render: (_, __, index) => (
         <Input
           id={`txtserial${index}`}
-          value={serials[index]}
+          value={serials[index].serial}
           onChange={(e) => handleSerialChange(index, e.target.value)}
         />
       ),
